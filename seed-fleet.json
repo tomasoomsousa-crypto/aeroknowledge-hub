@@ -1,0 +1,24 @@
+[
+ { "reg": "CS-AKA", "model": "Airbus A320", "bay": 1, "status": "ok", "since": "2026-10-30T09:10:00", "issue": "", "ata": "", "eta": "", "tech": "Miguel Santos",
+   "events": [
+    { "at": "2026-10-30T06:40:00", "type": "aog", "reason": "Aviso no ar quente do motor 1 logo depois de arrancar, com o avião frio", "ata": "36", "by": "Miguel Santos" },
+    { "at": "2026-10-30T09:10:00", "type": "ok", "reason": "Tubo de medição trocado (dica K-1051)", "by": "Miguel Santos" } ] },
+ { "reg": "CS-AKB", "model": "Airbus A320", "bay": 2, "status": "aog", "since": "2026-10-30T11:20:00", "issue": "A APU desliga-se sozinha por pouca pressão de óleo. O nível de óleo está bom.", "ata": "49", "eta": "2026-10-30T15:30:00", "tech": "Miguel Santos",
+   "events": [ { "at": "2026-10-30T11:20:00", "type": "aog", "reason": "A APU desliga-se sozinha por pouca pressão de óleo", "ata": "49", "by": "Rui Carvalho" } ] },
+ { "reg": "CS-AKC", "model": "Boeing 737-800", "bay": 3, "status": "maint", "since": "2026-10-30T08:00:00", "issue": "A luz da válvula de combustível fica meio acesa e não apaga.", "ata": "28", "eta": "2026-10-30T13:00:00", "tech": "Ana Ferreira",
+   "events": [ { "at": "2026-10-30T08:00:00", "type": "maint", "reason": "Luz da válvula de combustível fica meio acesa", "ata": "28", "by": "Ana Ferreira" } ] },
+ { "reg": "CS-AKD", "model": "Boeing 737 MAX 8", "bay": 4, "status": "ok", "since": "2026-10-27T18:00:00", "issue": "", "ata": "", "eta": "", "tech": "",
+   "events": [] },
+ { "reg": "CS-AKE", "model": "Embraer E190", "bay": 5, "status": "aog", "since": "2026-10-29T22:00:00", "issue": "O gerador do motor 1 não funciona depois da troca de motor.", "ata": "24", "eta": "2026-10-30T18:00:00", "tech": "Tiago Ribeiro",
+   "events": [ { "at": "2026-10-29T22:00:00", "type": "aog", "reason": "Gerador do motor 1 não funciona depois da troca de motor", "ata": "24", "by": "Tiago Ribeiro" } ] },
+ { "reg": "CS-AKF", "model": "Airbus A321neo", "bay": 6, "status": "ok", "since": "2026-10-30T08:05:00", "issue": "", "ata": "", "eta": "", "tech": "Pedro Almeida",
+   "events": [
+    { "at": "2026-10-30T07:15:00", "type": "maint", "reason": "O ar condicionado aquecia demais em solo", "ata": "21", "by": "Pedro Almeida" },
+    { "at": "2026-10-30T08:05:00", "type": "ok", "reason": "Radiador do ar condicionado limpo (dica K-1058)", "by": "Pedro Almeida" } ] },
+ { "reg": "CS-AKG", "model": "ATR 72-600", "bay": 7, "status": "maint", "since": "2026-10-28T07:00:00", "issue": "Revisão programada de rotina.", "ata": "", "eta": "2026-10-31T12:00:00", "tech": "Carla Nunes",
+   "events": [ { "at": "2026-10-28T07:00:00", "type": "maint", "reason": "Revisão programada de rotina", "ata": "", "by": "Carla Nunes" } ] },
+ { "reg": "CS-AKH", "model": "Boeing 737-800", "bay": 8, "status": "ok", "since": "2026-10-30T11:30:00", "issue": "", "ata": "", "eta": "", "tech": "Carla Nunes",
+   "events": [
+    { "at": "2026-10-30T10:05:00", "type": "aog", "reason": "Erro E-402: travões anti-bloqueio desligam-se", "ata": "32", "by": "Carla Nunes" },
+    { "at": "2026-10-30T11:30:00", "type": "ok", "reason": "Fio do sensor reparado (dica K-1060)", "by": "Carla Nunes" } ] }
+]
