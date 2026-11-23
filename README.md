@@ -1,49 +1,49 @@
 # AeroKnowledge Hub
 
-Aplicação web para registar e partilhar o conhecimento prático dos mecânicos de manutenção aeronáutica (MRO). Os mecânicos registam no hangar as soluções que encontram e os colegas mais novos tiram dúvidas num chat.
+A web app that captures and shares the practical know-how of aircraft maintenance mechanics (MRO). Mechanics record the fixes they find in the hangar (photo, voice note with transcript, or video), a quality engineer validates them, and newer mechanics ask an AI assistant that only answers with approved fixes.
 
-**Demo online:** https://tomasoomsousa-crypto.github.io/aeroknowledge-hub/
+**Live app:** https://vermillion-palmier-9c92b1.netlify.app/
 
-> Projeto de demonstração. Todos os dados (dicas, pessoas, matrículas) são fictícios e as dicas não substituem os manuais oficiais do avião.
+> Demo project for the Emerging Technologies course. All tips, people and aircraft registrations are fictional. Photos, videos and voices are AI-generated and labelled as such. Tips do not replace the official aircraft manuals.
 
-## O que faz
+## Features
 
-- **Dois perfis**, que se trocam no topo da página: Mecânico e Supervisor / Engenheiro de Qualidade.
-- **Submeter**: formulário pensado para tablet. Pede avião, sistema (código ATA), peça, aviso, horas de paragem poupadas, tipo de anexo e a descrição da solução. A dica fica *Pendente de Aprovação*.
-- **Validação** (só Supervisor):
-  - aprovar, com confirmação das horas poupadas, ou rejeitar com um motivo;
-  - **Hangar ao vivo**: os aviões desenhados nos lugares do hangar, com o estado de cada um (operacional, em manutenção ou parado), as paragens do dia e os motivos, e as dicas que podem ajudar;
-  - indicadores: horas poupadas, tempo de decisão, gráficos por mês, sistema e avião, e quem mais contribui.
-- **Feed**: as dicas aprovadas, com pesquisa e filtros por avião e sistema.
-- **Chat MEC-AI**: o mecânico descreve o problema por palavras suas. O assistente faz perguntas até perceber a causa e responde só com dicas aprovadas, mostrando sempre quem resolveu o problema.
+- **Two profiles**, switched at the top of the page: Mechanic and Supervisor / Quality Engineer.
+- **Submit**: a tablet-friendly form with aircraft, ATA system, part, warning, downtime hours saved and the fix. Attach a photo, record a voice note (with automatic transcription in Chrome and Edge) or add a video. Every tip starts as *Pending Approval*.
+- **Validation** (Supervisor only):
+  - approve, after confirming or correcting the hours saved, or reject with a reason;
+  - **Live hangar**: aircraft drawn in their bays with their status (operational, in maintenance, grounded/AOG), today's stops and reasons, and the approved tips that may help;
+  - indicators: hours saved, decision time, charts per month, system and aircraft, and top contributors.
+- **Feed**: approved tips with photos, videos and playable voice notes, searchable and filterable by aircraft and system.
+- **MEC-AI chat**: mechanics describe the problem in their own words (hangar slang included). The assistant asks diagnostic questions until it finds the cause and answers only with approved tips, always showing who fixed the problem. It replies in English, or in Portuguese if the mechanic writes in Portuguese.
 
-## Duas versões
+## Architecture
 
-| | claude.ai (Artifact) | GitHub Pages (este repositório) |
-|---|---|---|
-| Dados | Base partilhada em tempo real entre dispositivos | Dados de exemplo guardados só no browser de cada pessoa |
-| Chat MEC-AI | IA (Claude), com perguntas de diagnóstico e análise de fotos | Pesquisa por palavras-chave |
+| Part | Technology |
+|---|---|
+| Front end | A single HTML page (`aeroknowledge-hub.html`, built into `index.html`), no framework |
+| Hosting | Netlify (static site + serverless function) |
+| Data | Supabase Postgres (`items`, `fleet`) with real-time updates |
+| Files | Supabase Storage, public `media` bucket |
+| AI | Claude via the Netlify function `netlify/functions/mec-ai.mjs`; the API key is stored in Netlify (`ANTHROPIC_API_KEY`) |
 
-A página deteta sozinha onde está a correr. Fora do claude.ai entra em **Modo demo**, e o link "Repor dados de exemplo", no fundo da página, volta ao início.
+The same page also runs as a Claude Artifact on claude.ai. Without Supabase it falls back to a local demo mode that keeps changes in the browser.
 
-## Ficheiros
+## Files
 
-- `aeroknowledge-hub.html`: a aplicação, numa página só, sem dependências. É o ficheiro publicado como Artifact.
-- `index.html`: a mesma página com o cabeçalho HTML completo, para o GitHub Pages. É gerado por `build.py`.
-- `seed-items.json`: as dicas de exemplo.
-- `seed-fleet.json`: os aviões de exemplo do hangar.
+- `aeroknowledge-hub.html`: the app. `index.html` is generated from it by `build.py`.
+- `seed-items.json`, `seed-fleet.json`: example tips and aircraft, loaded automatically into an empty database.
+- `media/`: example photos, videos and voice notes.
+- `supabase/setup.sql`, `supabase/storage.sql`: create the tables, access rules and the media bucket. `supabase/reset.sql` clears the data so the examples are loaded again.
+- `netlify/functions/mec-ai.mjs`: the MEC-AI function.
 
-## Correr localmente
-
-O browser não carrega os ficheiros JSON se abrires o `index.html` diretamente. Usa um servidor local:
+## Run locally
 
 ```bash
 python -m http.server 8000
 ```
 
-Depois abre http://localhost:8000.
-
-Depois de alterares `aeroknowledge-hub.html`, volta a gerar o `index.html`:
+Then open http://localhost:8000. After editing `aeroknowledge-hub.html`, rebuild `index.html`:
 
 ```bash
 python build.py

@@ -1,4 +1,4 @@
-"""Gera index.html (GitHub Pages) a partir de aeroknowledge-hub.html (versão Artifact do claude.ai)."""
+"""Builds index.html (Netlify / GitHub Pages) from aeroknowledge-hub.html (the claude.ai Artifact version)."""
 from pathlib import Path
 
 root = Path(__file__).parent
@@ -16,4 +16,4 @@ head = '''<!doctype html>
 '''
 
 (root / 'index.html').write_text(head + src + '\n</body>\n</html>\n', encoding='utf-8')
-print('index.html gerado')
+print('index.html built')
