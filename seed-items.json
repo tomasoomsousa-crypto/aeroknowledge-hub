@@ -17,7 +17,29 @@
   "reviewer": "Helena Costa",
   "mediaUrl": "media/K-1042.jpg",
   "mediaKind": "photo",
-  "mediaNote": "AI-generated illustrative image"
+  "mediaNote": "AI-generated illustrative image",
+  "uses": [
+   {
+    "at": "2026-09-10T22:57:00",
+    "by": "Joana Lopes"
+   },
+   {
+    "at": "2026-09-22T00:31:00",
+    "by": "Pedro Almeida"
+   },
+   {
+    "at": "2026-10-03T02:05:00",
+    "by": "Sofia Martins"
+   },
+   {
+    "at": "2026-10-13T22:39:00",
+    "by": "Miguel Santos"
+   },
+   {
+    "at": "2026-10-25T00:13:00",
+    "by": "Carla Nunes"
+   }
+  ]
  },
  {
   "id": "K-1047",
@@ -37,7 +59,21 @@
   "reviewer": "Helena Costa",
   "mediaUrl": "media/K-1047.mp4",
   "mediaKind": "video",
-  "mediaNote": "AI-generated illustrative video"
+  "mediaNote": "AI-generated illustrative video",
+  "uses": [
+   {
+    "at": "2026-09-20T06:00:50",
+    "by": "Joana Lopes"
+   },
+   {
+    "at": "2026-10-06T09:12:30",
+    "by": "Pedro Almeida"
+   },
+   {
+    "at": "2026-10-22T12:24:10",
+    "by": "Sofia Martins"
+   }
+  ]
  },
  {
   "id": "K-1051",
@@ -58,7 +94,25 @@
   "mediaUrl": "media/K-1051-en.mp3",
   "mediaKind": "audio",
   "transcript": "Hi guys. We've had a bleed fault warning on engine one three times, always right after start-up, with the aircraft cold. They'd already replaced the system computer, and it didn't fix it. The tip is to check the thin pressure-sensing tube first, next to the valve. It has a crack that only opens when the tube is cold. That's why, when you test it with the engine hot, everything looks fine. With soapy water, and the engine at idle, you see the leak straight away. We replaced the tube and the problem never came back.",
-  "mediaNote": "AI-generated voice (ElevenLabs)"
+  "mediaNote": "AI-generated voice (ElevenLabs)",
+  "uses": [
+   {
+    "at": "2026-09-23T13:15:00",
+    "by": "Bruno Teixeira"
+   },
+   {
+    "at": "2026-10-04T03:45:00",
+    "by": "Ana Ferreira"
+   },
+   {
+    "at": "2026-10-14T18:15:00",
+    "by": "Tiago Ribeiro"
+   },
+   {
+    "at": "2026-10-25T03:45:00",
+    "by": "Joana Lopes"
+   }
+  ]
  },
  {
   "id": "K-1055",
@@ -78,7 +132,17 @@
   "reviewer": "Helena Costa",
   "mediaUrl": "media/K-1055.mp4",
   "mediaKind": "video",
-  "mediaNote": "AI-generated illustrative video"
+  "mediaNote": "AI-generated illustrative video",
+  "uses": [
+   {
+    "at": "2026-10-03T11:48:45",
+    "by": "Bruno Teixeira"
+   },
+   {
+    "at": "2026-10-21T11:56:15",
+    "by": "Ana Ferreira"
+   }
+  ]
  },
  {
   "id": "K-1058",
@@ -98,7 +162,33 @@
   "reviewer": "Helena Costa",
   "mediaUrl": "media/K-1058.jpg",
   "mediaKind": "photo",
-  "mediaNote": "AI-generated illustrative image"
+  "mediaNote": "AI-generated illustrative image",
+  "uses": [
+   {
+    "at": "2026-10-05T12:42:30",
+    "by": "Joana Lopes"
+   },
+   {
+    "at": "2026-10-10T03:07:30",
+    "by": "Ana Ferreira"
+   },
+   {
+    "at": "2026-10-14T17:32:30",
+    "by": "Sofia Martins"
+   },
+   {
+    "at": "2026-10-19T02:57:30",
+    "by": "Miguel Santos"
+   },
+   {
+    "at": "2026-10-23T17:22:30",
+    "by": "Carla Nunes"
+   },
+   {
+    "at": "2026-10-28T02:47:30",
+    "by": "Bruno Teixeira"
+   }
+  ]
  },
  {
   "id": "K-1060",
@@ -118,7 +208,21 @@
   "reviewer": "Helena Costa",
   "mediaUrl": "media/K-1060.jpg",
   "mediaKind": "photo",
-  "mediaNote": "AI-generated illustrative image"
+  "mediaNote": "AI-generated illustrative image",
+  "uses": [
+   {
+    "at": "2026-10-13T18:06:40",
+    "by": "Joana Lopes"
+   },
+   {
+    "at": "2026-10-20T11:40:00",
+    "by": "Ana Ferreira"
+   },
+   {
+    "at": "2026-10-27T05:13:20",
+    "by": "Sofia Martins"
+   }
+  ]
  },
  {
   "id": "K-1063",
@@ -139,7 +243,37 @@
   "mediaUrl": "media/K-1063-en.mp3",
   "mediaKind": "audio",
   "transcript": "Right, about the APU, the small engine in the tail. If it shuts down by itself on low oil pressure, and the oil level is fine, the first thing to check is the oil filter. The clogged-filter indicator doesn't always pop out. We pulled the filter, and it was full of carbon particles. Replace the filter, check the magnetic plug for metal particles, and only then start thinking about the sensor.",
-  "mediaNote": "AI-generated voice (ElevenLabs)"
+  "mediaNote": "AI-generated voice (ElevenLabs)",
+  "uses": [
+   {
+    "at": "2026-10-18T03:29:38",
+    "by": "Bruno Teixeira"
+   },
+   {
+    "at": "2026-10-20T02:38:55",
+    "by": "Ana Ferreira"
+   },
+   {
+    "at": "2026-10-22T01:48:12",
+    "by": "Tiago Ribeiro"
+   },
+   {
+    "at": "2026-10-23T19:57:30",
+    "by": "Joana Lopes"
+   },
+   {
+    "at": "2026-10-25T19:06:47",
+    "by": "Pedro Almeida"
+   },
+   {
+    "at": "2026-10-27T13:16:04",
+    "by": "Sofia Martins"
+   },
+   {
+    "at": "2026-10-29T12:25:21",
+    "by": "Rui Carvalho"
+   }
+  ]
  },
  {
   "id": "K-1067",
@@ -157,7 +291,8 @@
   "submittedAt": "2026-10-27T10:15:00",
   "mediaUrl": "media/K-1067.jpg",
   "mediaKind": "photo",
-  "mediaNote": "AI-generated illustrative image"
+  "mediaNote": "AI-generated illustrative image",
+  "uses": []
  },
  {
   "id": "K-1068",
@@ -176,7 +311,8 @@
   "mediaUrl": "media/K-1068-en.mp3",
   "mediaKind": "audio",
   "transcript": "Hi everyone, a quick note. We've had several low-pressure warnings on the centre tank fuel pump, in flight. In almost every case, the tank was nearly empty, and the pump hadn't switched itself off yet. Before opening the tank, check the fuel quantity and the history on the on-board computer. It saves you a big job.",
-  "mediaNote": "AI-generated voice (ElevenLabs)"
+  "mediaNote": "AI-generated voice (ElevenLabs)",
+  "uses": []
  },
  {
   "id": "K-1069",
@@ -194,7 +330,8 @@
   "submittedAt": "2026-10-29T15:30:00",
   "mediaUrl": "media/K-1069.mp4",
   "mediaKind": "video",
-  "mediaNote": "AI-generated illustrative video"
+  "mediaNote": "AI-generated illustrative video",
+  "uses": []
  },
  {
   "id": "K-1065",
@@ -212,6 +349,7 @@
   "submittedAt": "2026-10-20T11:00:00",
   "reviewedAt": "2026-10-21T09:40:00",
   "reviewer": "Helena Costa",
-  "rejectReason": "Resetting does not fix the root cause. Add what you checked (connector, cable and antenna seal) before resubmitting."
+  "rejectReason": "Resetting does not fix the root cause. Add what you checked (connector, cable and antenna seal) before resubmitting.",
+  "uses": []
  }
 ]

@@ -426,6 +426,10 @@ dialog::backdrop{background:rgba(5,12,24,.65)}
 .ac-panel [data-askac]{width:100%}
 .ac-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .ac-actions .btn{width:100%}
+.use-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 14px;border-radius:var(--r);background:var(--ok-bg);border:1px solid color-mix(in srgb,var(--ok) 30%,transparent)}
+.use-row b{display:block;font-family:var(--f-display);font-size:1.3rem;color:var(--ok);text-transform:uppercase}
+.use-row span{font-size:.85rem;color:var(--ink-2)}
+.source-info .use-row{padding:10px}
 .bottom-nav{display:none}
 @media (max-width:640px){
   .tabs{display:none}
@@ -565,7 +569,7 @@ dialog::backdrop{background:rgba(5,12,24,.65)}
           <div class="field"><label for="f-part">Part <span class="req">*</span></label><input class="input" id="f-part" placeholder="e.g. Engine bleed air valve"><span class="err">Enter the part.</span></div>
           <div class="field"><label for="f-alarm">Warning or error code <span class="req">*</span></label><input class="input mono" id="f-alarm" placeholder="e.g. Error E-402, pressure loss warning"><span class="err">Enter the warning or code.</span></div>
         </div>
-        <div class="field"><label for="f-downtime">Aircraft downtime hours saved <span class="req">*</span></label><div class="stepper"><button class="step" type="button" data-step="f-downtime" data-d="-0.5" aria-label="Fewer hours">−</button><input class="input mono" id="f-downtime" type="number" inputmode="decimal" min="0.5" step="0.5" placeholder="4.5"><button class="step" type="button" data-step="f-downtime" data-d="0.5" aria-label="More hours">+</button></div><span class="err">Enter the downtime hours saved (minimum 0.5 h).</span><span class="hint">How much less time the aircraft stays grounded thanks to this tip.</span></div>
+        <div class="field"><label for="f-downtime">Downtime hours saved each time it is used <span class="req">*</span></label><div class="stepper"><button class="step" type="button" data-step="f-downtime" data-d="-0.5" aria-label="Fewer hours">−</button><input class="input mono" id="f-downtime" type="number" inputmode="decimal" min="0.5" step="0.5" placeholder="4.5"><button class="step" type="button" data-step="f-downtime" data-d="0.5" aria-label="More hours">+</button></div><span class="err">Enter the downtime hours saved (minimum 0.5 h).</span><span class="hint">Your estimate per use: how much less time the aircraft stays grounded each time someone applies this tip.</span></div>
         <div class="form-section">Attachment</div>
         <div class="field" id="media-field">
           <span class="label" id="media-label">What are you attaching? <span class="req">*</span></span>
@@ -797,7 +801,7 @@ const LOCAL_KEY = 'akh-local-v1';
 function saveLocal(){ try { localStorage.setItem(LOCAL_KEY, JSON.stringify({ items: store.items, fleet: store.fleet })); } catch(e){} }
 function shiftDates(list, ms){
   const keys = ['at','since','eta','submittedAt','approvedAt','reviewedAt'];
-  const fix = o => { keys.forEach(k => { if (o[k]) o[k] = new Date(new Date(o[k]).getTime() + ms).toISOString(); }); (o.events || []).forEach(fix); };
+  const fix = o => { keys.forEach(k => { if (o[k]) o[k] = new Date(new Date(o[k]).getTime() + ms).toISOString(); }); (o.events || []).forEach(fix); (o.uses || []).forEach(fix); };
   list.forEach(fix); return list;
 }
 async function localMode(){
@@ -889,6 +893,9 @@ const fmtD = d => d ? new Date(d).toLocaleDateString('en-GB', {day:'2-digit', mo
 const fmtDT = d => d ? new Date(d).toLocaleString('en-GB', {day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'}) : '—';
 const initials = n => n.replace(/^Eng\.ª?\s*/,'').split(/\s+/).map(w => w[0]).slice(0,2).join('').toUpperCase();
 const approved = () => store.items.filter(i => i.status === 'approved');
+// Hours saved are counted per use: a tip's downtime estimate times the times mechanics reported using it.
+const usesOf = it => Array.isArray(it.uses) ? it.uses : [];
+const savedBy = (it, inR = () => true) => usesOf(it).filter(u => inR(u.at)).length * Number(it.downtime);
 const pending = () => store.items.filter(i => i.status === 'pending');
 const norm = s => String(s).normalize('NFD').replace(/\p{M}/gu,'').toLowerCase();
 
@@ -1012,8 +1019,8 @@ function renderFeed(){
     const hay = norm([it.title, it.description, it.part, it.alarm, it.aircraft, 'ata '+it.ata, ataName(it.ata), it.author].join(' '));
     return terms.every(t => hay.includes(t));
   }).sort((a,b) => b.approvedAt.localeCompare(a.approvedAt));
-  const hrs = list.reduce((s,i) => s + Number(i.downtime), 0);
-  $('#feed-meta').innerHTML = `<b>${list.length}</b> ${list.length===1?'approved tip':'approved tips'} · <span class="mono">${fmtH(hrs)} h</span> of downtime saved${pending().length ? ` · <span class="pill pill-pending">${pending().length} in validation, not visible</span>` : ''}`;
+  const hrs = list.reduce((s,i) => s + savedBy(i), 0), nUses = list.reduce((s,i) => s + usesOf(i).length, 0);
+  $('#feed-meta').innerHTML = `<b>${list.length}</b> ${list.length===1?'approved tip':'approved tips'} · used <b>${nUses}</b> times · <span class="mono">${fmtH(hrs)} h</span> of downtime saved${pending().length ? ` · <span class="pill pill-pending">${pending().length} in validation, not visible</span>` : ''}`;
   if (!store.items.length){
     $('#cards').innerHTML = `<div class="empty" style="grid-column:1/-1">${dbState === 'loading' ? 'Loading the knowledge base…' : dbState === 'offline' ? '<b>No connection to the shared database.</b><br>Open this page signed in to see and share tips.' : '<b>No tips yet.</b><br>The first fix submitted and approved will appear here. <button class="linkbtn" data-go="submit">Submit knowledge</button>'}</div>`;
     return;
@@ -1027,7 +1034,7 @@ function renderFeed(){
         ${it.mediaUrl && kindOf(it.media) === 'audio' ? `<audio class="card-audio" controls preload="none" src="${esc(it.mediaUrl)}" aria-label="Voice note by ${esc(it.author)}"></audio>` : ''}
         <div class="alarm">${alarmIco}<span>${esc(it.alarm)}</span></div>
         <p>${esc(it.description.replace(/\n+/g,' '))}</p>
-        <div class="card-foot">${byline(it)}<div class="saved"><b>${BOLT}−${fmtH(it.downtime)} h</b>downtime</div></div>
+        <div class="card-foot">${byline(it)}<div class="saved"><b>${BOLT}${fmtH(savedBy(it))} h</b>saved · used ${usesOf(it).length}×</div></div>
       </div>
     </article>`).join('') : `<div class="empty" style="grid-column:1/-1"><b>No results.</b><br>Try another warning or clear the filters. If you fixed this problem, <button class="linkbtn" data-go="submit">submit the fix</button>.</div>`;
 }
@@ -1048,7 +1055,8 @@ function openDetail(id){
     <div class="alarm">${alarmIco}<span>${esc(it.alarm)}</span></div>
     <p class="desc">${esc(it.description)}</p>
     ${metaList(it)}
-    <div class="card-foot">${byline(it)}<div class="saved"><b>−${fmtH(it.downtime)} h</b>downtime saved</div></div>`;
+    ${useRow(it)}
+    <div class="card-foot">${byline(it)}<div class="saved"><b>−${fmtH(it.downtime)} h</b>per use</div></div>`;
   const d = $('#dlg'); if (d.showModal) d.showModal(); else d.setAttribute('open','');
 }
 
@@ -1126,10 +1134,10 @@ function renderValidate(){
   $('#validate-locked').hidden = sup; $('#validate-body').hidden = !sup;
   if (!sup) return;
   const ap = approved(), pe = pending(), rj = store.items.filter(i => i.status === 'rejected');
-  const total = ap.reduce((s,i) => s + Number(i.downtime), 0);
+  const total = ap.reduce((s,i) => s + savedBy(i), 0), totalUses = ap.reduce((s,i) => s + usesOf(i).length, 0);
   const decided = ap.length + rj.length;
   $('#kpis').innerHTML = `
-    <div class="kpi kpi-hero"><span class="label">Total aircraft downtime hours saved</span><div class="val">${fmtH(total)}<small>h</small></div><div class="sub">Sum of hours saved across ${ap.length} approved tips</div></div>
+    <div class="kpi kpi-hero"><span class="label">Total aircraft downtime hours saved</span><div class="val">${fmtH(total)}<small>h</small></div><div class="sub">${totalUses} uses of ${ap.length} approved tips (hours per use × times used)</div></div>
     <div class="kpi"><span class="label">Pending</span><div class="val" style="color:var(--warn)">${pe.length}</div><div class="sub">${fmtH(pe.reduce((s,i)=>s+Number(i.downtime),0))} h in validation</div></div>
     <div class="kpi"><span class="label">Approved</span><div class="val" style="color:var(--ok)">${ap.length}</div><div class="sub">Visible in the Feed and MEC-AI</div></div>
     <div class="kpi"><span class="label">Approval rate</span><div class="val">${decided ? Math.round(ap.length/decided*100) : 0}<small style="font-size:1.2rem">%</small></div><div class="sub">${rj.length} rejected and returned</div></div>`;
@@ -1148,9 +1156,9 @@ function renderValidate(){
     <div><span class="label">How it was fixed</span><p class="desc" style="margin-top:6px">${esc(it.description)}</p></div>
     ${ui.approving ? `
       <div class="approve-box">
-        <div class="field"><label for="approve-hours">Aircraft downtime hours saved</label>
+        <div class="field"><label for="approve-hours">Downtime hours saved each time it is used</label>
         <div class="stepper"><button class="step" type="button" data-step="approve-hours" data-d="-0.5" aria-label="Fewer hours">−</button><input class="input mono" id="approve-hours" type="number" inputmode="decimal" min="0.5" step="0.5" value="${esc(ui.approveHours)}"><button class="step" type="button" data-step="approve-hours" data-d="0.5" aria-label="More hours">+</button></div>
-        <span class="hint">${esc(it.author)} entered <b>${fmtH(it.downtime)} h</b>. Confirm it is realistic or correct it before approving. This value counts towards the total hours saved.</span></div>
+        <span class="hint">${esc(it.author)} entered <b>${fmtH(it.downtime)} h</b>. Confirm it is realistic or correct it before approving. Every time a mechanic reports using this tip, this value is added to the hours saved.</span></div>
         <div class="decide"><button class="btn" type="button" data-act="cancel">Cancel</button><button class="btn btn-ok" type="button" data-act="confirm-approve" id="confirm-approve" ${Number(ui.approveHours) >= 0.5 ? '' : 'disabled'}>Confirm hours and approve</button></div>
       </div>` : ui.rejecting ? `
       <div class="reject-box">
@@ -1285,7 +1293,7 @@ function acPanel(a){
       <div><span>System</span>${a.ata ? `ATA ${a.ata} · ${esc(ataName(a.ata))}` : '—'}</div><div><span>Mechanic</span>${esc(a.tech || '—')}</div></div></div>`
       : `<p class="hint" style="margin:0">Ready to fly${a.since ? ` since ${fmtDT(a.since)}` : ''}.</p>`}
     <div><div class="label">Stops today</div>${stops.length ? `<ol class="stops">${stops.map(x => `<li><span class="mono">${x.carried ? 'since ' + fmtDT(x.at) : hhmm(x.at)} – ${x.end ? hhmm(x.end) : 'now'}</span>${esc(x.reason || '')}${x.fix ? `<small>Fixed: ${esc(x.fix)}</small>` : ''}</li>`).join('')}</ol>` : '<p class="hint" style="margin:6px 0 0">No stops today.</p>'}</div>
-    ${tips.length ? `<div><div class="label">Approved tips that may help</div><div class="ac-tips">${tips.map(t => `<button type="button" class="ac-tip" data-open="${t.id}"><b>${esc(t.title)}</b><small>${esc(t.author)} · ${esc(t.aircraft)} · −${fmtH(t.downtime)} h</small></button>`).join('')}</div></div>` : ''}
+    ${tips.length ? `<div><div class="label">Approved tips that may help</div><div class="ac-tips">${tips.map(t => `<button type="button" class="ac-tip" data-open="${t.id}"><b>${esc(t.title)}</b><small>${esc(t.author)} · ${esc(t.aircraft)} · −${fmtH(t.downtime)} h each · used ${usesOf(t).length}×</small></button>`).join('')}</div></div>` : ''}
     ${pend.length ? `<p class="hint" style="margin:0">There ${pend.length === 1 ? 'is 1 pending tip' : `are ${pend.length} pending tips`} about this system waiting for your approval.</p>` : ''}
     ${a.status !== 'ok' ? `<button class="btn btn-primary" type="button" data-askac="${esc(a.reg)}">Ask MEC-AI about this</button>` : ''}
     ${acActions(a)}`;
@@ -1441,18 +1449,38 @@ document.addEventListener('click', e => {
   $('#' + id).onchange = e => { const f = e.target.files[0]; if (f) setSubMedia({ kind, blob: f, name: f.name }); updRecUi(); e.target.value = ''; };
 });
 
+/* ---------- Tip usage ---------- */
+const USED_KEY = 'akh-used';
+function usedToday(id){ try { return JSON.parse(localStorage.getItem(USED_KEY) || '{}')[id] === new Date().toDateString(); } catch(e){ return false; } }
+function useRow(it){
+  if (it.status !== 'approved') return '';
+  const n = usesOf(it).length, done = usedToday(it.id);
+  return `<div class="use-row"><div><b>Used ${n}×</b><span>${fmtH(savedBy(it))} h of downtime saved so far · ${fmtH(it.downtime)} h each time</span></div>
+    <button class="btn ${done ? '' : 'btn-primary'}" type="button" data-use="${it.id}"${done ? ' disabled' : ''}>${done ? '✓ You used it today' : 'I used this tip'}</button></div>`;
+}
+async function markUsed(id){
+  const it = store.items.find(i => i.id === id); if (!it || it.status !== 'approved') return;
+  const ok = await dbWrite(id, { uses: [...usesOf(it), { at: new Date().toISOString(), by: PROFILES[store.role].name }] }, true);
+  if (!ok) return;
+  try { const m = JSON.parse(localStorage.getItem(USED_KEY) || '{}'); m[id] = new Date().toDateString(); localStorage.setItem(USED_KEY, JSON.stringify(m)); } catch(e){}
+  toast(`Thanks! ${fmtH(it.downtime)} h of downtime saved recorded for ${id}.`);
+  setTimeout(() => { if ($('#dlg').open) openDetail(id); if (ui.view === 'chat') renderChat(); }, 60);
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-use]'); if (b){ b.disabled = true; markUsed(b.dataset.use); } });
+
 /* ---------- Supervisor dashboard ---------- */
 const HOUR = 36e5, DAY = 864e5;
 function fmtDur(h){ return h < 48 ? `${Math.round(h)} h` : `${fmtH(h / 24)} days`; }
+// list holds one entry per use ({ it, at }); n counts uses.
 function groupSum(list, key){
   const m = new Map();
-  list.forEach(i => { const k = key(i); const g = m.get(k) || { k, hours:0, n:0 }; g.hours += Number(i.downtime); g.n++; m.set(k, g); });
+  list.forEach(u => { const k = key(u.it); const g = m.get(k) || { k, hours:0, n:0 }; g.hours += Number(u.it.downtime); g.n++; m.set(k, g); });
   return [...m.values()].sort((a, b) => b.hours - a.hours || b.n - a.n);
 }
 function hbars(rows, label){
-  if (!rows.length) return '<div class="empty">No approved tips in this period.</div>';
+  if (!rows.length) return '<div class="empty">No tips used in this period.</div>';
   const max = Math.max(...rows.map(r => r.hours), 1);
-  return `<div class="hbars">${rows.map(r => `<div class="hrow" data-tip="${esc(label(r.k))}: ${fmtH(r.hours)} h saved across ${r.n} ${r.n === 1 ? 'tip' : 'tips'}">
+  return `<div class="hbars">${rows.map(r => `<div class="hrow" data-tip="${esc(label(r.k))}: ${fmtH(r.hours)} h saved across ${r.n} ${r.n === 1 ? 'use' : 'uses'}">
     <span class="name">${esc(label(r.k))}</span><span class="bar"><i style="width:${r.hours / max * 100}%"></i></span><span class="v"><b>${fmtH(r.hours)} h</b> · ${r.n}</span></div>`).join('')}</div>`;
 }
 function renderDash(){
@@ -1465,7 +1493,8 @@ function renderDash(){
   const decided = [...ap, ...rj];
   const sub = all.filter(i => inR(i.submittedAt));
   const pe = pending().sort((a, b) => a.submittedAt.localeCompare(b.submittedAt));
-  const hours = ap.reduce((s, i) => s + Number(i.downtime), 0);
+  const used = all.filter(i => i.status === 'approved').flatMap(i => usesOf(i).filter(u => inR(u.at)).map(u => ({ it: i, at: u.at })));
+  const hours = used.reduce((s, u) => s + Number(u.it.downtime), 0);
   const avgRev = decided.length ? decided.reduce((s, i) => s + (new Date(i.approvedAt || i.reviewedAt) - new Date(i.submittedAt)), 0) / decided.length / HOUR : null;
   const oldest = pe[0], oldAge = oldest ? (now - new Date(oldest.submittedAt)) / HOUR : 0;
   const fixed = ap.filter(i => i.downtimeAsked != null && i.downtimeAsked !== i.downtime);
@@ -1475,10 +1504,10 @@ function renderDash(){
   const months = [];
   const d0 = new Date(); d0.setDate(1);
   for (let k = 5; k >= 0; k--){ const d = new Date(d0.getFullYear(), d0.getMonth() - k, 1); months.push({ y:d.getFullYear(), m:d.getMonth(), hours:0, n:0 }); }
-  all.filter(i => i.status === 'approved' && i.approvedAt).forEach(i => {
-    const d = new Date(i.approvedAt), mo = months.find(x => x.y === d.getFullYear() && x.m === d.getMonth());
+  all.filter(i => i.status === 'approved').forEach(i => usesOf(i).forEach(u => {
+    const d = new Date(u.at), mo = months.find(x => x.y === d.getFullYear() && x.m === d.getMonth());
     if (mo){ mo.hours += Number(i.downtime); mo.n++; }
-  });
+  }));
   const mMax = Math.max(...months.map(m => m.hours), 1);
   const mName = m => new Date(m.y, m.m, 1).toLocaleDateString('en-GB', { month:'short' }).replace('.', '');
 
@@ -1487,13 +1516,13 @@ function renderDash(){
 
   const people = new Map();
   all.forEach(i => {
-    const p = people.get(i.author) || { name:i.author, role:i.role, ap:0, hours:0, pe:0, rj:0 };
-    if (i.status === 'approved' && inR(i.approvedAt)){ p.ap++; p.hours += Number(i.downtime); }
+    const p = people.get(i.author) || { name:i.author, role:i.role, ap:0, uses:0, hours:0, pe:0, rj:0 };
+    if (i.status === 'approved'){ p.ap++; const n = usesOf(i).filter(u => inR(u.at)).length; p.uses += n; p.hours += n * Number(i.downtime); }
     if (i.status === 'pending') p.pe++;
     if (i.status === 'rejected' && inR(i.reviewedAt)) p.rj++;
     people.set(i.author, p);
   });
-  const rank = [...people.values()].filter(p => p.ap || p.pe || p.rj).sort((a, b) => b.hours - a.hours || b.ap - a.ap).slice(0, 6);
+  const rank = [...people.values()].filter(p => p.ap || p.pe || p.rj).sort((a, b) => b.hours - a.hours || b.uses - a.uses).slice(0, 6);
   const rangeLabel = { '30':'in the last 30 days', '90':'in the last 90 days', all:'since the start' }[ui.range || 'all'];
 
   el.innerHTML = `
@@ -1502,24 +1531,24 @@ function renderDash(){
       <div class="range" role="group" aria-label="Period">${[['30','30 days'],['90','90 days'],['all','All']].map(([k, l]) => `<button type="button" data-range="${k}" aria-pressed="${(ui.range || 'all') === k}">${l}</button>`).join('')}</div>
     </div>
     <div class="kpis-2">
-      <div class="kpi"><span class="label">Hours saved</span><div class="val">${fmtH(hours)}<small style="font-size:1rem"> h</small></div><div class="sub">${ap.length} ${ap.length === 1 ? 'approved tip' : 'approved tips'} ${rangeLabel}</div></div>
-      <div class="kpi"><span class="label">Average per tip</span><div class="val">${ap.length ? fmtH(hours / ap.length) : '—'}<small style="font-size:1rem"> h</small></div><div class="sub">Downtime hours avoided per approved tip</div></div>
+      <div class="kpi"><span class="label">Hours saved</span><div class="val">${fmtH(hours)}<small style="font-size:1rem"> h</small></div><div class="sub">From ${used.length} ${used.length === 1 ? 'use' : 'uses'} of approved tips ${rangeLabel}</div></div>
+      <div class="kpi"><span class="label">Times tips were used</span><div class="val">${used.length}</div><div class="sub">${used.length ? fmtH(hours / used.length) + ' h saved per use on average' : 'No uses reported yet'}</div></div>
       <div class="kpi"><span class="label">Average decision time</span><div class="val">${avgRev == null ? '—' : fmtDur(avgRev)}</div><div class="sub">From mechanic submission to approval or rejection</div></div>
       <div class="kpi"><span class="label">Longest waiting</span><div class="val" style="color:${oldAge > 72 ? 'var(--bad)' : 'var(--ink)'}">${oldest ? fmtDur(oldAge) : '—'}</div><div class="sub">${oldest ? `${esc(oldest.author)} · ${esc(oldest.id)}${oldAge > 72 ? ' · over 3 days' : ''}` : 'No tips waiting'}</div></div>
     </div>
     <div class="charts">
       <div class="chart chart-wide">
-        <div><h3>Hours saved per month</h3><div class="sub">Last 6 months, by approval date. ${fixed.length ? `Quality corrected ${fixed.length} ${fixed.length === 1 ? 'tip' : 'tips'} (−${fmtH(cut)} h compared with the request).` : 'No hours corrected at approval.'}</div></div>
-        <div><div class="cols">${months.map((m, k) => `<div class="col${k === 5 ? ' now' : ''}" data-tip="${mName(m)} ${m.y}: ${fmtH(m.hours)} h across ${m.n} ${m.n === 1 ? 'tip' : 'tips'}">${k === 5 || m.hours === mMax ? `<b style="bottom:${m.hours / mMax * 100}%">${fmtH(m.hours)} h</b>` : ''}<i style="height:${m.hours / mMax * 100}%"></i></div>`).join('')}</div>
+        <div><h3>Hours saved per month</h3><div class="sub">Last 6 months, by the date mechanics used the tips. ${fixed.length ? `Quality corrected ${fixed.length} ${fixed.length === 1 ? 'tip' : 'tips'} (−${fmtH(cut)} h compared with the request).` : 'No hours corrected at approval.'}</div></div>
+        <div><div class="cols">${months.map((m, k) => `<div class="col${k === 5 ? ' now' : ''}" data-tip="${mName(m)} ${m.y}: ${fmtH(m.hours)} h across ${m.n} ${m.n === 1 ? 'use' : 'uses'}">${k === 5 || m.hours === mMax ? `<b style="bottom:${m.hours / mMax * 100}%">${fmtH(m.hours)} h</b>` : ''}<i style="height:${m.hours / mMax * 100}%"></i></div>`).join('')}</div>
         <div class="col-labels">${months.map(m => `<span>${mName(m)}</span>`).join('')}</div></div>
       </div>
       <div class="chart">
-        <div><h3>By aircraft system</h3><div class="sub">Hours saved and number of tips ${rangeLabel}</div></div>
-        ${hbars(groupSum(ap, i => i.ata), k => ataName(k))}
+        <div><h3>By aircraft system</h3><div class="sub">Hours saved and number of uses ${rangeLabel}</div></div>
+        ${hbars(groupSum(used, i => i.ata), k => ataName(k))}
       </div>
       <div class="chart">
-        <div><h3>By aircraft</h3><div class="sub">Hours saved and number of tips ${rangeLabel}</div></div>
-        ${hbars(groupSum(ap, i => i.aircraft), k => k)}
+        <div><h3>By aircraft</h3><div class="sub">Hours saved and number of uses ${rangeLabel}</div></div>
+        ${hbars(groupSum(used, i => i.aircraft), k => k)}
       </div>
       <div class="chart">
         <div><h3>Submission status</h3><div class="sub">${stTotal} ${stTotal === 1 ? 'tip submitted' : 'tips submitted'} ${rangeLabel}</div></div>
@@ -1527,13 +1556,13 @@ function renderDash(){
         <div class="legend">${st.map(x => `<span><i class="sw" style="background:${x.c}"></i>${x.l} <b>${x.n}</b></span>`).join('')}</div>` : '<div class="empty">No tips submitted in this period.</div>'}
       </div>
       <div class="chart">
-        <div><h3>Attachment type</h3><div class="sub">Approved tips ${rangeLabel}, by format</div></div>
-        ${hbars(groupSum(ap, i => i.media), k => k)}
+        <div><h3>Attachment type</h3><div class="sub">Hours saved and uses ${rangeLabel}, by format</div></div>
+        ${hbars(groupSum(used, i => i.media), k => k)}
       </div>
       <div class="chart chart-wide">
         <div><h3>Top contributors</h3><div class="sub">Sorted by hours saved ${rangeLabel}</div></div>
-        ${rank.length ? `<div class="table-wrap"><table class="rank"><thead><tr><th>Mechanic</th><th style="text-align:right">Approved</th><th style="text-align:right">Hours saved</th><th style="text-align:right">Pending</th><th style="text-align:right">Rejected</th></tr></thead><tbody>
-          ${rank.map(p => `<tr><td><div class="who-cell"><div class="avatar" aria-hidden="true" style="background:${avColor(p.name)}">${esc(initials(p.name))}</div><div class="byline"><b>${esc(p.name)}</b><span>${esc(p.role)}</span></div></div></td><td class="num">${p.ap}</td><td class="num">${fmtH(p.hours)} h</td><td class="num">${p.pe}</td><td class="num">${p.rj}</td></tr>`).join('')}
+        ${rank.length ? `<div class="table-wrap"><table class="rank"><thead><tr><th>Mechanic</th><th style="text-align:right">Approved tips</th><th style="text-align:right">Times used</th><th style="text-align:right">Hours saved</th><th style="text-align:right">Pending</th><th style="text-align:right">Rejected</th></tr></thead><tbody>
+          ${rank.map(p => `<tr><td><div class="who-cell"><div class="avatar" aria-hidden="true" style="background:${avColor(p.name)}">${esc(initials(p.name))}</div><div class="byline"><b>${esc(p.name)}</b><span>${esc(p.role)}</span></div></div></td><td class="num">${p.ap}</td><td class="num">${p.uses}</td><td class="num">${fmtH(p.hours)} h</td><td class="num">${p.pe}</td><td class="num">${p.rj}</td></tr>`).join('')}
         </tbody></table></div>` : '<div class="empty">No contributions in this period.</div>'}
       </div>
     </div>`;
@@ -1610,9 +1639,11 @@ function sourceCard(it){
           <div><span>Approval date</span>${fmtD(it.approvedAt)}</div>
           <div><span>System</span>ATA ${it.ata} · ${esc(ataName(it.ata))}</div>
           <div><span>Aircraft</span>${esc(it.aircraft)}</div>
-          <div><span>Downtime saved</span>${fmtH(it.downtime)} h</div>
+          <div><span>Downtime saved</span>${fmtH(it.downtime)} h per use</div>
+          <div><span>Times used</span>${usesOf(it).length}×</div>
         </div>
         ${it.mediaUrl && kindOf(it.media) === 'audio' ? `<audio controls preload="none" src="${esc(it.mediaUrl)}"></audio>` : ''}
+        ${useRow(it)}
         <button class="btn btn-sm" type="button" data-open="${it.id}" style="align-self:flex-start">See full tip</button>
       </div>
     </div></div>`;
@@ -1683,7 +1714,7 @@ Format when you ANSWER:
 - One short sentence reminding them to confirm the procedure in the official aircraft manual.
 - On the LAST line: "SOURCES: " followed by the IDs of the tips used, separated by commas (at most 2).`;
 function kbText(){
-  return approved().map(i => `[${i.id}] ${i.title}\nAircraft: ${i.aircraft} | ATA ${i.ata} ${ataName(i.ata)} | Part: ${i.part} | Warning: ${i.alarm}\nAuthor: ${i.author} (${i.role}) | Approved: ${fmtD(i.approvedAt)} | Downtime hours saved: ${i.downtime} h\nDescription: ${i.description}${i.transcript && !i.description.includes(i.transcript.slice(0, 30)) ? '\nVoice-note transcript: ' + i.transcript : ''}`).join('\n\n---\n\n');
+  return approved().map(i => `[${i.id}] ${i.title}\nAircraft: ${i.aircraft} | ATA ${i.ata} ${ataName(i.ata)} | Part: ${i.part} | Warning: ${i.alarm}\nAuthor: ${i.author} (${i.role}) | Approved: ${fmtD(i.approvedAt)} | Downtime saved per use: ${i.downtime} h | Used ${usesOf(i).length} times\nDescription: ${i.description}${i.transcript && !i.description.includes(i.transcript.slice(0, 30)) ? '\nVoice-note transcript: ' + i.transcript : ''}`).join('\n\n---\n\n');
 }
 // Claude ends each reply with control lines: optional "OPTIONS: a | b" (quick replies) and "SOURCES: K-…" (Portuguese markers accepted too).
 function splitSources(text){
