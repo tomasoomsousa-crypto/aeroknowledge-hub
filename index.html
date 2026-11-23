@@ -141,6 +141,11 @@ textarea.input{min-height:150px;resize:vertical;line-height:1.5}
 .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:18px}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;cursor:pointer;text-align:left;padding:0;box-shadow:var(--shadow);transition:transform .15s,border-color .15s}
 .card:hover{transform:translateY(-2px);border-color:var(--ink-2)}
+.card{position:relative}
+.card-link{all:unset;cursor:pointer}
+.card-link::after{content:"";position:absolute;inset:0;z-index:1}
+.card:has(.card-link:focus-visible){outline:3px solid var(--amber);outline-offset:2px}
+.card-audio{position:relative;z-index:2;width:100%;height:40px}
 .card .media{border-radius:0}
 .card-body{padding:16px;display:flex;flex-direction:column;gap:10px;flex:1}
 .card-chips{display:flex;gap:6px;flex-wrap:wrap}
@@ -837,7 +842,7 @@ function mediaArt(it){
     const dur = `0${1 + Math.floor(r()*3)}:${String(10 + Math.floor(r()*49))}`;
     return `<div class="media"><span class="media-tag">${tag}</span><svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="320" height="180" class="m-bg"/>${g}
       <circle cx="28" cy="88" r="16" class="m-hi-fill"/><path d="M23 80v16l13-8Z" fill="#1b1300"/>${bars}
-      <text x="50" y="150" class="m-txt">NOTA DE VOZ · ${dur}</text><text x="50" y="166" class="m-txt" opacity=".7">ATA ${it.ata} · transcrição disponível</text></svg></div>`;
+      <text x="50" y="150" class="m-txt">NOTA DE VOZ · ${it.mediaUrl ? 'carrega para ouvir' : dur}</text><text x="50" y="166" class="m-txt" opacity=".7">ATA ${it.ata} · transcrição disponível</text></svg></div>`;
   }
   const cx = 110 + r()*100, cy = 70 + r()*40, R = 30 + r()*16;
   let shape = `<rect class="m-fill" x="${cx-R-40}" y="${cy-R*0.6}" width="${(R+40)*2}" height="${R*1.2}" rx="6" opacity=".7"/>
@@ -927,16 +932,17 @@ function renderFeed(){
     return;
   }
   $('#cards').innerHTML = list.length ? list.map(it => `
-    <button class="card" type="button" data-open="${it.id}">
+    <article class="card">
       ${mediaArt(it)}
       <div class="card-body">
         <div class="card-chips">${ataChip(it.ata)}<span class="chip">${esc(it.aircraft)}</span></div>
-        <h3>${esc(it.title)}</h3>
+        <h3><button class="card-link" type="button" data-open="${it.id}">${esc(it.title)}</button></h3>
+        ${it.mediaUrl && kindOf(it.media) === 'audio' ? `<audio class="card-audio" controls preload="none" src="${esc(it.mediaUrl)}" aria-label="Nota de voz de ${esc(it.author)}"></audio>` : ''}
         <div class="alarm">${alarmIco}<span>${esc(it.alarm)}</span></div>
         <p>${esc(it.description.replace(/\n+/g,' '))}</p>
         <div class="card-foot">${byline(it)}<div class="saved"><b>−${fmtH(it.downtime)} h</b>parado</div></div>
       </div>
-    </button>`).join('') : `<div class="empty" style="grid-column:1/-1"><b>Sem resultados.</b><br>Tenta outro alarme ou limpa os filtros. Se resolveste este problema, <button class="linkbtn" data-go="submit">submete a solução</button>.</div>`;
+    </article>`).join('') : `<div class="empty" style="grid-column:1/-1"><b>Sem resultados.</b><br>Tenta outro alarme ou limpa os filtros. Se resolveste este problema, <button class="linkbtn" data-go="submit">submete a solução</button>.</div>`;
 }
 // Detail views: playable audio/video and the transcription, on top of the card art.
 function mediaFull(it){
