@@ -1,0 +1,7 @@
+# index.html já vem gerado no repositório (python build.py), por isso não há passo de build.
+[build]
+  publish = "."
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"

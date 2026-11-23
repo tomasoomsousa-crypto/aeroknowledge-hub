@@ -588,6 +588,93 @@ function setSync(state){
   el.className = 'sync ' + c; el.querySelector('span').textContent = t;
   el.title = state === 'live' ? 'Dados partilhados em tempo real entre todos os dispositivos' : state === 'offline' ? 'Abre a página no claude.ai com sessão iniciada para ver os dados partilhados' : state === 'local' ? 'Dados de exemplo guardados só neste browser' : '';
 }
+// Netlify / GitHub Pages: shared data in Supabase (tables "items" and "fleet", see supabase/setup.sql).
+// The publishable key is meant to sit in the browser; access is limited by the table policies.
+const SUPABASE_URL = 'https://xyiggterdjrrkzsahnjw.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_fNcJwuk4kCM5MV8bIHdtTw_a5F83lVY';
+let sb = null;
+const ownWrites = new Set();
+function loadScript(src){ return new Promise((res, rej) => { const el = document.createElement('script'); el.src = src; el.onload = res; el.onerror = rej; document.head.appendChild(el); }); }
+async function offlineMode(){
+  const ok = location.protocol.startsWith('http') && await supabaseMode();
+  if (!ok) await localMode();
+  connectNetlifyAI();
+}
+async function supabaseMode(){
+  try {
+    if (!window.supabase) await loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js');
+    const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const load = async () => {
+      const [a, b] = await Promise.all([client.from('items').select('id,doc'), client.from('fleet').select('reg,doc')]);
+      if (a.error || b.error) throw a.error || b.error;
+      return [a.data, b.data];
+    };
+    let [items, fleet] = await load();
+    if (!items.length && !fleet.length){
+      // Empty project: load the example data, dated today.
+      const [si, sf] = await Promise.all(['seed-items.json', 'seed-fleet.json'].map(u => fetch(u).then(r => { if (!r.ok) throw new Error(u); return r.json(); })));
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      const ms = Math.round((today - new Date(2026, 9, 30)) / 864e5) * 864e5;
+      shiftDates(si, ms); shiftDates(sf, ms);
+      const [r1, r2] = await Promise.all([client.from('items').upsert(si.map(d => ({ id: d.id, doc: d }))), client.from('fleet').upsert(sf.map(d => ({ reg: d.reg, doc: d })))]);
+      if (r1.error || r2.error) throw r1.error || r2.error;
+      [items, fleet] = await load();
+    }
+    sb = client;
+    store.items = items.map(r => ({ ...r.doc, id: r.id }));
+    store.fleet = fleet.map(r => ({ ...r.doc, reg: r.reg }));
+    ui.lastStatus = Object.fromEntries(store.items.map(i => [i.id, i.status]));
+    client.channel('akh-live')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'items' }, p => applyRow('items', p.new))
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'fleet' }, p => applyRow('fleet', p.new))
+      .subscribe();
+    setSync('live'); render();
+    return true;
+  } catch(e){
+    console.warn('Supabase indisponível, a usar o modo demo.', e);
+    return false;
+  }
+}
+function applyRow(table, row){
+  if (!row || !row.doc) return;
+  if (table === 'fleet'){
+    const a = { ...row.doc, reg: row.reg }, i = store.fleet.findIndex(x => x.reg === a.reg);
+    if (i >= 0) store.fleet[i] = a; else store.fleet.push(a);
+    if (ui.view === 'validate' && store.role === 'sup') renderHangar();
+    return;
+  }
+  const it = { ...row.doc, id: row.id }, i = store.items.findIndex(x => x.id === it.id), prev = i >= 0 ? store.items[i] : null;
+  if (i >= 0) store.items[i] = it; else store.items.push(it);
+  if (!ownWrites.has(it.id)){
+    if (!prev && it.status === 'pending' && store.role === 'sup') toast(`Nova submissão de ${it.author}: ${it.title}`);
+    if (prev && prev.status === 'pending' && it.status === 'approved' && store.role === 'mec') toast(`${it.id} foi aprovado e publicado.`);
+  }
+  render();
+}
+// MEC-AI through the Netlify function (netlify/functions/mec-ai.mjs), shaped like the claude.ai `sample` call.
+async function connectNetlifyAI(){
+  if (sample || !location.protocol.startsWith('http')) return;
+  try {
+    const r = await fetch('/.netlify/functions/mec-ai');
+    if (!r.ok || !(await r.json()).ready) return;
+  } catch(e){ return; }
+  const ask = async (input, opts = {}) => {
+    let image;
+    const blob = opts.images && opts.images[0];
+    if (blob){ const url = await shrinkImg(blob, 1024); image = { media_type: 'image/jpeg', data: url.split(',')[1] }; }
+    let r;
+    try { r = await fetch('/.netlify/functions/mec-ai', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ messages: input, image }) }); }
+    catch(e){ throw { code: 'upstream_error' }; }
+    const body = await r.json().catch(() => ({}));
+    if (!r.ok) throw { code: r.status === 429 ? 'rate_limited' : r.status === 503 ? 'not_granted' : 'upstream_error', message: body.error };
+    opts.onText && opts.onText({ text: body.text, delta: body.text });
+    return { text: body.text, truncated: !!body.truncated };
+  };
+  ask.limits = async () => ({ images: { maxCount: 1 } });
+  sample = ask; sampleImages = true;
+  if (ui.view === 'chat') renderChat();
+}
+
 // Outside a Claude viewer (e.g. GitHub Pages): load the example data and keep changes in this browser only.
 let local = false;
 const LOCAL_KEY = 'akh-local-v1';
@@ -619,6 +706,16 @@ async function localMode(){
 document.addEventListener('click', e => { if (e.target.id === 'reset-local'){ try { localStorage.removeItem(LOCAL_KEY); } catch(_){} location.reload(); } });
 
 async function dbWrite(id, data, merge, coll = 'items'){
+  if (sb){
+    const table = coll === 'fleet' ? 'fleet' : 'items', key = coll === 'fleet' ? 'reg' : 'id', list = coll === 'fleet' ? store.fleet : store.items;
+    const cur = list.find(x => x[key] === id), doc = merge && cur ? { ...cur, ...data } : { ...data, [key]: id };
+    ownWrites.add(id); setTimeout(() => ownWrites.delete(id), 5000);
+    const { error } = await sb.from(table).upsert({ [key]: id, doc, updated_at: new Date().toISOString() });
+    if (error){ toast('Não foi possível guardar. Verifica a ligação e tenta de novo.'); return false; }
+    const i = list.findIndex(x => x[key] === id); if (i >= 0) list[i] = doc; else list.push(doc);
+    setTimeout(render);
+    return true;
+  }
   if (local){
     const list = coll === 'fleet' ? store.fleet : store.items, key = coll === 'fleet' ? 'reg' : 'id';
     const i = list.findIndex(x => x[key] === id), next = merge && i >= 0 ? { ...list[i], ...data } : { ...data, [key]: id };
@@ -640,14 +737,14 @@ async function dbWrite(id, data, merge, coll = 'items'){
 }
 async function connect(){
   const c = window.claude;
-  if (!c || !c.use){ localMode(); return; }
+  if (!c || !c.use){ offlineMode(); return; }
   c.use('sample').then(async s => {
     sample = s;
     if (s){ try { const l = await s.limits(); sampleImages = !!l.images; } catch(e){} }
     if (ui.view === 'chat') renderChat();
   });
   db = await c.use('db');
-  if (!db){ localMode(); return; }
+  if (!db){ offlineMode(); return; }
   db.collection('fleet').onSnapshot(snap => {
     store.fleet = snap.docs.map(d => ({ ...d.data(), reg: d.id }));
     if (ui.view === 'validate' && store.role === 'sup') renderHangar();
