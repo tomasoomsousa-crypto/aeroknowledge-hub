@@ -4,6 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<meta name="theme-color" content="#0b2a55">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script>if ('serviceWorker' in navigator) addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));</script>
 </head>
 <body>
 <title>AeroKnowledge Hub</title>
@@ -266,6 +272,7 @@ td.num{font-family:var(--f-mono);text-align:right;font-variant-numeric:tabular-n
 .composer textarea{flex:1;min-height:52px;max-height:140px;resize:none}
 .attach{width:52px;height:52px;flex:none;border-radius:var(--r);border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;cursor:pointer;color:var(--ink)}
 .attach:hover{border-color:var(--accent);color:var(--accent)}
+.attach.rec-on{background:var(--bad);border-color:var(--bad);color:#fff;animation:blink 1.2s infinite}
 .send{width:52px;height:52px;flex:none;padding:0}
 .pending-att{display:flex;align-items:center;gap:10px;font-size:.85rem;color:var(--ink-2)}
 .pending-att img{width:52px;height:40px;object-fit:cover;border-radius:6px}
@@ -433,10 +440,32 @@ dialog::backdrop{background:rgba(5,12,24,.65)}
 .ac-panel [data-askac]{width:100%}
 .ac-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .ac-actions .btn{width:100%}
+.dash-tools{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}
+.aog-set{display:flex;flex-direction:column;gap:4px;font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+.aog-set .input{min-height:42px;width:140px;padding:6px 10px}
 .use-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 14px;border-radius:var(--r);background:var(--ok-bg);border:1px solid color-mix(in srgb,var(--ok) 30%,transparent)}
 .use-row b{display:block;font-family:var(--f-display);font-size:1.3rem;color:var(--ok);text-transform:uppercase}
 .use-row span{font-size:.85rem;color:var(--ink-2)}
+.use-sum{flex:1 1 220px;min-width:0}
+.use-act{display:flex;gap:8px;flex-wrap:wrap;align-items:center;flex:1 1 100%}
+.use-act select{flex:1 1 180px;width:auto;min-height:46px}
+.use-act .btn{min-height:46px}
+.use-done{font-weight:600;color:var(--ok)!important}
+.use-flags{flex:1 1 100%;display:flex;flex-direction:column;gap:4px;background:var(--bad-bg);border:1px solid color-mix(in srgb,var(--bad) 30%,transparent);border-radius:8px;padding:10px 12px}
+.use-flags b{font-family:var(--f-body);font-size:.9rem;color:var(--bad);text-transform:none}
+.use-flags span{color:var(--ink)!important}
+.flag-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:12px 0;border-bottom:1px solid var(--line)}
+.flag-row:last-child{border-bottom:0}
+.flag-row > div{flex:1 1 240px;min-width:0}
+.flag-row small{display:block;color:var(--ink-2)}
 .source-info .use-row{padding:10px}
+.fb-btn{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:24;display:inline-flex;align-items:center;gap:6px;border:0;border-radius:999px;background:var(--navy);color:var(--amber);font-family:var(--f-display);font-weight:700;font-size:.95rem;letter-spacing:.05em;text-transform:uppercase;padding:10px 16px;box-shadow:0 4px 12px rgba(11,42,85,.25);cursor:pointer}
+.stars{display:flex;gap:6px}
+.stars button{font-size:2.2rem;line-height:1;background:none;border:0;cursor:pointer;color:var(--line);padding:2px}
+.stars button.on{color:var(--amber)}
+.fb-list{display:flex;flex-direction:column;gap:8px}
+.fb-list blockquote{margin:0;padding:8px 12px;border-left:3px solid var(--amber);background:var(--surface-2);border-radius:0 6px 6px 0;font-size:.9rem}
+.fb-list cite{display:block;font-style:normal;font-size:.76rem;color:var(--ink-2);margin-top:2px}
 .pin-dlg{width:min(380px,calc(100vw - 32px))}
 .pin-input{font-size:2rem;letter-spacing:.6em;text-align:center;padding-left:.6em}
 .pin-err{margin:0;color:var(--bad);font-weight:600}
@@ -448,6 +477,7 @@ dialog::backdrop{background:rgba(5,12,24,.65)}
   .bottom-nav button[aria-current="page"]{color:var(--amber)}
   .bottom-nav .count{position:absolute;top:2px;left:calc(50% + 6px);font-family:var(--f-mono);font-size:.66rem;background:var(--accent);color:#fff;border-radius:999px;padding:0 6px}
   main{padding-bottom:110px}
+  .fb-btn{bottom:calc(86px + env(safe-area-inset-bottom,0px));padding:8px 12px;font-size:.82rem}
   .toast{bottom:calc(86px + env(safe-area-inset-bottom,0px))}
   .ac-actions{grid-template-columns:1fr}
   .me{display:none}
@@ -530,7 +560,7 @@ dialog::backdrop{background:rgba(5,12,24,.65)}
             <input type="file" id="chat-file" accept="image/*" hidden>
             <button class="attach" type="button" id="btn-photo" aria-label="Attach a photo of the problem" title="Attach photo">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4Z"/><circle cx="12" cy="13" r="3.5"/></svg></button>
-            <button class="attach" type="button" id="btn-audio" aria-label="Simulate a voice note" title="Simulate a voice note">
+            <button class="attach" type="button" id="btn-audio" aria-label="Ask by voice" title="Ask by voice">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>
             <textarea class="input" id="chat-in" rows="1" placeholder="Describe what is happening, in your own words…"></textarea>
             <button class="btn btn-primary send" type="submit" aria-label="Send">
@@ -653,6 +683,10 @@ dialog::backdrop{background:rgba(5,12,24,.65)}
         </div>
         <div class="panel detail" id="detail"></div>
       </div>
+      <div class="panel" id="flagged-panel" style="margin-top:22px" hidden>
+        <h2>Reported as not working</h2>
+        <div id="flagged"></div>
+      </div>
       <div class="panel" style="margin-top:22px">
         <h2>Decided</h2>
         <div class="table-wrap"><table id="history"></table></div>
@@ -687,6 +721,20 @@ dialog::backdrop{background:rgba(5,12,24,.65)}
   </div>
 </main>
 
+<button class="fb-btn" id="fb-btn" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9Z"/></svg>Feedback</button>
+<dialog id="fb-dlg" class="pin-dlg" aria-labelledby="fb-title">
+  <form class="dlg" id="fb-form" novalidate>
+    <h2 id="fb-title">How useful is AeroKnowledge Hub?</h2>
+    <div class="stars" role="radiogroup" aria-label="Rating from 1 to 5">
+      <button type="button" data-star="1" aria-label="1 star">★</button><button type="button" data-star="2" aria-label="2 stars">★</button><button type="button" data-star="3" aria-label="3 stars">★</button><button type="button" data-star="4" aria-label="4 stars">★</button><button type="button" data-star="5" aria-label="5 stars">★</button>
+    </div>
+    <div class="field"><label for="fb-who">You are</label><select class="input" id="fb-who"><option>Aircraft mechanic / technician</option><option>Aeronautical engineer</option><option>Aviation or engineering student</option><option>Maintenance manager</option><option>Other</option></select></div>
+    <div class="field"><label for="fb-would">Would you use it at work?</label><select class="input" id="fb-would"><option>Yes</option><option>Maybe</option><option>No</option></select></div>
+    <div class="field"><label for="fb-text">What would you change or add?</label><textarea class="input" id="fb-text" style="min-height:90px" maxlength="2000"></textarea></div>
+    <p class="pin-err" id="fb-err" role="alert" hidden>Choose a rating from 1 to 5.</p>
+    <div class="decide"><button class="btn" type="button" id="fb-cancel">Cancel</button><button class="btn btn-primary" type="submit">Send feedback</button></div>
+  </form>
+</dialog>
 <nav class="bottom-nav" id="bottom-nav" aria-label="Sections"></nav>
 <dialog id="pin-dlg" class="pin-dlg" aria-labelledby="pin-title">
   <form class="dlg" id="pin-form" novalidate>
@@ -713,7 +761,7 @@ const PROFILES = {
 
 
 // Records live in the artifact's shared db ("items" collection); only the chosen role is per-viewer.
-let store = { role: 'mec', items: [], fleet: [] };
+let store = { role: 'mec', items: [], fleet: [], feedback: [] };
 try { if (localStorage.getItem('akh-role') === 'sup') store.role = 'sup'; } catch(e){}
 let ui = { view: 'feed', selected: null, rejecting: false, chat: [], turns: [], pendingImg: null, pendingBlob: null, subMedia: null, busy: false };
 let db = null, sample = null, sampleImages = false, dbState = 'loading', firstSnap = true;
@@ -763,7 +811,10 @@ async function supabaseMode(){
     store.items = items.map(r => ({ ...r.doc, id: r.id }));
     store.fleet = fleet.map(r => ({ ...r.doc, reg: r.reg }));
     ui.lastStatus = Object.fromEntries(store.items.map(i => [i.id, i.status]));
+    client.from('feedback').select('*').order('created_at', { ascending: false }).limit(300)
+      .then(({ data, error }) => { if (!error && data){ store.feedback = data; if (ui.view === 'fleet') renderDash(); } });
     client.channel('akh-live')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'feedback' }, p => { if (p.new && !store.feedback.some(f => f.id === p.new.id)){ store.feedback.unshift(p.new); if (ui.view === 'fleet') renderDash(); } })
       .on('postgres_changes', { event: '*', schema: 'public', table: 'items' }, p => applyRow('items', p.new))
       .on('postgres_changes', { event: '*', schema: 'public', table: 'fleet' }, p => applyRow('fleet', p.new))
       .subscribe();
@@ -836,6 +887,7 @@ async function localMode(){
       store.items = shiftDates(items, ms); store.fleet = shiftDates(fleet, ms);
       saveLocal();
     }
+    try { store.feedback = JSON.parse(localStorage.getItem(FB_KEY) || '[]'); } catch(e){}
     local = true; setSync('local');
     const note = $('#mode-note');
     if (note) note.innerHTML = 'Demo mode: changes are saved in this browser only. <button class="linkbtn" id="reset-local" type="button">Reset example data</button>';
@@ -914,6 +966,9 @@ const initials = n => n.replace(/^Eng\.ª?\s*/,'').split(/\s+/).map(w => w[0]).s
 const approved = () => store.items.filter(i => i.status === 'approved');
 // Hours saved are counted per use: a tip's downtime estimate times the times mechanics reported using it.
 const usesOf = it => Array.isArray(it.uses) ? it.uses : [];
+const AOG_KEY = 'akh-aog-cost';
+function aogCost(){ try { const v = Number(localStorage.getItem(AOG_KEY)); return v > 0 ? v : 10000; } catch(e){ return 10000; } }
+const fmtEUR = v => new Intl.NumberFormat('en-GB', { style:'currency', currency:'EUR', maximumFractionDigits: v >= 1e6 ? 2 : 0, notation: v >= 1e6 ? 'compact' : 'standard' }).format(v);
 const savedBy = (it, inR = () => true) => usesOf(it).filter(u => inR(u.at)).length * Number(it.downtime);
 const pending = () => store.items.filter(i => i.status === 'pending');
 const norm = s => String(s).normalize('NFD').replace(/\p{M}/gu,'').toLowerCase();
@@ -1156,7 +1211,7 @@ function renderValidate(){
   const total = ap.reduce((s,i) => s + savedBy(i), 0), totalUses = ap.reduce((s,i) => s + usesOf(i).length, 0);
   const decided = ap.length + rj.length;
   $('#kpis').innerHTML = `
-    <div class="kpi kpi-hero"><span class="label">Total aircraft downtime hours saved</span><div class="val">${fmtH(total)}<small>h</small></div><div class="sub">${totalUses} uses of ${ap.length} approved tips (hours per use × times used)</div></div>
+    <div class="kpi kpi-hero"><span class="label">Total aircraft downtime hours saved</span><div class="val">${fmtH(total)}<small>h</small></div><div class="sub">${totalUses} uses of ${ap.length} approved tips · ≈ <b>${fmtEUR(total * aogCost())}</b> of AOG cost avoided at ${fmtEUR(aogCost())}/h</div></div>
     <div class="kpi"><span class="label">Pending</span><div class="val" style="color:var(--warn)">${pe.length}</div><div class="sub">${fmtH(pe.reduce((s,i)=>s+Number(i.downtime),0))} h in validation</div></div>
     <div class="kpi"><span class="label">Approved</span><div class="val" style="color:var(--ok)">${ap.length}</div><div class="sub">Visible in the Feed and MEC-AI</div></div>
     <div class="kpi"><span class="label">Approval rate</span><div class="val">${decided ? Math.round(ap.length/decided*100) : 0}<small style="font-size:1.2rem">%</small></div><div class="sub">${rj.length} rejected and returned</div></div>`;
@@ -1189,6 +1244,9 @@ function renderValidate(){
         <button class="btn btn-ok" type="button" data-act="approve"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Approve and publish</button>
         <button class="btn btn-bad" type="button" data-act="reject"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>Reject</button>
       </div>`}`;
+  const flagged = approved().filter(i => (i.flags || []).some(f => !f.resolved));
+  $('#flagged-panel').hidden = !flagged.length;
+  $('#flagged').innerHTML = flagged.map(i => { const fl = i.flags.filter(f => !f.resolved), last = fl[fl.length - 1]; return `<div class="flag-row"><div><b>${esc(i.id)} · ${esc(i.title)}</b><small>${fl.length} ${fl.length === 1 ? 'report' : 'reports'} · latest: “${esc(last.reason)}” (${esc(last.by)}${last.reg ? ', ' + esc(last.reg) : ''})</small></div><button class="btn btn-sm" type="button" data-open="${i.id}">Open tip</button><button class="btn btn-sm btn-navy" type="button" data-resolve="${i.id}">Mark as reviewed</button></div>`; }).join('');
   const hist = store.items.filter(i => i.status !== 'pending').sort((a,b) => (b.approvedAt||b.reviewedAt).localeCompare(a.approvedAt||a.reviewedAt));
   $('#history').innerHTML = `<thead><tr><th>ID</th><th>Title</th><th>Author</th><th>ATA</th><th>Decision</th><th>Date</th><th style="text-align:right">Hours</th></tr></thead><tbody>${hist.map(i => `
     <tr><td class="mono">${i.id}</td><td>${esc(i.title)}${i.rejectReason?`<div class="hint">${esc(i.rejectReason)}</div>`:''}</td><td>${esc(i.author)}</td><td class="mono">${i.ata}</td><td>${pill(i.status)}</td><td style="white-space:nowrap">${fmtD(i.approvedAt||i.reviewedAt)}</td><td class="num">${i.status==='approved'?fmtH(i.downtime):'—'}${i.status==='approved' && i.downtimeAsked != null && i.downtimeAsked !== i.downtime ? `<div class="hint">requested: ${fmtH(i.downtimeAsked)}</div>` : ''}</td></tr>`).join('')}</tbody>`;
@@ -1318,6 +1376,15 @@ function acPanel(a){
     ${acActions(a)}`;
 }
 function acActions(a){
+  if (ui.acMode === 'ok'){
+    const tips = approved().sort((x, y) => (y.ata === a.ata) - (x.ata === a.ata) || (y.aircraft === a.model) - (x.aircraft === a.model));
+    return `<div class="ac-form">
+      <div class="label">Back in service</div>
+      <div class="field"><label for="ac-tip">Did an approved tip help fix it?</label><select class="input" id="ac-tip"><option value="">No tip, another fix</option>${tips.map(t => `<option value="${t.id}"${ui.acTip === t.id ? ' selected' : ''}>${t.id} · ${esc(t.title)}</option>`).join('')}</select></div>
+      <div class="field"><label for="ac-fix">What fixed it? (optional)</label><input class="input" id="ac-fix" type="text" value="${esc(ui.acFix || '')}" placeholder="e.g. Oil filter replaced"></div>
+      <div class="decide"><button class="btn" type="button" data-acset="cancel">Cancel</button><button class="btn btn-navy" type="button" data-acset="save-ok">Confirm back in service</button></div>
+    </div>`;
+  }
   if (ui.acMode) return `<div class="ac-form">
       <div class="label">${ui.acMode === 'aog' ? 'Mark as grounded (AOG)' : 'Put in maintenance'}</div>
       <div class="field"><label for="ac-reason">What is wrong?</label><input class="input" id="ac-reason" type="text" value="${esc(ui.acReason || '')}" placeholder="e.g. The APU shuts down by itself"></div>
@@ -1342,12 +1409,16 @@ document.addEventListener('click', async e => {
   const a = store.fleet.find(x => x.reg === ui.ac); if (!a) return;
   const k = s.dataset.acset;
   if (k === 'maint' || k === 'aog'){ Object.assign(ui, { acMode:k, acReason:'', acAta:'', acEta:'' }); renderHangar(); $('#ac-reason')?.focus(); return; }
+  if (k === 'ok'){ const t = approved().find(i => a.ata && i.ata === a.ata); Object.assign(ui, { acMode:'ok', acTip: t ? t.id : '', acFix:'' }); renderHangar(); return; }
   if (k === 'cancel'){ ui.acMode = null; renderHangar(); return; }
   const now = new Date().toISOString();
-  let patch, msg;
-  if (k === 'ok'){
-    patch = { status:'ok', since:now, issue:'', ata:'', eta:'', events:[...(a.events || []), { at:now, type:'ok', reason:'Back in service', by:PROFILES.sup.name }] };
-    msg = `${a.reg} is back in service.`;
+  let patch, msg, tipUse = null;
+  if (k === 'save-ok'){
+    tipUse = store.items.find(i => i.id === ui.acTip) || null;
+    const fixTxt = (ui.acFix || '').trim();
+    const reason = tipUse ? `Fixed with tip ${tipUse.id}${fixTxt ? ': ' + fixTxt : ''}` : (fixTxt || 'Back in service');
+    patch = { status:'ok', since:now, issue:'', ata:'', eta:'', events:[...(a.events || []), { at:now, type:'ok', reason, tip: tipUse ? tipUse.id : '', by:PROFILES.sup.name }] };
+    msg = tipUse ? `${a.reg} is back in service. ${fmtH(tipUse.downtime)} h saved recorded for ${tipUse.id}.` : `${a.reg} is back in service.`;
   } else {
     const reason = (ui.acReason || '').trim(); if (!reason) return;
     const h = Number(ui.acEta), mode = ui.acMode;
@@ -1356,14 +1427,18 @@ document.addEventListener('click', async e => {
     msg = `${a.reg} marked as ${ST[mode][0].toLowerCase()}.`;
   }
   s.disabled = true;
-  if (await dbWrite(a.reg, patch, true, 'fleet')){ toast(msg); ui.acMode = null; }
+  if (await dbWrite(a.reg, patch, true, 'fleet')){
+    if (tipUse) await dbWrite(tipUse.id, { uses: [...usesOf(tipUse), { at: now, by: PROFILES.sup.name, reg: a.reg }] }, true);
+    toast(msg); ui.acMode = null;
+  }
   renderHangar();
 });
 document.addEventListener('input', e => {
   if (e.target.id === 'ac-reason'){ ui.acReason = e.target.value; $('#ac-save').disabled = !e.target.value.trim(); }
   if (e.target.id === 'ac-eta') ui.acEta = e.target.value;
+  if (e.target.id === 'ac-fix') ui.acFix = e.target.value;
 });
-document.addEventListener('change', e => { if (e.target.id === 'ac-ata') ui.acAta = e.target.value; });
+document.addEventListener('change', e => { if (e.target.id === 'ac-ata') ui.acAta = e.target.value; if (e.target.id === 'ac-tip') ui.acTip = e.target.value; });
 setInterval(() => { if (ui.view === 'fleet' && store.role === 'sup' && !ui.acMode) renderHangar(); }, 60000);
 
 /* ---------- Attachments: photo, voice note with transcription, video ---------- */
@@ -1468,24 +1543,103 @@ document.addEventListener('click', e => {
   $('#' + id).onchange = e => { const f = e.target.files[0]; if (f) setSubMedia({ kind, blob: f, name: f.name }); updRecUi(); e.target.value = ''; };
 });
 
+/* ---------- Tester feedback ---------- */
+const FB_KEY = 'akh-feedback';
+let fbRating = 0;
+function paintStars(){ document.querySelectorAll('[data-star]').forEach(b => b.classList.toggle('on', Number(b.dataset.star) <= fbRating)); }
+$('#fb-btn').onclick = () => { fbRating = 0; paintStars(); $('#fb-text').value = ''; $('#fb-err').hidden = true; $('#fb-dlg').showModal(); };
+$('#fb-cancel').onclick = () => $('#fb-dlg').close();
+$('#fb-dlg').addEventListener('click', e => { if (e.target.id === 'fb-dlg') e.target.close(); const b = e.target.closest('[data-star]'); if (b){ fbRating = Number(b.dataset.star); paintStars(); $('#fb-err').hidden = true; } });
+$('#fb-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  if (!fbRating){ $('#fb-err').hidden = false; return; }
+  const row = { rating: fbRating, profile: $('#fb-who').value, would_use: $('#fb-would').value, comment: $('#fb-text').value.trim().slice(0, 2000), app_role: store.role, created_at: new Date().toISOString() };
+  let ok = false;
+  if (sb){ const { data, error } = await sb.from('feedback').insert(row).select().single(); ok = !error; if (ok && !store.feedback.some(f => f.id === data.id)) store.feedback.unshift(data); }
+  else if (db){ try { await db.collection('feedback').add(row); store.feedback.unshift(row); ok = true; } catch(err){} }
+  else { try { const all = JSON.parse(localStorage.getItem(FB_KEY) || '[]'); all.unshift(row); localStorage.setItem(FB_KEY, JSON.stringify(all)); store.feedback = all; ok = true; } catch(err){} }
+  if (!ok){ toast('Could not send the feedback. Check your connection and try again.'); return; }
+  $('#fb-dlg').close(); toast('Thank you for your feedback!');
+  if (ui.view === 'fleet') renderDash();
+});
+function feedbackCard(){
+  const f = store.feedback;
+  if (!f.length) return '<div class="empty">No feedback yet. Testers can use the ★ Feedback button at the bottom of the page.</div>';
+  const avg = f.reduce((s, x) => s + Number(x.rating), 0) / f.length;
+  const yes = f.filter(x => x.would_use === 'Yes').length;
+  const byWho = [...f.reduce((m, x) => m.set(x.profile || 'Other', (m.get(x.profile || 'Other') || 0) + 1), new Map())].sort((a, b) => b[1] - a[1]);
+  const quotes = f.filter(x => x.comment).slice(0, 3);
+  return `<div class="kpis-2" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+      <div class="kpi"><span class="label">Average rating</span><div class="val" style="color:var(--amber)">${avg.toFixed(1)}<small style="font-size:1rem"> / 5</small></div><div class="sub">${f.length} ${f.length === 1 ? 'response' : 'responses'}</div></div>
+      <div class="kpi"><span class="label">Would use it at work</span><div class="val">${Math.round(yes / f.length * 100)}<small style="font-size:1rem">%</small></div><div class="sub">${yes} said yes</div></div>
+      <div class="kpi"><span class="label">Who answered</span><div class="sub" style="margin-top:4px">${byWho.map(([k, n]) => `${esc(k)}: <b>${n}</b>`).join('<br>')}</div></div>
+    </div>
+    ${quotes.length ? `<div class="fb-list">${quotes.map(q => `<blockquote>“${esc(q.comment)}”<cite>${'★'.repeat(q.rating)} · ${esc(q.profile || '')} · ${fmtD(q.created_at)}</cite></blockquote>`).join('')}</div>` : ''}`;
+}
+
 /* ---------- Tip usage ---------- */
 const USED_KEY = 'akh-used';
 function usedToday(id){ try { return JSON.parse(localStorage.getItem(USED_KEY) || '{}')[id] === new Date().toDateString(); } catch(e){ return false; } }
 function useRow(it){
   if (it.status !== 'approved') return '';
-  const n = usesOf(it).length, done = usedToday(it.id);
-  return `<div class="use-row"><div><b>Used ${n}×</b><span>${fmtH(savedBy(it))} h of downtime saved so far · ${fmtH(it.downtime)} h each time</span></div>
-    <button class="btn ${done ? '' : 'btn-primary'}" type="button" data-use="${it.id}"${done ? ' disabled' : ''}>${done ? '✓ You used it today' : 'I used this tip'}</button></div>`;
+  const n = usesOf(it).length, done = usedToday(it.id), last = usesOf(it).slice(-1)[0];
+  const regs = [...store.fleet].sort((a, b) => (b.model === it.aircraft) - (a.model === it.aircraft) || (a.bay || 0) - (b.bay || 0));
+  const flags = (it.flags || []).filter(f => !f.resolved);
+  return `<div class="use-row">
+    <div class="use-sum"><b>Used ${n}×</b><span>${fmtH(savedBy(it))} h of downtime saved so far · ${fmtH(it.downtime)} h each time${last ? ` · last used${last.reg ? ' on ' + esc(last.reg) : ''} ${fmtD(last.at)}` : ''}</span></div>
+    ${done ? '<span class="use-done">✓ You used this tip today</span>' : `<div class="use-act">
+      <select class="input" aria-label="Aircraft where you used it">${regs.map(a => `<option value="${esc(a.reg)}">${esc(a.reg)} · ${esc(a.model)}</option>`).join('')}<option value="">Another aircraft</option></select>
+      <button class="btn btn-primary" type="button" data-use="${it.id}">I used this tip</button>
+      <button class="btn" type="button" data-flag="${it.id}">Didn't work</button>
+    </div>`}
+    ${flags.length ? `<div class="use-flags"><b>⚠ ${flags.length === 1 ? '1 mechanic reported' : flags.length + ' mechanics reported'} it didn't work</b>${flags.map(f => `<span>“${esc(f.reason)}” · ${esc(f.by)}${f.reg ? ' · ' + esc(f.reg) : ''} · ${fmtD(f.at)}</span>`).join('')}</div>` : ''}
+  </div>`;
 }
-async function markUsed(id){
+function refreshTip(id){ setTimeout(() => { if ($('#dlg').open) openDetail(id); if (ui.view === 'chat') renderChat(); if (ui.view === 'validate') renderValidate(); }, 60); }
+function rememberUse(id){ try { const m = JSON.parse(localStorage.getItem(USED_KEY) || '{}'); m[id] = new Date().toDateString(); localStorage.setItem(USED_KEY, JSON.stringify(m)); } catch(e){} }
+async function markUsed(id, reg){
   const it = store.items.find(i => i.id === id); if (!it || it.status !== 'approved') return;
-  const ok = await dbWrite(id, { uses: [...usesOf(it), { at: new Date().toISOString(), by: PROFILES[store.role].name }] }, true);
+  const ok = await dbWrite(id, { uses: [...usesOf(it), { at: new Date().toISOString(), by: PROFILES[store.role].name, reg: reg || '' }] }, true);
   if (!ok) return;
-  try { const m = JSON.parse(localStorage.getItem(USED_KEY) || '{}'); m[id] = new Date().toDateString(); localStorage.setItem(USED_KEY, JSON.stringify(m)); } catch(e){}
-  toast(`Thanks! ${fmtH(it.downtime)} h of downtime saved recorded for ${id}.`);
-  setTimeout(() => { if ($('#dlg').open) openDetail(id); if (ui.view === 'chat') renderChat(); }, 60);
+  rememberUse(id);
+  toast(`Thanks! ${fmtH(it.downtime)} h of downtime saved recorded for ${id}${reg ? ' on ' + reg : ''}.`);
+  refreshTip(id);
 }
-document.addEventListener('click', e => { const b = e.target.closest('[data-use]'); if (b){ b.disabled = true; markUsed(b.dataset.use); } });
+async function reportFail(id, reg, reason){
+  const it = store.items.find(i => i.id === id); if (!it) return;
+  const ok = await dbWrite(id, { flags: [...(it.flags || []), { at: new Date().toISOString(), by: PROFILES[store.role].name, reg: reg || '', reason, resolved: false }] }, true);
+  if (!ok) return;
+  rememberUse(id);
+  toast('Thanks. Quality will review this tip.');
+  refreshTip(id);
+}
+document.addEventListener('click', e => {
+  const u = e.target.closest('[data-use]');
+  if (u){ const sel = u.closest('.use-row').querySelector('select'); u.disabled = true; markUsed(u.dataset.use, sel ? sel.value : ''); return; }
+  const f = e.target.closest('[data-flag]');
+  if (f){
+    const row = f.closest('.use-row'), act = row.querySelector('.use-act'), sel = act.querySelector('select');
+    row.dataset.reg = sel ? sel.value : '';
+    act.innerHTML = `<textarea class="input" aria-label="What happened" placeholder="What happened when you tried it? e.g. Filter was clean, APU still shuts down" style="min-height:80px;flex:1 1 100%"></textarea>
+      <button class="btn" type="button" data-flag-cancel="${f.dataset.flag}">Cancel</button><button class="btn btn-bad-solid" type="button" data-flag-send="${f.dataset.flag}">Send to Quality</button>`;
+    act.querySelector('textarea').focus();
+    return;
+  }
+  const c = e.target.closest('[data-flag-cancel]'); if (c){ refreshTip(c.dataset.flagCancel); return; }
+  const sd = e.target.closest('[data-flag-send]');
+  if (sd){
+    const row = sd.closest('.use-row'), txt = row.querySelector('textarea').value.trim();
+    if (txt.length < 5){ toast('Write a few words about what happened.'); return; }
+    sd.disabled = true; reportFail(sd.dataset.flagSend, row.dataset.reg, txt);
+    return;
+  }
+  const rs = e.target.closest('[data-resolve]');
+  if (rs){
+    const it = store.items.find(i => i.id === rs.dataset.resolve); if (!it) return;
+    rs.disabled = true;
+    dbWrite(it.id, { flags: (it.flags || []).map(x => ({ ...x, resolved: true })) }, true).then(ok => { if (ok) toast(`${it.id}: reports marked as reviewed.`); });
+  }
+});
 
 /* ---------- Supervisor dashboard ---------- */
 const HOUR = 36e5, DAY = 864e5;
@@ -1547,10 +1701,11 @@ function renderDash(){
   el.innerHTML = `
     <div class="dash-head">
       <div><div class="eyebrow">Indicators</div><h2>Knowledge impact</h2></div>
-      <div class="range" role="group" aria-label="Period">${[['30','30 days'],['90','90 days'],['all','All']].map(([k, l]) => `<button type="button" data-range="${k}" aria-pressed="${(ui.range || 'all') === k}">${l}</button>`).join('')}</div>
+      <div class="dash-tools"><label class="aog-set" for="aog-cost">AOG cost per hour (€)<input class="input mono" id="aog-cost" type="number" min="0" step="500" value="${aogCost()}"></label>
+      <div class="range" role="group" aria-label="Period">${[['30','30 days'],['90','90 days'],['all','All']].map(([k, l]) => `<button type="button" data-range="${k}" aria-pressed="${(ui.range || 'all') === k}">${l}</button>`).join('')}</div></div>
     </div>
     <div class="kpis-2">
-      <div class="kpi"><span class="label">Hours saved</span><div class="val">${fmtH(hours)}<small style="font-size:1rem"> h</small></div><div class="sub">From ${used.length} ${used.length === 1 ? 'use' : 'uses'} of approved tips ${rangeLabel}</div></div>
+      <div class="kpi"><span class="label">Hours saved</span><div class="val">${fmtH(hours)}<small style="font-size:1rem"> h</small></div><div class="sub">≈ <b>${fmtEUR(hours * aogCost())}</b> avoided · ${used.length} ${used.length === 1 ? 'use' : 'uses'} ${rangeLabel}</div></div>
       <div class="kpi"><span class="label">Times tips were used</span><div class="val">${used.length}</div><div class="sub">${used.length ? fmtH(hours / used.length) + ' h saved per use on average' : 'No uses reported yet'}</div></div>
       <div class="kpi"><span class="label">Average decision time</span><div class="val">${avgRev == null ? '—' : fmtDur(avgRev)}</div><div class="sub">From mechanic submission to approval or rejection</div></div>
       <div class="kpi"><span class="label">Longest waiting</span><div class="val" style="color:${oldAge > 72 ? 'var(--bad)' : 'var(--ink)'}">${oldest ? fmtDur(oldAge) : '—'}</div><div class="sub">${oldest ? `${esc(oldest.author)} · ${esc(oldest.id)}${oldAge > 72 ? ' · over 3 days' : ''}` : 'No tips waiting'}</div></div>
@@ -1584,9 +1739,19 @@ function renderDash(){
           ${rank.map(p => `<tr><td><div class="who-cell"><div class="avatar" aria-hidden="true" style="background:${avColor(p.name)}">${esc(initials(p.name))}</div><div class="byline"><b>${esc(p.name)}</b><span>${esc(p.role)}</span></div></div></td><td class="num">${p.ap}</td><td class="num">${p.uses}</td><td class="num">${fmtH(p.hours)} h</td><td class="num">${p.pe}</td><td class="num">${p.rj}</td></tr>`).join('')}
         </tbody></table></div>` : '<div class="empty">No contributions in this period.</div>'}
       </div>
+      <div class="chart chart-wide">
+        <div><h3>Tester feedback</h3><div class="sub">Answers from the ★ Feedback button, all time</div></div>
+        ${feedbackCard()}
+      </div>
     </div>`;
 }
 document.addEventListener('click', e => { const r = e.target.closest('[data-range]'); if (r){ ui.range = r.dataset.range; renderDash(); } });
+document.addEventListener('change', e => {
+  if (e.target.id !== 'aog-cost') return;
+  const v = Math.max(0, Number(e.target.value) || 0);
+  try { localStorage.setItem(AOG_KEY, String(v)); } catch(err){}
+  renderDash(); toast(`AOG cost set to ${fmtEUR(v)} per hour.`);
+});
 (() => {
   const tip = document.createElement('div'); tip.className = 'tip'; tip.hidden = true; document.body.appendChild(tip);
   document.addEventListener('pointermove', e => {
@@ -1622,11 +1787,6 @@ async function decide(act){
 /* ---------- Chat ---------- */
 const STOP = new Set(('a o os as de da do das dos e em no na nos nas um uma uns umas para por com que se ao aos e é tenho tem temos estou esta está qual quais como problema aviao avião ajuda dica dicas quando onde depois antes muito fica faz fazer o que porque sobre alguma algum me meu minha isto isso ja já nao não sim ou verifico primeiro '
   + 'the and an of on in at to for with is it its my we our this that what why how when after before keeps keep gets get does do i have has there problem aircraft plane help tip tips first check should').split(' ').map(norm));
-const PRESETS_AUDIO = [
-  'On the A320, right after starting the engine in the morning, I get a bleed warning on engine 1. What should I check first?',
-  'On the Boeing 737 a fuel valve light stays dim and does not go out.',
-  'The A320 APU keeps shutting down by itself, but the oil level is fine.'
-];
 const SUGGEST = ['The engine gives a bleed warning right after start','The APU shuts down by itself','A fuel valve light stays half on','The air conditioning overheats on the ground in summer'];
 function score(q){
   const terms = norm(q).split(/[^a-z0-9]+/).filter(t => t && !STOP.has(t) && (t.length > 2 || /\d/.test(t)));
@@ -1875,7 +2035,25 @@ $('#composer').addEventListener('submit', e => { e.preventDefault(); if (ui.busy
 $('#chat-in').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); $('#composer').requestSubmit(); } });
 $('#btn-photo').onclick = () => $('#chat-file').click();
 $('#chat-file').onchange = e => { const f = e.target.files[0]; ui.pendingBlob = f || null; readImg(f, d => { ui.pendingImg = d; renderChat(); $('#chat-in').focus(); }); e.target.value = ''; };
-$('#btn-audio').onclick = () => { const t = PRESETS_AUDIO[Math.floor(Math.random()*PRESETS_AUDIO.length)]; ask(t, { audio:true }); };
+// Voice questions: the browser transcribes while the mechanic talks (Chrome, Edge) and the text goes to MEC-AI.
+let chatRec = null;
+$('#btn-audio').onclick = () => {
+  if (chatRec){ chatRec.stop(); return; }
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR){ toast('Voice questions work in Chrome and Edge. Type your question instead.'); return; }
+  const sr = new SR(), box = $('#chat-in'), base = box.value.trim();
+  let heard = '';
+  sr.lang = 'en-GB'; sr.interimResults = true; sr.continuous = false;
+  sr.onresult = ev => { heard = Array.from(ev.results).map(r => r[0].transcript).join(' ').trim(); box.value = [base, heard].filter(Boolean).join(' '); };
+  sr.onerror = ev => { if (ev.error === 'not-allowed' || ev.error === 'service-not-allowed') toast('No microphone access. Allow the microphone in the browser.'); };
+  sr.onend = () => {
+    chatRec = null; $('#btn-audio').classList.remove('rec-on');
+    const t = box.value.trim();
+    if (heard && t && !ui.busy){ box.value = ''; ask(t, { audio: true }); }
+  };
+  try { sr.start(); chatRec = sr; $('#btn-audio').classList.add('rec-on'); toast('Listening… ask your question.'); }
+  catch(e){ toast('Could not start the microphone.'); }
+};
 $('#chat-reset').onclick = () => { if (ui.busy) return; ui.turns = []; greet(); renderChat(); };
 
 document.addEventListener('click', e => {
