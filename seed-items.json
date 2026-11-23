@@ -14,7 +14,10 @@
   "status": "approved",
   "submittedAt": "2026-09-02T08:40:00",
   "approvedAt": "2026-09-04T15:10:00",
-  "reviewer": "Eng.ª Helena Costa"
+  "reviewer": "Eng.ª Helena Costa",
+  "mediaUrl": "media/K-1042.jpg",
+  "mediaKind": "photo",
+  "mediaNote": "Imagem ilustrativa gerada por IA"
  },
  {
   "id": "K-1047",
@@ -31,7 +34,10 @@
   "status": "approved",
   "submittedAt": "2026-09-10T13:00:00",
   "approvedAt": "2026-09-11T09:25:00",
-  "reviewer": "Eng.ª Helena Costa"
+  "reviewer": "Eng.ª Helena Costa",
+  "mediaUrl": "media/K-1047.mp4",
+  "mediaKind": "video",
+  "mediaNote": "Vídeo ilustrativo gerado por IA"
  },
  {
   "id": "K-1051",
@@ -68,7 +74,10 @@
   "status": "approved",
   "submittedAt": "2026-09-21T07:30:00",
   "approvedAt": "2026-09-23T16:45:00",
-  "reviewer": "Eng.ª Helena Costa"
+  "reviewer": "Eng.ª Helena Costa",
+  "mediaUrl": "media/K-1055.mp4",
+  "mediaKind": "video",
+  "mediaNote": "Vídeo ilustrativo gerado por IA"
  },
  {
   "id": "K-1058",
@@ -85,7 +94,10 @@
   "status": "approved",
   "submittedAt": "2026-10-01T12:05:00",
   "approvedAt": "2026-10-02T10:30:00",
-  "reviewer": "Eng.ª Helena Costa"
+  "reviewer": "Eng.ª Helena Costa",
+  "mediaUrl": "media/K-1058.jpg",
+  "mediaKind": "photo",
+  "mediaNote": "Imagem ilustrativa gerada por IA"
  },
  {
   "id": "K-1060",
@@ -102,7 +114,10 @@
   "status": "approved",
   "submittedAt": "2026-10-08T09:50:00",
   "approvedAt": "2026-10-09T14:20:00",
-  "reviewer": "Eng.ª Helena Costa"
+  "reviewer": "Eng.ª Helena Costa",
+  "mediaUrl": "media/K-1060.jpg",
+  "mediaKind": "photo",
+  "mediaNote": "Imagem ilustrativa gerada por IA"
  },
  {
   "id": "K-1063",
@@ -137,7 +152,10 @@
   "title": "Gerador do motor 1 não funciona depois de trocar o motor: ficha mal apertada",
   "description": "Depois de trocarmos um motor, o gerador elétrico desse motor não entrou em funcionamento no primeiro arranque.\n\nA ficha de saída do gerador estava apertada, mas não com a força certa, e havia sinais de aquecimento num terminal. Apertei com a força indicada no manual, limpei o terminal e o gerador passou a funcionar.\n\nSugestão: juntar esta verificação à lista de tarefas de troca de motor.",
   "status": "pending",
-  "submittedAt": "2026-10-27T10:15:00"
+  "submittedAt": "2026-10-27T10:15:00",
+  "mediaUrl": "media/K-1067.jpg",
+  "mediaKind": "photo",
+  "mediaNote": "Imagem ilustrativa gerada por IA"
  },
  {
   "id": "K-1068",
@@ -170,7 +188,10 @@
   "title": "Pressão do sistema hidráulico B desce com o avião parado: falta de azoto no acumulador",
   "description": "O que acontece: depois de desligar as bombas, a pressão do sistema hidráulico B desce mais depressa do que o normal, sem fuga à vista.\n\nNo vídeo mostro como verificar o azoto do acumulador (uma garrafa que guarda pressão) com o sistema sem pressão. Tinha azoto a menos. Enchemos e o problema desapareceu.",
   "status": "pending",
-  "submittedAt": "2026-10-29T15:30:00"
+  "submittedAt": "2026-10-29T15:30:00",
+  "mediaUrl": "media/K-1069.mp4",
+  "mediaKind": "video",
+  "mediaNote": "Vídeo ilustrativo gerado por IA"
  },
  {
   "id": "K-1065",
