@@ -17,6 +17,9 @@ create table if not exists public.fleet (
 alter table public.items enable row level security;
 alter table public.fleet enable row level security;
 
+-- Os projetos novos não dão acesso automático às tabelas; as policies abaixo continuam a decidir o que é permitido.
+grant select, insert, update on public.items, public.fleet to anon, authenticated;
+
 -- Demo sem login: qualquer visitante do site lê, cria e altera registos. Ninguém pode apagar.
 drop policy if exists "demo ler items" on public.items;
 drop policy if exists "demo criar items" on public.items;
