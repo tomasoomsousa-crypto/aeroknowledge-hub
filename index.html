@@ -842,7 +842,7 @@ function mediaArt(it){
     let bars = ''; const n = 44;
     for (let i = 0; i < n; i++){ const h = 10 + r()*70*Math.sin(Math.PI*(i+1)/(n+1)); bars += `<rect class="${i < 16 ? 'm-bar-on' : 'm-bar'}" x="${50 + i*5.4}" y="${88 - h/2}" width="3.2" height="${h}" rx="1.5"/>`; }
     const dur = `0${1 + Math.floor(r()*3)}:${String(10 + Math.floor(r()*49))}`;
-    return `<div class="media"><span class="media-tag">${tag}</span><svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="320" height="180" class="m-bg"/>${g}
+    return `<div class="media"><span class="media-tag">${tag}</span>${aiNote}<svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="320" height="180" class="m-bg"/>${g}
       <circle cx="28" cy="88" r="16" class="m-hi-fill"/><path d="M23 80v16l13-8Z" fill="#1b1300"/>${bars}
       <text x="50" y="150" class="m-txt">NOTA DE VOZ · ${it.mediaUrl ? 'carrega para ouvir' : dur}</text><text x="50" y="166" class="m-txt" opacity=".7">ATA ${it.ata} · transcrição disponível</text></svg></div>`;
   }
