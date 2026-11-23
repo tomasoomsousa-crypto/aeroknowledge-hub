@@ -164,6 +164,22 @@ textarea.input{min-height:150px;resize:vertical;line-height:1.5}
 .media-pick input:focus-visible+label{outline:3px solid var(--amber);outline-offset:2px}
 .file-drop{display:flex;align-items:center;gap:12px;padding:14px;border:2px dashed var(--line);border-radius:var(--r);flex-wrap:wrap}
 .file-drop img{width:72px;height:54px;object-fit:cover;border-radius:6px}
+.media video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;background:#000}
+.media-play{position:absolute;left:50%;top:50%;width:52px;height:52px;margin:-26px 0 0 -26px;border-radius:50%;background:rgba(255,255,255,.9);display:grid;place-items:center;z-index:1}
+.media-in{display:flex;flex-direction:column;gap:12px;padding:14px;border:2px dashed var(--line);border-radius:var(--r)}
+.media-in-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn-rec{border-color:var(--bad);color:var(--bad)}
+.btn-rec.on{background:var(--bad);color:#fff}
+.btn-rec.on::before{content:"";width:10px;height:10px;border-radius:2px;background:#fff}
+.btn-rec:not(.on)::before{content:"";width:12px;height:12px;border-radius:50%;background:var(--bad)}
+.rec-time{font-size:.95rem;color:var(--bad);font-weight:500}
+.media-preview{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:10px;border-radius:8px;background:var(--surface-2)}
+.media-preview img,.media-preview video{max-width:220px;max-height:160px;border-radius:6px;display:block}
+.media-preview audio{flex:1;min-width:200px}
+.player audio{width:100%;display:block}
+.transcript{background:var(--surface-2);border-radius:8px;padding:12px 14px}
+.transcript p{margin:4px 0 0;white-space:pre-wrap;line-height:1.55}
+.source-info audio{width:100%;height:36px}
 .form-actions{display:flex;gap:12px;flex-wrap:wrap}
 .form-actions .btn-primary{flex:1;min-height:60px;font-size:1.08rem}
 .sublist{display:flex;flex-direction:column;gap:10px}
@@ -499,10 +515,28 @@ dialog::backdrop{background:rgba(5,12,24,.65)}
           </div>
           <span class="err">Escolhe o tipo de anexo.</span>
         </div>
-        <div class="file-drop">
-          <input type="file" id="f-file" accept="image/*,video/*,audio/*" hidden>
-          <button class="btn btn-sm" type="button" id="f-file-btn">Anexar ficheiro</button>
-          <span class="hint" id="f-file-name">Opcional na demo. Fotos ficam visíveis no cartão.</span>
+        <div class="media-in" id="media-in">
+          <p class="hint" id="media-hint" style="margin:0">Escolhe o tipo de anexo acima para juntar a foto, o áudio ou o vídeo.</p>
+          <div class="media-in-row" data-for="photo" hidden>
+            <input type="file" id="f-photo" accept="image/*" capture="environment" hidden>
+            <button class="btn" type="button" data-pick="f-photo">Tirar ou escolher foto</button>
+          </div>
+          <div class="media-in-row" data-for="audio" hidden>
+            <button class="btn btn-rec" type="button" id="rec-btn">Gravar nota de voz</button>
+            <span class="rec-time mono" id="rec-time" hidden></span>
+            <input type="file" id="f-audio" accept="audio/*" hidden>
+            <button class="btn" type="button" data-pick="f-audio">Anexar ficheiro de áudio</button>
+          </div>
+          <div class="media-in-row" data-for="video" hidden>
+            <input type="file" id="f-video" accept="video/*" capture="environment" hidden>
+            <button class="btn" type="button" data-pick="f-video">Gravar ou escolher vídeo</button>
+          </div>
+          <div class="media-preview" id="media-preview" hidden></div>
+          <div class="field" id="transcript-field" data-for="audio" hidden>
+            <label for="f-transcript">Transcrição do áudio <span class="req">*</span></label>
+            <textarea class="input" id="f-transcript" style="min-height:110px" placeholder="Ao gravar, a transcrição aparece aqui sozinha (Chrome e Edge). Também podes escrevê-la ou corrigi-la."></textarea>
+            <span class="err">Escreve ou corrige a transcrição do áudio (pelo menos 10 letras).</span>
+          </div>
         </div>
         <div class="form-section">A tua dica</div>
         <div class="field"><label for="f-title">Título da dica <span class="req">*</span></label><input class="input" id="f-title" placeholder="ex: Aviso de ar quente no motor por ficha solta no sensor"><span class="err">Dá um título à solução.</span></div>
@@ -576,7 +610,7 @@ const PROFILES = {
 // Records live in the artifact's shared db ("items" collection); only the chosen role is per-viewer.
 let store = { role: 'mec', items: [], fleet: [] };
 try { if (localStorage.getItem('akh-role') === 'sup') store.role = 'sup'; } catch(e){}
-let ui = { view: 'feed', selected: null, rejecting: false, chat: [], turns: [], pendingImg: null, pendingBlob: null, subFile: null, busy: false };
+let ui = { view: 'feed', selected: null, rejecting: false, chat: [], turns: [], pendingImg: null, pendingBlob: null, subMedia: null, busy: false };
 let db = null, sample = null, sampleImages = false, dbState = 'loading', firstSnap = true;
 
 function save(){ try { localStorage.setItem('akh-role', store.role); } catch(e){} }
@@ -783,8 +817,10 @@ function rng(seedStr){ let h = 2166136261; for (const c of seedStr) h = Math.imu
 function kindOf(m){ return m.startsWith('Foto') ? 'photo' : m.startsWith('Áudio') ? 'audio' : 'video'; }
 function mediaArt(it){
   const k = kindOf(it.media), r = rng(it.id);
-  const tag = k === 'photo' ? 'FOTO' : k === 'audio' ? 'ÁUDIO + TRANSCRIÇÃO' : 'VÍDEO';
-  if (it.mediaData && k === 'photo') return `<div class="media"><span class="media-tag">${tag}</span><img src="${it.mediaData}" alt="Foto anexada: ${esc(it.part)}"></div>`;
+  const tag = k === 'photo' ? 'FOTO' : k === 'audio' ? (it.mediaUrl ? 'NOTA DE VOZ + TRANSCRIÇÃO' : 'ÁUDIO + TRANSCRIÇÃO') : 'VÍDEO';
+  const photo = it.mediaData || (it.mediaKind === 'photo' && it.mediaUrl);
+  if (photo && k === 'photo') return `<div class="media"><span class="media-tag">${tag}</span><img src="${esc(photo)}" alt="Foto anexada: ${esc(it.part)}" loading="lazy"></div>`;
+  if (it.mediaUrl && k === 'video') return `<div class="media"><span class="media-tag">${tag}</span><video src="${esc(it.mediaUrl)}#t=0.5" muted preload="metadata" playsinline></video><span class="media-play"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7Z" fill="#0d2140"/></svg></span></div>`;
   let g = '';
   for (let x = 0; x <= 320; x += 20) g += `<path class="m-grid" d="M${x} 0V180"/>`;
   for (let y = 0; y <= 180; y += 20) g += `<path class="m-grid" d="M0 ${y}H320"/>`;
@@ -895,12 +931,20 @@ function renderFeed(){
       </div>
     </button>`).join('') : `<div class="empty" style="grid-column:1/-1"><b>Sem resultados.</b><br>Tenta outro alarme ou limpa os filtros. Se resolveste este problema, <button class="linkbtn" data-go="submit">submete a solução</button>.</div>`;
 }
+// Detail views: playable audio/video and the transcription, on top of the card art.
+function mediaFull(it){
+  const k = kindOf(it.media), url = it.mediaUrl;
+  let h = url && k === 'video' ? `<div class="media"><span class="media-tag">VÍDEO</span><video src="${esc(url)}" controls preload="metadata" playsinline></video></div>` : mediaArt(it);
+  if (url && k === 'audio') h += `<div class="player"><audio controls preload="none" src="${esc(url)}"></audio></div>`;
+  if (it.transcript && !String(it.description).includes(it.transcript.slice(0, 30))) h += `<div class="transcript"><span class="label">Transcrição</span><p>${esc(it.transcript)}</p></div>`;
+  return h;
+}
 function openDetail(id){
   const it = store.items.find(i => i.id === id); if (!it) return;
   $('#dlg-body').innerHTML = `
     <div class="dlg-top"><div><div class="card-chips" style="margin-bottom:8px">${ataChip(it.ata)}<span class="chip">${esc(it.aircraft)}</span>${pill(it.status)}</div><h2>${esc(it.title)}</h2></div>
       <button class="close" type="button" data-close aria-label="Fechar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
-    ${mediaArt(it)}
+    ${mediaFull(it)}
     <div class="alarm">${alarmIco}<span>${esc(it.alarm)}</span></div>
     <p class="desc">${esc(it.description)}</p>
     ${metaList(it)}
@@ -934,6 +978,9 @@ function validateForm(){
   const m = document.querySelector('input[name="media"]:checked');
   $('#media-field').classList.toggle('invalid', !m);
   if (!m){ ok = false; first = first || $('#m-photo'); }
+  const needT = m && kindOf(m.value) === 'audio' && $('#f-transcript').value.trim().length < 10;
+  $('#transcript-field').classList.toggle('invalid', !!needT);
+  if (needT){ ok = false; first = first || $('#f-transcript'); }
   if (first) first.focus();
   return ok;
 }
@@ -945,12 +992,18 @@ async function submitForm(e){
   const item = { id:'K-'+n, author:$('#f-name').value.trim(), role:$('#f-role').value.trim(), aircraft:$('#f-aircraft').value, ata:$('#f-ata').value,
     part:$('#f-part').value.trim(), alarm:$('#f-alarm').value.trim(), downtime:Number($('#f-downtime').value), media,
     title:$('#f-title').value.trim(), description:$('#f-desc').value.trim(), status:'pending', submittedAt:new Date().toISOString() };
-  if (ui.subFile && kindOf(media) === 'photo') item.mediaData = ui.subFile;
+  if (rec) stopRec();
+  if (kindOf(media) === 'audio') item.transcript = $('#f-transcript').value.trim();
   const btn = $('#sub-form [type=submit]'); btn.disabled = true;
+  if (ui.subMedia && ui.subMedia.kind === kindOf(media)){
+    try { Object.assign(item, await storeMedia(item.id, ui.subMedia), { mediaKind: ui.subMedia.kind }); }
+    catch(err){ btn.disabled = false; toast('Não foi possível enviar o anexo. Verifica a ligação e tenta de novo.'); return; }
+    if (!item.mediaUrl) delete item.mediaKind;
+  }
   const ok = await dbWrite(item.id, item, false);
   btn.disabled = false;
   if (!ok) return;
-  $('#sub-form').reset(); ui.subFile = null; $('#f-file-name').textContent = 'Opcional na demo. Fotos ficam visíveis no cartão.';
+  $('#sub-form').reset(); setSubMedia(null); updMediaIn(); updRecUi();
   document.querySelectorAll('.field.invalid').forEach(f => f.classList.remove('invalid'));
   toast(`${item.id} submetido. Estado: Pendente de Aprovação.`);
 }
@@ -960,7 +1013,7 @@ function fillExample(){
   $('#f-part').value = 'Pistão que mexe o travão de ar 3 da asa esquerda';
   $('#f-alarm').value = 'Aviso de falha no travão de ar 3 (SPLR 3 FAULT)';
   $('#f-downtime').value = '3.5';
-  $('#m-video').checked = true;
+  $('#m-video').checked = true; updMediaIn();
   $('#f-title').value = 'Aviso no travão de ar depois de lavar o avião: tirar o ar do pistão antes de o trocar';
   $('#f-desc').value = 'O que acontece: depois de lavar o avião e de mexer no sistema hidráulico, aparece um aviso de falha no travão de ar 3 da asa esquerda.\n\nCausa: entrou ar no pistão quando se tirou a pressão ao sistema. O pistão estava bom.\n\nSolução: dar pressão ao sistema hidráulico, abrir e fechar o travão de ar várias vezes pelo teste do computador e tirar o ar como diz o manual. No vídeo mostro a sequência.';
   document.querySelectorAll('.field.invalid').forEach(f => f.classList.remove('invalid'));
@@ -992,7 +1045,7 @@ function renderValidate(){
   const it = store.items.find(i => i.id === ui.selected);
   $('#detail').innerHTML = !it ? `<div class="empty">Seleciona uma submissão para rever.</div>` : `
     <div><div class="card-chips" style="margin-bottom:8px">${ataChip(it.ata)}<span class="chip">${esc(it.aircraft)}</span>${pill(it.status)}</div><h2>${esc(it.title)}</h2></div>
-    ${mediaArt(it)}
+    ${mediaFull(it)}
     ${metaList(it)}
     <div><span class="label">Como resolveu</span><p class="desc" style="margin-top:6px">${esc(it.description)}</p></div>
     ${ui.approving ? `
@@ -1182,6 +1235,108 @@ document.addEventListener('input', e => {
 document.addEventListener('change', e => { if (e.target.id === 'ac-ata') ui.acAta = e.target.value; });
 setInterval(() => { if (ui.view === 'validate' && store.role === 'sup' && !ui.acMode) renderHangar(); }, 60000);
 
+/* ---------- Attachments: photo, voice note with transcription, video ---------- */
+const MAX_MEDIA = 10 * 1024 * 1024;
+let rec = null;
+function selectedKind(){ const m = document.querySelector('input[name="media"]:checked'); return m ? kindOf(m.value) : null; }
+function updMediaIn(){
+  const k = selectedKind();
+  document.querySelectorAll('#media-in [data-for]').forEach(el => el.hidden = el.dataset.for !== k);
+  $('#media-hint').hidden = !!k;
+  if (ui.subMedia && ui.subMedia.kind !== k) setSubMedia(null);
+}
+function setSubMedia(m){
+  if (ui.subMedia?.url) URL.revokeObjectURL(ui.subMedia.url);
+  if (m && m.blob.size > MAX_MEDIA){ toast('O ficheiro tem mais de 10 MB. Usa um mais curto ou mais pequeno.'); m = null; }
+  ui.subMedia = m ? { ...m, url: URL.createObjectURL(m.blob) } : null;
+  const pv = $('#media-preview'), sm = ui.subMedia;
+  pv.hidden = !sm;
+  pv.innerHTML = !sm ? '' : `${sm.kind === 'photo' ? `<img src="${sm.url}" alt="Foto escolhida">` : sm.kind === 'audio' ? `<audio controls src="${sm.url}"></audio>` : `<video controls src="${sm.url}" playsinline></video>`}
+    <span class="hint">${esc(sm.name || 'nota de voz')} · ${sm.blob.size < 1048576 ? Math.max(1, Math.round(sm.blob.size / 1024)) + ' KB' : fmtH(sm.blob.size / 1048576) + ' MB'}</span><button class="linkbtn" type="button" id="media-remove">Remover</button>`;
+}
+function updRecUi(){
+  const b = $('#rec-btn'), t = $('#rec-time');
+  b.classList.toggle('on', !!rec);
+  b.textContent = rec ? 'Parar gravação' : (ui.subMedia?.kind === 'audio' ? 'Gravar outra vez' : 'Gravar nota de voz');
+  t.hidden = !rec;
+  if (rec){ const sec = Math.floor((Date.now() - rec.t0) / 1000); t.textContent = `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`; if (sec >= 120) stopRec(); }
+}
+async function startRec(){
+  if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder){ toast('Este browser não deixa gravar áudio. Anexa um ficheiro de áudio.'); return; }
+  let stream;
+  try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
+  catch(e){ toast('Sem acesso ao microfone. Autoriza o microfone no browser ou anexa um ficheiro.'); return; }
+  const mr = new MediaRecorder(stream), chunks = [];
+  mr.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
+  mr.onstop = () => {
+    stream.getTracks().forEach(t => t.stop());
+    setSubMedia({ kind:'audio', blob: new Blob(chunks, { type: mr.mimeType || 'audio/webm' }), name:'Nota de voz gravada' });
+    updRecUi();
+  };
+  // Live transcription where the browser offers it (Chrome, Edge); elsewhere the mechanic types it.
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  let sr = null;
+  if (SR){
+    sr = new SR(); sr.lang = 'pt-PT'; sr.continuous = true; sr.interimResults = true;
+    const base = $('#f-transcript').value.trim();
+    sr.onresult = ev => {
+      let text = '';
+      for (let i = 0; i < ev.results.length; i++) text += ev.results[i][0].transcript + ' ';
+      $('#f-transcript').value = [base, text.trim()].filter(Boolean).join(' ');
+      $('#transcript-field').classList.remove('invalid');
+    };
+    sr.onerror = () => {};
+    sr.onend = () => { if (rec && rec.sr === sr) try { sr.start(); } catch(e){} };
+    try { sr.start(); } catch(e){ sr = null; }
+  }
+  mr.start();
+  rec = { mr, sr, t0: Date.now(), timer: setInterval(updRecUi, 500) };
+  updRecUi();
+  if (!sr) toast('A gravar. Este browser não transcreve sozinho: escreve a transcrição no fim.');
+}
+function stopRec(){
+  if (!rec) return;
+  const r = rec; rec = null;
+  clearInterval(r.timer);
+  if (r.sr) try { r.sr.stop(); } catch(e){}
+  r.mr.stop();
+  updRecUi();
+}
+function blobToDataURL(blob){ return new Promise((res, rej) => { const fr = new FileReader(); fr.onload = () => res(fr.result); fr.onerror = rej; fr.readAsDataURL(blob); }); }
+function dataURLtoBlob(url){ const [h, b] = url.split(','), bin = atob(b), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return new Blob([u], { type: h.slice(5, h.indexOf(';')) }); }
+function fileExt(m){
+  const fromName = /\.([a-z0-9]{2,5})$/i.exec(m.name || '');
+  if (fromName) return fromName[1].toLowerCase();
+  const sub = (m.blob.type.split('/')[1] || 'bin').split(';')[0];
+  return { mpeg:'mp3', 'x-m4a':'m4a', quicktime:'mov' }[sub] || sub;
+}
+// Supabase: files go to the public "media" bucket. Other versions keep small files inside the record.
+async function storeMedia(id, m){
+  if (m.kind === 'photo'){
+    const url = await shrinkImg(m.blob, sb ? 1280 : 720);
+    if (!sb) return { mediaUrl: url };
+    return upload(id, { ...m, blob: dataURLtoBlob(url), name: 'foto.jpg' });
+  }
+  if (sb) return upload(id, m);
+  if (m.blob.size < 180 * 1024) return { mediaUrl: await blobToDataURL(m.blob) };
+  toast('Nesta versão só cabem anexos pequenos. A dica foi guardada sem o ficheiro.');
+  return {};
+}
+async function upload(id, m){
+  const path = `${id}/${Date.now()}.${fileExt(m)}`;
+  const { error } = await sb.storage.from('media').upload(path, m.blob, { contentType: m.blob.type || undefined });
+  if (error) throw error;
+  return { mediaUrl: sb.storage.from('media').getPublicUrl(path).data.publicUrl };
+}
+$('#rec-btn').onclick = () => rec ? stopRec() : startRec();
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-pick]'); if (b) $('#' + b.dataset.pick).click();
+  if (e.target.id === 'media-remove') setSubMedia(null), updRecUi();
+});
+[['f-photo','photo'], ['f-audio','audio'], ['f-video','video']].forEach(([id, kind]) => {
+  $('#' + id).onchange = e => { const f = e.target.files[0]; if (f) setSubMedia({ kind, blob: f, name: f.name }); updRecUi(); e.target.value = ''; };
+});
+
 /* ---------- Supervisor dashboard ---------- */
 const HOUR = 36e5, DAY = 864e5;
 function fmtDur(h){ return h < 48 ? `${Math.round(h)} h` : `${fmtH(h / 24)} dias`; }
@@ -1352,6 +1507,7 @@ function sourceCard(it){
           <div><span>Aeronave</span>${esc(it.aircraft)}</div>
           <div><span>Paragem poupada</span>${fmtH(it.downtime)} h</div>
         </div>
+        ${it.mediaUrl && kindOf(it.media) === 'audio' ? `<audio controls preload="none" src="${esc(it.mediaUrl)}"></audio>` : ''}
         <button class="btn btn-sm" type="button" data-open="${it.id}" style="align-self:flex-start">Ver dica completa</button>
       </div>
     </div></div>`;
@@ -1422,7 +1578,7 @@ Formato quando RESPONDES:
 - Uma frase curta a lembrar que o procedimento deve ser confirmado no manual oficial do avião.
 - Na ÚLTIMA linha: "FONTES: " seguido dos IDs das dicas usadas, separados por vírgula (máximo 2).`;
 function kbText(){
-  return approved().map(i => `[${i.id}] ${i.title}\nAeronave: ${i.aircraft} | ATA ${i.ata} ${ataName(i.ata)} | Peça: ${i.part} | Alarme: ${i.alarm}\nAutor: ${i.author} (${i.role}) | Aprovado: ${fmtD(i.approvedAt)} | Horas de paragem poupadas: ${i.downtime} h\n${i.description}`).join('\n\n---\n\n');
+  return approved().map(i => `[${i.id}] ${i.title}\nAeronave: ${i.aircraft} | ATA ${i.ata} ${ataName(i.ata)} | Peça: ${i.part} | Alarme: ${i.alarm}\nAutor: ${i.author} (${i.role}) | Aprovado: ${fmtD(i.approvedAt)} | Horas de paragem poupadas: ${i.downtime} h\n${i.description}${i.transcript && !i.description.includes(i.transcript.slice(0, 30)) ? '\nTranscrição da nota de voz: ' + i.transcript : ''}`).join('\n\n---\n\n');
 }
 // Claude ends each reply with control lines: optional "OPÇÕES: a | b" (quick replies) and "FONTES: K-…".
 function splitSources(text){
@@ -1512,7 +1668,7 @@ document.addEventListener('input', e => {
   if (e.target.id === 'reject-reason'){ ui.rejectText = e.target.value; $('#confirm-reject').disabled = !e.target.value.trim(); }
   if (e.target.closest && e.target.closest('#sub-form')) e.target.closest('.field')?.classList.remove('invalid');
 });
-document.addEventListener('change', e => { if (e.target.name === 'media') $('#media-field').classList.remove('invalid'); });
+document.addEventListener('change', e => { if (e.target.name === 'media'){ $('#media-field').classList.remove('invalid'); updMediaIn(); } });
 $('#dlg').addEventListener('click', e => { if (e.target.id === 'dlg') e.target.close(); });
 $('#role-mec').onclick = () => setRole('mec');
 $('#role-sup').onclick = () => setRole('sup');
@@ -1526,8 +1682,6 @@ $('#theme').onclick = () => {
 ['#q','#fa','#fata'].forEach(s => $(s).addEventListener('input', renderFeed));
 $('#sub-form').addEventListener('submit', submitForm);
 $('#fill-example').onclick = fillExample;
-$('#f-file-btn').onclick = () => $('#f-file').click();
-$('#f-file').onchange = e => { const f = e.target.files[0]; if (!f) return; $('#f-file-name').textContent = f.name; ui.subFile = null; if (f.type.startsWith('image/')) shrinkImg(f).then(d => ui.subFile = d).catch(() => {}); };
 // Photos are stored inside the shared record, so scale them down well under the 256 KiB document cap.
 function shrinkImg(file, max = 720){
   return new Promise((res, rej) => {
