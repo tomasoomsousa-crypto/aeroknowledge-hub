@@ -430,6 +430,9 @@ dialog::backdrop{background:rgba(5,12,24,.65)}
 .use-row b{display:block;font-family:var(--f-display);font-size:1.3rem;color:var(--ok);text-transform:uppercase}
 .use-row span{font-size:.85rem;color:var(--ink-2)}
 .source-info .use-row{padding:10px}
+.pin-dlg{width:min(380px,calc(100vw - 32px))}
+.pin-input{font-size:2rem;letter-spacing:.6em;text-align:center;padding-left:.6em}
+.pin-err{margin:0;color:var(--bad);font-weight:600}
 .bottom-nav{display:none}
 @media (max-width:640px){
   .tabs{display:none}
@@ -678,6 +681,15 @@ dialog::backdrop{background:rgba(5,12,24,.65)}
 </main>
 
 <nav class="bottom-nav" id="bottom-nav" aria-label="Sections"></nav>
+<dialog id="pin-dlg" class="pin-dlg" aria-labelledby="pin-title">
+  <form class="dlg" id="pin-form" novalidate>
+    <h2 id="pin-title">Supervisor access</h2>
+    <p class="hint" style="margin:0">Enter the supervisor code to open the Validation and Fleet sections.</p>
+    <input class="input mono pin-input" id="pin-in" type="password" inputmode="numeric" autocomplete="off" maxlength="4" aria-label="Supervisor code">
+    <p class="pin-err" id="pin-err" role="alert" hidden>Wrong code. Try again.</p>
+    <div class="decide"><button class="btn" type="button" id="pin-cancel">Cancel</button><button class="btn btn-primary" type="submit">Unlock</button></div>
+  </form>
+</dialog>
 <dialog id="dlg"><div class="dlg" id="dlg-body"></div></dialog>
 <div class="toast" id="toast" role="status"></div>
 
@@ -1807,9 +1819,29 @@ document.addEventListener('input', e => {
 document.addEventListener('change', e => { if (e.target.name === 'media'){ $('#media-field').classList.remove('invalid'); updMediaIn(); } });
 $('#dlg').addEventListener('click', e => { if (e.target.id === 'dlg') e.target.close(); });
 $('#role-mec').onclick = () => setRole('mec');
-$('#role-sup').onclick = () => setRole('sup');
-$('#go-sup').onclick = () => setRole('sup');
-$('#go-sup-fleet').onclick = () => setRole('sup');
+$('#role-sup').onclick = askSupervisor;
+$('#go-sup').onclick = askSupervisor;
+$('#go-sup-fleet').onclick = askSupervisor;
+// Demo-only gate: switching to Supervisor asks for a code; going back to Mechanic does not.
+// The code lives in the page, so this is a demo convenience, not real security (that needs login + server rules).
+const SUPERVISOR_PIN = '1234';
+function askSupervisor(){
+  if (store.role === 'sup') return;
+  $('#pin-in').value = ''; $('#pin-err').hidden = true;
+  $('#pin-dlg').showModal(); $('#pin-in').focus();
+}
+$('#pin-form').addEventListener('submit', e => {
+  e.preventDefault();
+  if ($('#pin-in').value === SUPERVISOR_PIN){ $('#pin-dlg').close(); setRole('sup'); }
+  else { $('#pin-err').hidden = false; $('#pin-in').select(); }
+});
+$('#pin-in').addEventListener('input', e => {
+  e.target.value = e.target.value.replace(/\D/g, '').slice(0, 4);
+  $('#pin-err').hidden = true;
+  if (e.target.value.length === 4) $('#pin-form').requestSubmit();
+});
+$('#pin-cancel').onclick = () => $('#pin-dlg').close();
+$('#pin-dlg').addEventListener('click', e => { if (e.target.id === 'pin-dlg') e.target.close(); });
 $('#theme').onclick = () => {
   const cur = document.documentElement.dataset.theme || 'light';
   const next = cur === 'dark' ? 'light' : 'dark';
