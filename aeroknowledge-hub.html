@@ -9,24 +9,15 @@
   --bg:#e9edf2; --surface:#ffffff; --surface-2:#dfe5ec; --ink:#0f1d33; --ink-2:#4b5b70; --line:#cbd4df;
   --navy:#0b2a55; --navy-2:#123a70; --navy-ink:#f2f6fb; --navy-ink-2:#a9bcd6;
   --accent:#e57a0e; --accent-ink:#ffffff; --amber:#f2b705;
-  --ok:#17804f; --ok-bg:#dcf1e6; --warn:#a85f00; --warn-bg:#fdecd0; --bad:#b9302a; --bad-bg:#f8dcda;
+  --ok:#17804f; --ok-bg:#e3f7ec; --warn:#a85f00; --warn-bg:#fef3e2; --bad:#b9302a; --bad-bg:#fdeeed;
   --bar:#2a5b9c; --grid:rgba(15,29,51,.07);
   --media-bg:#0d2140; --media-grid:#1d3a63; --media-line:#7fa3d1; --media-text:#c6d6ea;
-  --shadow:0 1px 2px rgba(15,29,51,.08),0 4px 14px rgba(15,29,51,.06);
+  --shadow:0 1px 0 rgba(11,42,85,.04);
   --f-display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
   --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
   --r:10px;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#09111c; --surface:#111c2b; --surface-2:#192739; --ink:#e5ecf5; --ink-2:#93a4ba; --line:#26374d;
-  --navy:#0c1a2e; --navy-2:#16294a; --navy-ink:#eef3fa; --navy-ink-2:#8ea4c2;
-  --accent:#ff9533; --accent-ink:#1a0e00; --amber:#f5c02a;
-  --ok:#4cc58a; --ok-bg:#12301f; --warn:#f0a53a; --warn-bg:#33240c; --bad:#ff7a70; --bad-bg:#3a1714;
-  --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 18px rgba(0,0,0,.25);
-  --bar:#6f9fe0; --grid:rgba(229,236,245,.07);
-  color-scheme:dark;
-}}
 :root[data-theme="dark"]{
   --bg:#09111c; --surface:#111c2b; --surface-2:#192739; --ink:#e5ecf5; --ink-2:#93a4ba; --line:#26374d;
   --navy:#0c1a2e; --navy-2:#16294a; --navy-ink:#eef3fa; --navy-ink-2:#8ea4c2;
@@ -170,7 +161,7 @@ textarea.input{min-height:150px;resize:vertical;line-height:1.5}
 .file-drop{display:flex;align-items:center;gap:12px;padding:14px;border:2px dashed var(--line);border-radius:var(--r);flex-wrap:wrap}
 .file-drop img{width:72px;height:54px;object-fit:cover;border-radius:6px}
 .media video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;background:#000}
-.media-ai{position:absolute;right:10px;bottom:10px;font-size:.68rem;padding:3px 8px;border-radius:4px;background:rgba(0,0,0,.6);color:#fff;z-index:1;pointer-events:none}
+.media-ai{position:absolute;right:10px;top:10px;font-size:.68rem;padding:3px 8px;border-radius:4px;background:rgba(0,0,0,.6);color:#fff;z-index:1;pointer-events:none}
 .media-play{position:absolute;left:50%;top:50%;width:52px;height:52px;margin:-26px 0 0 -26px;border-radius:50%;background:rgba(255,255,255,.9);display:grid;place-items:center;z-index:1}
 .media-in{display:flex;flex-direction:column;gap:12px;padding:14px;border:2px dashed var(--line);border-radius:var(--r)}
 .media-in-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
@@ -395,6 +386,69 @@ dialog::backdrop{background:rgba(5,12,24,.65)}
   .msg{max-width:100%}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* Stitch design pass */
+.eyebrow{display:inline-flex;align-items:center;gap:7px;align-self:flex-start;background:var(--accent);color:#fff;padding:4px 11px;border-radius:999px;font-size:.68rem;letter-spacing:.1em;font-weight:600}
+.eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:#fff}
+.view-head .grow{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+.view-head h1{font-size:clamp(2rem,4.4vw,2.9rem)}
+.card h3{text-transform:uppercase;font-weight:700;letter-spacing:.02em;font-size:1.35rem;line-height:1.08}
+.alarm{padding:7px 10px;border:1px solid color-mix(in srgb,var(--bad) 30%,transparent);background:var(--bad-bg);color:var(--bad);border-radius:6px;align-items:center}
+.saved{text-transform:uppercase;font-size:.66rem;letter-spacing:.08em}
+.saved b{display:flex;align-items:center;justify-content:flex-end;gap:3px;font-size:1.4rem}
+.saved b svg{flex:none}
+.me{width:40px;height:40px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-family:var(--f-display);font-weight:700;font-size:.95rem;flex:none}
+.btn-navy{background:var(--navy);border-color:var(--navy);color:#fff}
+.btn-navy:hover{filter:brightness(1.15);border-color:var(--navy)}
+.stepper{display:flex;align-items:stretch;max-width:260px;border:1.5px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--surface)}
+.stepper .input{border:0;border-radius:0;text-align:center;min-width:0;flex:1;-moz-appearance:textfield;appearance:textfield;font-size:1.1rem;font-weight:600}
+.stepper .input:focus{box-shadow:none}
+.stepper:focus-within{border-color:var(--navy);box-shadow:0 0 0 3px rgba(11,42,85,.2)}
+.stepper input::-webkit-inner-spin-button,.stepper input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.stepper .step{width:52px;border:0;background:var(--surface-2);font-size:1.5rem;line-height:1;cursor:pointer;color:var(--ink);flex:none}
+.stepper .step:hover{background:color-mix(in srgb,var(--accent) 18%,var(--surface-2))}
+.field.invalid .stepper{border-color:var(--bad)}
+.msg.bot .bubble .suggest{flex-direction:column;align-items:stretch}
+.msg.bot .bubble .suggest button{border-radius:10px;background:var(--surface);display:flex;gap:10px;align-items:center;min-height:46px}
+.msg.bot .bubble .suggest button::before{content:"";width:14px;height:14px;border:2px solid var(--accent);border-radius:50%;flex:none}
+.ac-panel{padding:0;overflow:hidden;gap:16px}
+.ac-panel > *:not(.ac-top){margin-inline:18px}
+.ac-panel > :last-child{margin-bottom:18px}
+.ac-top{background:var(--navy);color:var(--navy-ink);padding:18px}
+.ac-top .hint{color:var(--navy-ink-2)}
+.ac-reg{font-family:var(--f-display);font-size:2.1rem;font-weight:700;letter-spacing:.02em}
+.ac-issue{background:var(--bad-bg);border:1px solid color-mix(in srgb,var(--bad) 30%,transparent);border-radius:8px;padding:12px 14px}
+.ac-issue .label{color:var(--bad)}
+.ac-issue p{color:var(--bad);font-size:1.02rem}
+.ac-issue.maint{background:var(--warn-bg);border-color:color-mix(in srgb,var(--warn) 30%,transparent)}
+.ac-issue.maint .label,.ac-issue.maint p{color:var(--warn)}
+.ac-facts > div{background:var(--surface);border-radius:6px;padding:8px 10px}
+.ac-panel [data-askac]{width:100%}
+.ac-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ac-actions .btn{width:100%}
+.bottom-nav{display:none}
+@media (max-width:640px){
+  .tabs{display:none}
+  .bottom-nav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:25;background:var(--navy);border-top:3px solid var(--accent);padding:4px max(6px,env(safe-area-inset-right,0px)) calc(4px + env(safe-area-inset-bottom,0px)) max(6px,env(safe-area-inset-left,0px));justify-content:space-around}
+  .bottom-nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:0;color:var(--navy-ink-2);font-family:var(--f-display);font-weight:600;font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;padding:6px 0;min-height:54px;cursor:pointer;position:relative}
+  .bottom-nav button[aria-current="page"]{color:var(--amber)}
+  .bottom-nav .count{position:absolute;top:2px;left:calc(50% + 6px);font-family:var(--f-mono);font-size:.66rem;background:var(--accent);color:#fff;border-radius:999px;padding:0 6px}
+  main{padding-bottom:110px}
+  .toast{bottom:calc(86px + env(safe-area-inset-bottom,0px))}
+  .ac-actions{grid-template-columns:1fr}
+  .me{display:none}
+  .top{position:relative;top:auto}
+  .top-row{gap:8px 10px;padding-block:10px}
+  .brand{flex:1 1 auto;gap:8px}
+  .brand svg{width:32px;height:32px}
+  .brand-name{font-size:1.15rem}
+  .sync{padding:8px}
+  .sync > span{display:none}
+  .iconbtn{width:38px;height:38px}
+  .seg{order:5;flex:1 1 100%}
+  .view-head .grow{flex:1 1 100%}
+  .seg button{flex:1;justify-content:center;padding:6px 10px;min-height:40px;font-size:.85rem}
+}
 </style>
 
 <header class="top">
@@ -414,6 +468,7 @@ dialog::backdrop{background:rgba(5,12,24,.65)}
     <button class="iconbtn" id="theme" type="button" aria-label="Toggle light/dark mode">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
     </button>
+    <div class="me" id="me" aria-hidden="true"></div>
   </div>
   <nav class="wrap tabs" id="tabs" aria-label="Sections"></nav>
   <div class="hazard" aria-hidden="true"></div>
@@ -510,7 +565,7 @@ dialog::backdrop{background:rgba(5,12,24,.65)}
           <div class="field"><label for="f-part">Part <span class="req">*</span></label><input class="input" id="f-part" placeholder="e.g. Engine bleed air valve"><span class="err">Enter the part.</span></div>
           <div class="field"><label for="f-alarm">Warning or error code <span class="req">*</span></label><input class="input mono" id="f-alarm" placeholder="e.g. Error E-402, pressure loss warning"><span class="err">Enter the warning or code.</span></div>
         </div>
-        <div class="field"><label for="f-downtime">Aircraft downtime hours saved <span class="req">*</span></label><input class="input mono" id="f-downtime" type="number" inputmode="decimal" min="0.5" step="0.5" placeholder="e.g. 4.5" style="max-width:220px"><span class="err">Enter the downtime hours saved (minimum 0.5 h).</span><span class="hint">How much less time the aircraft stays grounded thanks to this tip.</span></div>
+        <div class="field"><label for="f-downtime">Aircraft downtime hours saved <span class="req">*</span></label><div class="stepper"><button class="step" type="button" data-step="f-downtime" data-d="-0.5" aria-label="Fewer hours">−</button><input class="input mono" id="f-downtime" type="number" inputmode="decimal" min="0.5" step="0.5" placeholder="4.5"><button class="step" type="button" data-step="f-downtime" data-d="0.5" aria-label="More hours">+</button></div><span class="err">Enter the downtime hours saved (minimum 0.5 h).</span><span class="hint">How much less time the aircraft stays grounded thanks to this tip.</span></div>
         <div class="form-section">Attachment</div>
         <div class="field" id="media-field">
           <span class="label" id="media-label">What are you attaching? <span class="req">*</span></span>
@@ -577,8 +632,6 @@ dialog::backdrop{background:rgba(5,12,24,.65)}
         </div>
       </div>
       <div class="kpis" id="kpis"></div>
-      <section class="hangar" id="hangar" aria-label="Fleet status"></section>
-      <section class="dash" id="dash" aria-label="Indicators"></section>
       <div class="val-grid">
         <div class="panel">
           <h2>Awaiting approval</h2>
@@ -593,12 +646,34 @@ dialog::backdrop{background:rgba(5,12,24,.65)}
     </div>
   </section>
 
+  <!-- FLEET -->
+  <section id="view-fleet" data-view="fleet" hidden>
+    <div id="fleet-locked" class="locked" hidden>
+      <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+      <h1>Supervisors only</h1>
+      <p class="hint">Fleet status and indicators are available to Supervisors and Quality Engineers. Switch the profile at the top to continue the demo.</p>
+      <button class="btn btn-primary" id="go-sup-fleet" type="button">Switch to Supervisor</button>
+    </div>
+    <div id="fleet-body">
+      <div class="view-head">
+        <div class="grow">
+          <div class="eyebrow">Live hangar</div>
+          <h1>Fleet Status</h1>
+          <p>Where every aircraft is, whether it can fly, and why it stopped today.</p>
+        </div>
+      </div>
+      <section class="hangar" id="hangar" aria-label="Fleet status"></section>
+      <section class="dash" id="dash" aria-label="Indicators"></section>
+    </div>
+  </section>
+
   <div class="disclaimer">
     <span>Demo data. Tips do not replace the official aircraft manuals or the release to service.</span>
     <span id="mode-note">Submissions and decisions are shared in real time with everyone who opens this page.</span>
   </div>
 </main>
 
+<nav class="bottom-nav" id="bottom-nav" aria-label="Sections"></nav>
 <dialog id="dlg"><div class="dlg" id="dlg-body"></div></dialog>
 <div class="toast" id="toast" role="status"></div>
 
@@ -681,7 +756,7 @@ function applyRow(table, row){
   if (table === 'fleet'){
     const a = { ...row.doc, reg: row.reg }, i = store.fleet.findIndex(x => x.reg === a.reg);
     if (i >= 0) store.fleet[i] = a; else store.fleet.push(a);
-    if (ui.view === 'validate' && store.role === 'sup') renderHangar();
+    if (ui.view === 'fleet' && store.role === 'sup') renderHangar();
     return;
   }
   const it = { ...row.doc, id: row.id }, i = store.items.findIndex(x => x.id === it.id), prev = i >= 0 ? store.items[i] : null;
@@ -788,7 +863,7 @@ async function connect(){
   if (!db){ offlineMode(); return; }
   db.collection('fleet').onSnapshot(snap => {
     store.fleet = snap.docs.map(d => ({ ...d.data(), reg: d.id }));
-    if (ui.view === 'validate' && store.role === 'sup') renderHangar();
+    if (ui.view === 'fleet' && store.role === 'sup') renderHangar();
   }, () => {});
   db.collection('items').onSnapshot(snap => {
     const before = new Set(store.items.map(i => i.id));
@@ -862,7 +937,10 @@ function mediaArt(it){
 const ataChip = c => `<span class="chip chip-ata"><b>ATA ${c}</b> ${esc(ataName(c))}</span>`;
 const pill = s => s === 'approved' ? '<span class="pill pill-approved">Approved</span>' : s === 'rejected' ? '<span class="pill pill-rejected">Rejected</span>' : '<span class="pill pill-pending">Pending Approval</span>';
 const alarmIco = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M12 3 2 21h20Z"/><path d="M12 10v5M12 18h.01"/></svg>';
-const byline = it => `<div class="avatar" aria-hidden="true">${esc(initials(it.author))}</div><div class="byline"><b>${esc(it.author)}</b><span>${esc(it.role)}</span></div>`;
+const AV_COLORS = ['#0b2a55','#e57a0e','#17804f','#455e8c','#a85f00','#785900'];
+const avColor = n => AV_COLORS[[...String(n)].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7) % AV_COLORS.length];
+const BOLT = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7Z"/></svg>';
+const byline = it => `<div class="avatar" aria-hidden="true" style="background:${avColor(it.author)}">${esc(initials(it.author))}</div><div class="byline"><b>${esc(it.author)}</b><span>${esc(it.role)}</span></div>`;
 
 function metaList(it){
   const rows = [['Fixed by', it.author],['Role', it.role],['Aircraft', it.aircraft],['System', `ATA ${it.ata} · ${ataName(it.ata)}`],['Part', it.part],['Warning / error', it.alarm],['Downtime hours saved', fmtH(it.downtime)+' h'],['Attachment', it.media],['Submitted', fmtDT(it.submittedAt)],['ID', it.id]];
@@ -871,10 +949,22 @@ function metaList(it){
 }
 
 /* ---------- Navigation & role ---------- */
-const VIEWS = [['feed','Feed'],['chat','MEC-AI Chat'],['submit','Submit'],['validate','Validation']];
+const VIEWS = [['feed','Feed'],['chat','MEC-AI Chat'],['submit','Submit'],['validate','Validation'],['fleet','Fleet']];
+const SUP_ONLY = ['validate','fleet'];
+const NAV_ICONS = {
+  feed:'<path d="M4 5h16v4H4zM4 11h16v8H4z"/>',
+  chat:'<path d="M4 5h16v11H9l-5 4Z"/><path d="M8 10h8M8 13h5"/>',
+  submit:'<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>',
+  validate:'<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6Z"/><path d="m9 12 2 2 4-4"/>',
+  fleet:'<path d="M3 13.5 12 4l2 1.5-4 6h7l2.5-2.5H21l-1.5 4 1.5 4h-1.5L17 14.5h-7l4 6-2 1.5Z"/>'
+};
+const NAV_SHORT = { feed:'Feed', chat:'AI Chat', submit:'Submit', validate:'Validate', fleet:'Fleet' };
 function renderNav(){
   const sup = store.role === 'sup';
-  $('#tabs').innerHTML = VIEWS.filter(v => v[0] !== 'validate' || sup).map(([k,l]) =>
+  const vis = VIEWS.filter(v => sup || !SUP_ONLY.includes(v[0]));
+  $('#bottom-nav').innerHTML = vis.map(([k]) => `<button type="button" data-go="${k}" ${ui.view===k?'aria-current="page"':''}><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true">${NAV_ICONS[k]}</svg>${NAV_SHORT[k]}${k==='validate'&&pending().length?`<span class="count">${pending().length}</span>`:''}</button>`).join('');
+  $('#me').textContent = initials(PROFILES[store.role].name);
+  $('#tabs').innerHTML = vis.map(([k,l]) =>
     `<button class="tab" data-go="${k}" ${ui.view===k?'aria-current="page"':''}>${l}${k==='validate'&&pending().length?`<span class="count">${pending().length}</span>`:''}</button>`).join('');
   $('#role-mec').setAttribute('aria-pressed', !sup);
   $('#role-sup').setAttribute('aria-pressed', sup);
@@ -892,7 +982,7 @@ function go(v){
 function setRole(r){
   store.role = r; save();
   toast(r === 'sup' ? 'Profile: Supervisor / Quality Engineer' : 'Profile: Mechanic / Technician');
-  if (r === 'mec' && ui.view === 'validate') go('feed'); else render();
+  if (r === 'mec' && SUP_ONLY.includes(ui.view)) go('feed'); else render();
 }
 
 function render(){
@@ -901,6 +991,7 @@ function render(){
   if (ui.view === 'feed') renderFeed();
   if (ui.view === 'submit') renderSubmit();
   if (ui.view === 'validate') renderValidate();
+  if (ui.view === 'fleet') renderFleet();
   if (ui.view === 'chat') renderChat();
   if (focusId === 'approve-hours' && $('#approve-hours')) $('#approve-hours').focus();
   if (focusId === 'reject-reason' && $('#reject-reason')){ const t = $('#reject-reason'); t.focus(); t.selectionStart = t.selectionEnd = t.value.length; }
@@ -936,7 +1027,7 @@ function renderFeed(){
         ${it.mediaUrl && kindOf(it.media) === 'audio' ? `<audio class="card-audio" controls preload="none" src="${esc(it.mediaUrl)}" aria-label="Voice note by ${esc(it.author)}"></audio>` : ''}
         <div class="alarm">${alarmIco}<span>${esc(it.alarm)}</span></div>
         <p>${esc(it.description.replace(/\n+/g,' '))}</p>
-        <div class="card-foot">${byline(it)}<div class="saved"><b>−${fmtH(it.downtime)} h</b>downtime</div></div>
+        <div class="card-foot">${byline(it)}<div class="saved"><b>${BOLT}−${fmtH(it.downtime)} h</b>downtime</div></div>
       </div>
     </article>`).join('') : `<div class="empty" style="grid-column:1/-1"><b>No results.</b><br>Try another warning or clear the filters. If you fixed this problem, <button class="linkbtn" data-go="submit">submit the fix</button>.</div>`;
 }
@@ -1042,12 +1133,10 @@ function renderValidate(){
     <div class="kpi"><span class="label">Pending</span><div class="val" style="color:var(--warn)">${pe.length}</div><div class="sub">${fmtH(pe.reduce((s,i)=>s+Number(i.downtime),0))} h in validation</div></div>
     <div class="kpi"><span class="label">Approved</span><div class="val" style="color:var(--ok)">${ap.length}</div><div class="sub">Visible in the Feed and MEC-AI</div></div>
     <div class="kpi"><span class="label">Approval rate</span><div class="val">${decided ? Math.round(ap.length/decided*100) : 0}<small style="font-size:1.2rem">%</small></div><div class="sub">${rj.length} rejected and returned</div></div>`;
-  renderHangar();
-  renderDash();
   if (!pe.some(i => i.id === ui.selected)){ ui.selected = pe[0]?.id || null; ui.rejecting = false; ui.approving = false; }
   $('#queue').innerHTML = pe.length ? pe.sort((a,b) => a.submittedAt.localeCompare(b.submittedAt)).map(it => `
     <button class="qrow" type="button" role="option" data-sel="${it.id}" aria-selected="${it.id===ui.selected}">
-      <div class="avatar" aria-hidden="true">${esc(initials(it.author))}</div>
+      <div class="avatar" aria-hidden="true" style="background:${avColor(it.author)}">${esc(initials(it.author))}</div>
       <div style="min-width:0"><span class="t">${esc(it.title)}</span><small>${esc(it.author)} · ${esc(it.aircraft)} · ATA ${it.ata}</small></div>
       <div class="h">${fmtH(it.downtime)} h<br>${fmtD(it.submittedAt)}</div>
     </button>`).join('') : `<div class="empty">Queue empty. Every submission has been reviewed.</div>`;
@@ -1060,7 +1149,7 @@ function renderValidate(){
     ${ui.approving ? `
       <div class="approve-box">
         <div class="field"><label for="approve-hours">Aircraft downtime hours saved</label>
-        <input class="input mono" id="approve-hours" type="number" inputmode="decimal" min="0.5" step="0.5" value="${esc(ui.approveHours)}">
+        <div class="stepper"><button class="step" type="button" data-step="approve-hours" data-d="-0.5" aria-label="Fewer hours">−</button><input class="input mono" id="approve-hours" type="number" inputmode="decimal" min="0.5" step="0.5" value="${esc(ui.approveHours)}"><button class="step" type="button" data-step="approve-hours" data-d="0.5" aria-label="More hours">+</button></div>
         <span class="hint">${esc(it.author)} entered <b>${fmtH(it.downtime)} h</b>. Confirm it is realistic or correct it before approving. This value counts towards the total hours saved.</span></div>
         <div class="decide"><button class="btn" type="button" data-act="cancel">Cancel</button><button class="btn btn-ok" type="button" data-act="confirm-approve" id="confirm-approve" ${Number(ui.approveHours) >= 0.5 ? '' : 'disabled'}>Confirm hours and approve</button></div>
       </div>` : ui.rejecting ? `
@@ -1076,6 +1165,12 @@ function renderValidate(){
   const hist = store.items.filter(i => i.status !== 'pending').sort((a,b) => (b.approvedAt||b.reviewedAt).localeCompare(a.approvedAt||a.reviewedAt));
   $('#history').innerHTML = `<thead><tr><th>ID</th><th>Title</th><th>Author</th><th>ATA</th><th>Decision</th><th>Date</th><th style="text-align:right">Hours</th></tr></thead><tbody>${hist.map(i => `
     <tr><td class="mono">${i.id}</td><td>${esc(i.title)}${i.rejectReason?`<div class="hint">${esc(i.rejectReason)}</div>`:''}</td><td>${esc(i.author)}</td><td class="mono">${i.ata}</td><td>${pill(i.status)}</td><td style="white-space:nowrap">${fmtD(i.approvedAt||i.reviewedAt)}</td><td class="num">${i.status==='approved'?fmtH(i.downtime):'—'}${i.status==='approved' && i.downtimeAsked != null && i.downtimeAsked !== i.downtime ? `<div class="hint">requested: ${fmtH(i.downtimeAsked)}</div>` : ''}</td></tr>`).join('')}</tbody>`;
+}
+/* ---------- Fleet view: live hangar + indicators ---------- */
+function renderFleet(){
+  const sup = store.role === 'sup';
+  $('#fleet-locked').hidden = sup; $('#fleet-body').hidden = !sup;
+  if (sup){ renderHangar(); renderDash(); }
 }
 /* ---------- Hangar live map ---------- */
 const ST = { ok:['Operational','var(--ok)','pill-approved'], maint:['In maintenance','var(--warn)','pill-pending'], aog:['Grounded (AOG)','var(--bad)','pill-rejected'] };
@@ -1146,7 +1241,7 @@ function renderHangar(){
   const el = $('#hangar'); if (!el) return;
   const focusId = document.activeElement?.id;
   const fleet = [...store.fleet].sort((a, b) => (a.bay || 0) - (b.bay || 0));
-  const head = (extra = '') => `<div class="dash-head"><div><div class="eyebrow">Live hangar</div><h2>Fleet status</h2></div>${extra}</div>`;
+  const head = (extra = '') => `<div class="dash-head"><div><h2>Apron &amp; hangar bays</h2></div>${extra}</div>`;
   if (!fleet.length){ el.innerHTML = head() + `<div class="empty">${dbState === 'loading' ? 'Loading the fleet…' : 'No aircraft registered in the hangar yet.'}</div>`; return; }
   const cnt = k => fleet.filter(a => a.status === k).length;
   const f = ui.fleetFilter || 'all';
@@ -1185,14 +1280,14 @@ function acPanel(a){
   return `
     <div class="ac-top" style="--sc:${c}"><div class="ac-sketch">${planeSvg(a.model)}</div>
       <div><span class="mono ac-reg">${esc(a.reg)}</span><span class="hint">${esc(a.model)} · Bay ${a.bay}</span><span class="pill ${pc}">${l}</span></div></div>
-    ${a.status !== 'ok' ? `<div class="ac-issue"><div class="label">Why it is stopped</div><p>${esc(a.issue || 'No reason given')}</p>
+    ${a.status !== 'ok' ? `<div class="ac-issue ${a.status}"><div class="label">Why it is stopped</div><p>${esc(a.issue || 'No reason given')}</p>
       <div class="ac-facts"><div><span>Since</span>${fmtDT(a.since)}</div><div><span>Expected back</span>${a.eta ? fmtDT(a.eta) : '—'}</div>
       <div><span>System</span>${a.ata ? `ATA ${a.ata} · ${esc(ataName(a.ata))}` : '—'}</div><div><span>Mechanic</span>${esc(a.tech || '—')}</div></div></div>`
       : `<p class="hint" style="margin:0">Ready to fly${a.since ? ` since ${fmtDT(a.since)}` : ''}.</p>`}
     <div><div class="label">Stops today</div>${stops.length ? `<ol class="stops">${stops.map(x => `<li><span class="mono">${x.carried ? 'since ' + fmtDT(x.at) : hhmm(x.at)} – ${x.end ? hhmm(x.end) : 'now'}</span>${esc(x.reason || '')}${x.fix ? `<small>Fixed: ${esc(x.fix)}</small>` : ''}</li>`).join('')}</ol>` : '<p class="hint" style="margin:6px 0 0">No stops today.</p>'}</div>
     ${tips.length ? `<div><div class="label">Approved tips that may help</div><div class="ac-tips">${tips.map(t => `<button type="button" class="ac-tip" data-open="${t.id}"><b>${esc(t.title)}</b><small>${esc(t.author)} · ${esc(t.aircraft)} · −${fmtH(t.downtime)} h</small></button>`).join('')}</div></div>` : ''}
     ${pend.length ? `<p class="hint" style="margin:0">There ${pend.length === 1 ? 'is 1 pending tip' : `are ${pend.length} pending tips`} about this system waiting for your approval.</p>` : ''}
-    ${a.status !== 'ok' ? `<button class="btn btn-sm" type="button" data-askac="${esc(a.reg)}">Ask MEC-AI about this</button>` : ''}
+    ${a.status !== 'ok' ? `<button class="btn btn-primary" type="button" data-askac="${esc(a.reg)}">Ask MEC-AI about this</button>` : ''}
     ${acActions(a)}`;
 }
 function acActions(a){
@@ -1206,9 +1301,9 @@ function acActions(a){
       <div class="decide"><button class="btn" type="button" data-acset="cancel">Cancel</button><button class="btn ${ui.acMode === 'aog' ? 'btn-bad-solid' : 'btn-primary'}" type="button" data-acset="save" id="ac-save"${ui.acReason?.trim() ? '' : ' disabled'}>Save</button></div>
     </div>`;
   return `<div class="ac-actions">
-    ${a.status !== 'ok' ? '<button class="btn btn-ok btn-sm" type="button" data-acset="ok">Back in service</button>' : ''}
-    ${a.status !== 'maint' ? '<button class="btn btn-sm" type="button" data-acset="maint">In maintenance</button>' : ''}
-    ${a.status !== 'aog' ? '<button class="btn btn-bad btn-sm" type="button" data-acset="aog">Grounded (AOG)</button>' : ''}
+    ${a.status !== 'ok' ? '<button class="btn btn-navy" type="button" data-acset="ok">Back in service</button>' : ''}
+    ${a.status !== 'maint' ? '<button class="btn" type="button" data-acset="maint">In maintenance</button>' : ''}
+    ${a.status !== 'aog' ? '<button class="btn btn-bad" type="button" data-acset="aog">Grounded (AOG)</button>' : ''}
   </div>`;
 }
 document.addEventListener('click', async e => {
@@ -1242,7 +1337,7 @@ document.addEventListener('input', e => {
   if (e.target.id === 'ac-eta') ui.acEta = e.target.value;
 });
 document.addEventListener('change', e => { if (e.target.id === 'ac-ata') ui.acAta = e.target.value; });
-setInterval(() => { if (ui.view === 'validate' && store.role === 'sup' && !ui.acMode) renderHangar(); }, 60000);
+setInterval(() => { if (ui.view === 'fleet' && store.role === 'sup' && !ui.acMode) renderHangar(); }, 60000);
 
 /* ---------- Attachments: photo, voice note with transcription, video ---------- */
 const MAX_MEDIA = 10 * 1024 * 1024;
@@ -1438,7 +1533,7 @@ function renderDash(){
       <div class="chart chart-wide">
         <div><h3>Top contributors</h3><div class="sub">Sorted by hours saved ${rangeLabel}</div></div>
         ${rank.length ? `<div class="table-wrap"><table class="rank"><thead><tr><th>Mechanic</th><th style="text-align:right">Approved</th><th style="text-align:right">Hours saved</th><th style="text-align:right">Pending</th><th style="text-align:right">Rejected</th></tr></thead><tbody>
-          ${rank.map(p => `<tr><td><div class="who-cell"><div class="avatar" aria-hidden="true">${esc(initials(p.name))}</div><div class="byline"><b>${esc(p.name)}</b><span>${esc(p.role)}</span></div></div></td><td class="num">${p.ap}</td><td class="num">${fmtH(p.hours)} h</td><td class="num">${p.pe}</td><td class="num">${p.rj}</td></tr>`).join('')}
+          ${rank.map(p => `<tr><td><div class="who-cell"><div class="avatar" aria-hidden="true" style="background:${avColor(p.name)}">${esc(initials(p.name))}</div><div class="byline"><b>${esc(p.name)}</b><span>${esc(p.role)}</span></div></div></td><td class="num">${p.ap}</td><td class="num">${fmtH(p.hours)} h</td><td class="num">${p.pe}</td><td class="num">${p.rj}</td></tr>`).join('')}
         </tbody></table></div>` : '<div class="empty">No contributions in this period.</div>'}
       </div>
     </div>`;
@@ -1683,8 +1778,9 @@ $('#dlg').addEventListener('click', e => { if (e.target.id === 'dlg') e.target.c
 $('#role-mec').onclick = () => setRole('mec');
 $('#role-sup').onclick = () => setRole('sup');
 $('#go-sup').onclick = () => setRole('sup');
+$('#go-sup-fleet').onclick = () => setRole('sup');
 $('#theme').onclick = () => {
-  const cur = document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  const cur = document.documentElement.dataset.theme || 'light';
   const next = cur === 'dark' ? 'light' : 'dark';
   document.documentElement.dataset.theme = next;
   try { localStorage.setItem('akh-theme', next); } catch(e){}
@@ -1711,6 +1807,13 @@ $('#btn-photo').onclick = () => $('#chat-file').click();
 $('#chat-file').onchange = e => { const f = e.target.files[0]; ui.pendingBlob = f || null; readImg(f, d => { ui.pendingImg = d; renderChat(); $('#chat-in').focus(); }); e.target.value = ''; };
 $('#btn-audio').onclick = () => { const t = PRESETS_AUDIO[Math.floor(Math.random()*PRESETS_AUDIO.length)]; ask(t, { audio:true }); };
 $('#chat-reset').onclick = () => { if (ui.busy) return; ui.turns = []; greet(); renderChat(); };
+
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-step]'); if (!b) return;
+  const inp = $('#' + b.dataset.step); if (!inp) return;
+  inp.value = Math.max(0.5, Math.round(((Number(inp.value) || 0) + Number(b.dataset.d)) * 2) / 2);
+  inp.dispatchEvent(new Event('input', { bubbles: true }));
+});
 
 /* ---------- Boot ---------- */
 try { const th = localStorage.getItem('akh-theme'); if (th) document.documentElement.dataset.theme = th; } catch(e){}
