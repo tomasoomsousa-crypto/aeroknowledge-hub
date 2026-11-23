@@ -112,6 +112,7 @@ textarea.input{min-height:150px;resize:vertical;line-height:1.5}
 .pill::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
 .pill-pending{background:var(--warn-bg);color:var(--warn)}
 .pill-approved{background:var(--ok-bg);color:var(--ok)}
+.pill-withdrawn{background:var(--surface-2);color:var(--ink-2)}
 .pill-rejected{background:var(--bad-bg);color:var(--bad)}
 .alarm{font-family:var(--f-mono);font-size:.82rem;color:var(--accent);font-weight:500;display:flex;gap:6px;align-items:flex-start}
 .alarm svg{flex:none;margin-top:2px}
@@ -443,6 +444,7 @@ dialog::backdrop{background:rgba(5,12,24,.65)}
 .dash-tools{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}
 .aog-set{display:flex;flex-direction:column;gap:4px;font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
 .aog-set .input{min-height:42px;width:140px;padding:6px 10px}
+.withdraw{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .use-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 14px;border-radius:var(--r);background:var(--ok-bg);border:1px solid color-mix(in srgb,var(--ok) 30%,transparent)}
 .use-row b{display:block;font-family:var(--f-display);font-size:1.3rem;color:var(--ok);text-transform:uppercase}
 .use-row span{font-size:.85rem;color:var(--ink-2)}
@@ -969,6 +971,9 @@ const usesOf = it => Array.isArray(it.uses) ? it.uses : [];
 const AOG_KEY = 'akh-aog-cost';
 function aogCost(){ try { const v = Number(localStorage.getItem(AOG_KEY)); return v > 0 ? v : 10000; } catch(e){ return 10000; } }
 const fmtEUR = v => new Intl.NumberFormat('en-GB', { style:'currency', currency:'EUR', maximumFractionDigits: v >= 1e6 ? 2 : 0, notation: v >= 1e6 ? 'compact' : 'standard' }).format(v);
+const openFlags = it => (it.flags || []).filter(f => !f.resolved);
+// Success rate: uses that worked vs. reports that it didn't (reviewed reports still count as failures).
+const successOf = it => { const u = usesOf(it).length, f = (it.flags || []).length; return u + f ? { u, f, rate: Math.round(u / (u + f) * 100) } : null; };
 const savedBy = (it, inR = () => true) => usesOf(it).filter(u => inR(u.at)).length * Number(it.downtime);
 const pending = () => store.items.filter(i => i.status === 'pending');
 const norm = s => String(s).normalize('NFD').replace(/\p{M}/gu,'').toLowerCase();
@@ -1016,7 +1021,7 @@ function mediaArt(it){
 
 /* ---------- Shared pieces ---------- */
 const ataChip = c => `<span class="chip chip-ata"><b>ATA ${c}</b> ${esc(ataName(c))}</span>`;
-const pill = s => s === 'approved' ? '<span class="pill pill-approved">Approved</span>' : s === 'rejected' ? '<span class="pill pill-rejected">Rejected</span>' : '<span class="pill pill-pending">Pending Approval</span>';
+const pill = s => s === 'approved' ? '<span class="pill pill-approved">Approved</span>' : s === 'withdrawn' ? '<span class="pill pill-withdrawn">Withdrawn</span>' : s === 'rejected' ? '<span class="pill pill-rejected">Rejected</span>' : '<span class="pill pill-pending">Pending Approval</span>';
 const alarmIco = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M12 3 2 21h20Z"/><path d="M12 10v5M12 18h.01"/></svg>';
 const AV_COLORS = ['#0b2a55','#e57a0e','#17804f','#455e8c','#a85f00','#785900'];
 const avColor = n => AV_COLORS[[...String(n)].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7) % AV_COLORS.length];
@@ -1108,7 +1113,7 @@ function renderFeed(){
         ${it.mediaUrl && kindOf(it.media) === 'audio' ? `<audio class="card-audio" controls preload="none" src="${esc(it.mediaUrl)}" aria-label="Voice note by ${esc(it.author)}"></audio>` : ''}
         <div class="alarm">${alarmIco}<span>${esc(it.alarm)}</span></div>
         <p>${esc(it.description.replace(/\n+/g,' '))}</p>
-        <div class="card-foot">${byline(it)}<div class="saved"><b>${BOLT}${fmtH(savedBy(it))} h</b>saved · used ${usesOf(it).length}×</div></div>
+        <div class="card-foot">${byline(it)}<div class="saved"><b>${BOLT}${fmtH(savedBy(it))} h</b>saved · used ${usesOf(it).length}×${(it.flags || []).length ? ' · ' + successOf(it).rate + '% success' : ''}</div></div>
       </div>
     </article>`).join('') : `<div class="empty" style="grid-column:1/-1"><b>No results.</b><br>Try another warning or clear the filters. If you fixed this problem, <button class="linkbtn" data-go="submit">submit the fix</button>.</div>`;
 }
@@ -1130,6 +1135,8 @@ function openDetail(id){
     <p class="desc">${esc(it.description)}</p>
     ${metaList(it)}
     ${useRow(it)}
+    ${it.status === 'withdrawn' ? `<div class="reason"><b>Withdrawn by Quality${it.withdrawnAt ? ' on ' + fmtD(it.withdrawnAt) : ''}:</b> ${esc(it.withdrawReason || '')}</div>` : ''}
+    ${store.role === 'sup' && it.status === 'approved' ? `<div class="withdraw" id="withdraw-box"><button class="btn btn-bad" type="button" data-withdraw="${it.id}">Withdraw tip</button><span class="hint">Removes it from the Feed and MEC-AI. The mechanic sees the reason.</span></div>` : ''}
     <div class="card-foot">${byline(it)}<div class="saved"><b>−${fmtH(it.downtime)} h</b>per use</div></div>`;
   const d = $('#dlg'); if (d.showModal) d.showModal(); else d.setAttribute('open','');
 }
@@ -1145,6 +1152,7 @@ function renderSubmit(){
       <div class="subitem-top"><b>${esc(it.title)}</b>${pill(it.status)}</div>
       <small>${esc(it.author)} · ${esc(it.aircraft)} · ATA ${it.ata} · ${fmtDT(it.submittedAt)}</small>
       ${it.status === 'rejected' ? `<div class="reason"><b>Rejection reason:</b> ${esc(it.rejectReason)}</div>` : ''}
+      ${it.status === 'withdrawn' ? `<div class="reason"><b>Withdrawn by Quality:</b> ${esc(it.withdrawReason || '')}</div>` : ''}
     </div>`).join('');
 }
 const REQ = ['f-name','f-role','f-aircraft','f-ata','f-part','f-alarm','f-downtime','f-title','f-desc'];
@@ -1246,10 +1254,11 @@ function renderValidate(){
       </div>`}`;
   const flagged = approved().filter(i => (i.flags || []).some(f => !f.resolved));
   $('#flagged-panel').hidden = !flagged.length;
-  $('#flagged').innerHTML = flagged.map(i => { const fl = i.flags.filter(f => !f.resolved), last = fl[fl.length - 1]; return `<div class="flag-row"><div><b>${esc(i.id)} · ${esc(i.title)}</b><small>${fl.length} ${fl.length === 1 ? 'report' : 'reports'} · latest: “${esc(last.reason)}” (${esc(last.by)}${last.reg ? ', ' + esc(last.reg) : ''})</small></div><button class="btn btn-sm" type="button" data-open="${i.id}">Open tip</button><button class="btn btn-sm btn-navy" type="button" data-resolve="${i.id}">Mark as reviewed</button></div>`; }).join('');
-  const hist = store.items.filter(i => i.status !== 'pending').sort((a,b) => (b.approvedAt||b.reviewedAt).localeCompare(a.approvedAt||a.reviewedAt));
+  $('#flagged').innerHTML = flagged.map(i => { const fl = i.flags.filter(f => !f.resolved), last = fl[fl.length - 1]; return `<div class="flag-row"><div><b>${esc(i.id)} · ${esc(i.title)}</b><small>${fl.length} ${fl.length === 1 ? 'report' : 'reports'} · latest: “${esc(last.reason)}” (${esc(last.by)}${last.reg ? ', ' + esc(last.reg) : ''})</small></div><button class="btn btn-sm" type="button" data-open="${i.id}">Open to review or withdraw</button><button class="btn btn-sm btn-navy" type="button" data-resolve="${i.id}">Mark as reviewed</button></div>`; }).join('');
+  const when = i => i.withdrawnAt || i.approvedAt || i.reviewedAt || '';
+  const hist = store.items.filter(i => i.status !== 'pending').sort((a,b) => when(b).localeCompare(when(a)));
   $('#history').innerHTML = `<thead><tr><th>ID</th><th>Title</th><th>Author</th><th>ATA</th><th>Decision</th><th>Date</th><th style="text-align:right">Hours</th></tr></thead><tbody>${hist.map(i => `
-    <tr><td class="mono">${i.id}</td><td>${esc(i.title)}${i.rejectReason?`<div class="hint">${esc(i.rejectReason)}</div>`:''}</td><td>${esc(i.author)}</td><td class="mono">${i.ata}</td><td>${pill(i.status)}</td><td style="white-space:nowrap">${fmtD(i.approvedAt||i.reviewedAt)}</td><td class="num">${i.status==='approved'?fmtH(i.downtime):'—'}${i.status==='approved' && i.downtimeAsked != null && i.downtimeAsked !== i.downtime ? `<div class="hint">requested: ${fmtH(i.downtimeAsked)}</div>` : ''}</td></tr>`).join('')}</tbody>`;
+    <tr><td class="mono">${i.id}</td><td>${esc(i.title)}${i.rejectReason?`<div class="hint">${esc(i.rejectReason)}</div>`:''}${i.withdrawReason?`<div class="hint">Withdrawn: ${esc(i.withdrawReason)}</div>`:''}</td><td>${esc(i.author)}</td><td class="mono">${i.ata}</td><td>${pill(i.status)}</td><td style="white-space:nowrap">${fmtD(when(i))}</td><td class="num">${i.status==='approved'?fmtH(i.downtime):'—'}${i.status==='approved' && i.downtimeAsked != null && i.downtimeAsked !== i.downtime ? `<div class="hint">requested: ${fmtH(i.downtimeAsked)}</div>` : ''}</td></tr>`).join('')}</tbody>`;
 }
 /* ---------- Fleet view: live hangar + indicators ---------- */
 function renderFleet(){
@@ -1543,6 +1552,27 @@ document.addEventListener('click', e => {
   $('#' + id).onchange = e => { const f = e.target.files[0]; if (f) setSubMedia({ kind, blob: f, name: f.name }); updRecUi(); e.target.value = ''; };
 });
 
+// Supervisor withdraws a published tip (e.g. after "didn't work" reports); it leaves the Feed and MEC-AI.
+document.addEventListener('click', async e => {
+  const w = e.target.closest('[data-withdraw]');
+  if (w){
+    $('#withdraw-box').innerHTML = `<textarea class="input" id="withdraw-reason" style="min-height:80px;flex:1 1 100%" placeholder="Why is it being withdrawn? e.g. Two reports show the root cause is the sensor, not the filter"></textarea>
+      <button class="btn" type="button" data-withdraw-cancel="${w.dataset.withdraw}">Cancel</button><button class="btn btn-bad-solid" type="button" data-withdraw-ok="${w.dataset.withdraw}">Confirm withdrawal</button>`;
+    $('#withdraw-reason').focus();
+    return;
+  }
+  const c = e.target.closest('[data-withdraw-cancel]'); if (c){ openDetail(c.dataset.withdrawCancel); return; }
+  const ok = e.target.closest('[data-withdraw-ok]');
+  if (ok){
+    const reason = $('#withdraw-reason').value.trim();
+    if (reason.length < 5){ toast('Write the reason for withdrawing the tip.'); return; }
+    const it = store.items.find(i => i.id === ok.dataset.withdrawOk); if (!it) return;
+    ok.disabled = true;
+    const done = await dbWrite(it.id, { status:'withdrawn', withdrawnAt: new Date().toISOString(), withdrawReason: reason, reviewer: PROFILES.sup.name, flags: (it.flags || []).map(f => ({ ...f, resolved: true })) }, true);
+    if (done){ toast(`${it.id} withdrawn. It no longer appears in the Feed or MEC-AI.`); $('#dlg').close(); render(); }
+  }
+});
+
 /* ---------- Tester feedback ---------- */
 const FB_KEY = 'akh-feedback';
 let fbRating = 0;
@@ -1579,15 +1609,16 @@ function feedbackCard(){
 
 /* ---------- Tip usage ---------- */
 const USED_KEY = 'akh-used';
-function usedToday(id){ try { return JSON.parse(localStorage.getItem(USED_KEY) || '{}')[id] === new Date().toDateString(); } catch(e){ return false; } }
+// What this browser did with a tip today: 'used', 'reported' or null.
+function usedToday(id){ try { const v = JSON.parse(localStorage.getItem(USED_KEY) || '{}')[id]; const [kind, day] = String(v || '').includes('|') ? v.split('|') : ['used', v]; return day === new Date().toDateString() ? kind : null; } catch(e){ return null; } }
 function useRow(it){
   if (it.status !== 'approved') return '';
   const n = usesOf(it).length, done = usedToday(it.id), last = usesOf(it).slice(-1)[0];
   const regs = [...store.fleet].sort((a, b) => (b.model === it.aircraft) - (a.model === it.aircraft) || (a.bay || 0) - (b.bay || 0));
-  const flags = (it.flags || []).filter(f => !f.resolved);
+  const flags = openFlags(it), sc = successOf(it);
   return `<div class="use-row">
-    <div class="use-sum"><b>Used ${n}×</b><span>${fmtH(savedBy(it))} h of downtime saved so far · ${fmtH(it.downtime)} h each time${last ? ` · last used${last.reg ? ' on ' + esc(last.reg) : ''} ${fmtD(last.at)}` : ''}</span></div>
-    ${done ? '<span class="use-done">✓ You used this tip today</span>' : `<div class="use-act">
+    <div class="use-sum"><b>Used ${n}×</b><span>${fmtH(savedBy(it))} h of downtime saved so far · ${fmtH(it.downtime)} h each time${sc && sc.f ? ` · worked ${sc.u} of ${sc.u + sc.f} times (${sc.rate}%)` : ''}${last ? ` · last used${last.reg ? ' on ' + esc(last.reg) : ''} ${fmtD(last.at)}` : ''}</span></div>
+    ${done ? `<span class="use-done">${done === 'reported' ? '✓ You reported this tip today. Quality will review it.' : '✓ You used this tip today'}</span>` : `<div class="use-act">
       <select class="input" aria-label="Aircraft where you used it">${regs.map(a => `<option value="${esc(a.reg)}">${esc(a.reg)} · ${esc(a.model)}</option>`).join('')}<option value="">Another aircraft</option></select>
       <button class="btn btn-primary" type="button" data-use="${it.id}">I used this tip</button>
       <button class="btn" type="button" data-flag="${it.id}">Didn't work</button>
@@ -1596,7 +1627,7 @@ function useRow(it){
   </div>`;
 }
 function refreshTip(id){ setTimeout(() => { if ($('#dlg').open) openDetail(id); if (ui.view === 'chat') renderChat(); if (ui.view === 'validate') renderValidate(); }, 60); }
-function rememberUse(id){ try { const m = JSON.parse(localStorage.getItem(USED_KEY) || '{}'); m[id] = new Date().toDateString(); localStorage.setItem(USED_KEY, JSON.stringify(m)); } catch(e){} }
+function rememberUse(id, kind = 'used'){ try { const m = JSON.parse(localStorage.getItem(USED_KEY) || '{}'); m[id] = kind + '|' + new Date().toDateString(); localStorage.setItem(USED_KEY, JSON.stringify(m)); } catch(e){} }
 async function markUsed(id, reg){
   const it = store.items.find(i => i.id === id); if (!it || it.status !== 'approved') return;
   const ok = await dbWrite(id, { uses: [...usesOf(it), { at: new Date().toISOString(), by: PROFILES[store.role].name, reg: reg || '' }] }, true);
@@ -1609,7 +1640,7 @@ async function reportFail(id, reg, reason){
   const it = store.items.find(i => i.id === id); if (!it) return;
   const ok = await dbWrite(id, { flags: [...(it.flags || []), { at: new Date().toISOString(), by: PROFILES[store.role].name, reg: reg || '', reason, resolved: false }] }, true);
   if (!ok) return;
-  rememberUse(id);
+  rememberUse(id, 'reported');
   toast('Thanks. Quality will review this tip.');
   refreshTip(id);
 }
@@ -1706,7 +1737,7 @@ function renderDash(){
     </div>
     <div class="kpis-2">
       <div class="kpi"><span class="label">Hours saved</span><div class="val">${fmtH(hours)}<small style="font-size:1rem"> h</small></div><div class="sub">≈ <b>${fmtEUR(hours * aogCost())}</b> avoided · ${used.length} ${used.length === 1 ? 'use' : 'uses'} ${rangeLabel}</div></div>
-      <div class="kpi"><span class="label">Times tips were used</span><div class="val">${used.length}</div><div class="sub">${used.length ? fmtH(hours / used.length) + ' h saved per use on average' : 'No uses reported yet'}</div></div>
+      <div class="kpi"><span class="label">Times tips were used</span><div class="val">${used.length}</div><div class="sub">${used.length ? fmtH(hours / used.length) + ' h saved per use on average' : 'No uses reported yet'}${(() => { const f = all.filter(i => i.status === 'approved').reduce((n, i) => n + (i.flags || []).length, 0); return used.length + f ? ` · worked ${Math.round(used.length / (used.length + f) * 100)}% of the time` : ''; })()}</div></div>
       <div class="kpi"><span class="label">Average decision time</span><div class="val">${avgRev == null ? '—' : fmtDur(avgRev)}</div><div class="sub">From mechanic submission to approval or rejection</div></div>
       <div class="kpi"><span class="label">Longest waiting</span><div class="val" style="color:${oldAge > 72 ? 'var(--bad)' : 'var(--ink)'}">${oldest ? fmtDur(oldAge) : '—'}</div><div class="sub">${oldest ? `${esc(oldest.author)} · ${esc(oldest.id)}${oldAge > 72 ? ' · over 3 days' : ''}` : 'No tips waiting'}</div></div>
     </div>
@@ -1880,6 +1911,7 @@ How to decide:
 - If ONE tip clearly fits, answer straight away.
 - If the description is vague or fits more than one tip, ask ONE diagnostic question at a time to narrow it down: which aircraft, which warning shows in the cockpit, in which phase it happens (start-up, taxi, cruise, on the ground), whether it is intermittent, under which conditions (cold, heat, after washing), what has already been checked. Pick the question that best narrows the options and say in one short sentence what you are considering.
 - Ask at most 3 questions in the conversation. After that, give the best match and say how confident you are.
+- Some tips have open "didn't work" reports from other mechanics. If you recommend such a tip, say so in one short sentence (how many reports and what they said), and if another approved tip also fits, suggest it as well. Prefer tips without open reports when both fit equally.
 - If no tip applies, say clearly that there is no validated fix in the knowledge base and suggest submitting the fix once it is solved.
 - Use ONLY the approved tips in the knowledge base below. Do not invent procedures, values, torques, part numbers or references.
 
@@ -1893,7 +1925,7 @@ Format when you ANSWER:
 - One short sentence reminding them to confirm the procedure in the official aircraft manual.
 - On the LAST line: "SOURCES: " followed by the IDs of the tips used, separated by commas (at most 2).`;
 function kbText(){
-  return approved().map(i => `[${i.id}] ${i.title}\nAircraft: ${i.aircraft} | ATA ${i.ata} ${ataName(i.ata)} | Part: ${i.part} | Warning: ${i.alarm}\nAuthor: ${i.author} (${i.role}) | Approved: ${fmtD(i.approvedAt)} | Downtime saved per use: ${i.downtime} h | Used ${usesOf(i).length} times\nDescription: ${i.description}${i.transcript && !i.description.includes(i.transcript.slice(0, 30)) ? '\nVoice-note transcript: ' + i.transcript : ''}`).join('\n\n---\n\n');
+  return approved().map(i => `[${i.id}] ${i.title}\nAircraft: ${i.aircraft} | ATA ${i.ata} ${ataName(i.ata)} | Part: ${i.part} | Warning: ${i.alarm}\nAuthor: ${i.author} (${i.role}) | Approved: ${fmtD(i.approvedAt)} | Downtime saved per use: ${i.downtime} h | Used ${usesOf(i).length} times${openFlags(i).length ? ` | OPEN "DIDN'T WORK" REPORTS: ${openFlags(i).length} (${openFlags(i).map(f => `"${f.reason}"`).join('; ')})` : ''}${(i.flags || []).length ? ` | Success rate: ${successOf(i).rate}%` : ''}\nDescription: ${i.description}${i.transcript && !i.description.includes(i.transcript.slice(0, 30)) ? '\nVoice-note transcript: ' + i.transcript : ''}`).join('\n\n---\n\n');
 }
 // Claude ends each reply with control lines: optional "OPTIONS: a | b" (quick replies) and "SOURCES: K-…" (Portuguese markers accepted too).
 function splitSources(text){
