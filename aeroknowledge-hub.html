@@ -401,21 +401,21 @@ dialog::backdrop{background:rgba(5,12,24,.65)}
   <div class="wrap top-row">
     <div class="brand">
       <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="9" fill="#f2b705"/><path d="M8 23.5 20 9l3 2-6 10h11l4-4h2l-2 6 2 6h-2l-4-4H17l6 10-3 2L8 26.5Z" fill="#0b2a55"/></svg>
-      <div><div class="brand-name">AEROKNOWLEDGE HUB</div><div class="brand-sub">Saber do hangar · Manutenção</div></div>
+      <div><div class="brand-name">AEROKNOWLEDGE HUB</div><div class="brand-sub">Hangar know-how · Maintenance</div></div>
     </div>
-    <span class="sync sync-wait" id="sync" role="status"><i aria-hidden="true"></i><span>A ligar…</span></span>
+    <span class="sync sync-wait" id="sync" role="status"><i aria-hidden="true"></i><span>Connecting…</span></span>
     <div class="who" id="who"></div>
-    <div class="seg" role="group" aria-label="Perfil de utilizador">
+    <div class="seg" role="group" aria-label="User profile">
       <button id="role-mec" type="button" aria-pressed="true">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4Z"/></svg>Mecânico</button>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4Z"/></svg>Mechanic</button>
       <button id="role-sup" type="button" aria-pressed="false">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6Z"/><path d="m9 12 2 2 4-4"/></svg>Supervisor</button>
     </div>
-    <button class="iconbtn" id="theme" type="button" aria-label="Alternar modo claro/escuro">
+    <button class="iconbtn" id="theme" type="button" aria-label="Toggle light/dark mode">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
     </button>
   </div>
-  <nav class="wrap tabs" id="tabs" aria-label="Secções"></nav>
+  <nav class="wrap tabs" id="tabs" aria-label="Sections"></nav>
   <div class="hazard" aria-hidden="true"></div>
 </header>
 
@@ -424,15 +424,15 @@ dialog::backdrop{background:rgba(5,12,24,.65)}
   <section id="view-feed" data-view="feed">
     <div class="view-head">
       <div class="grow">
-        <div class="eyebrow">Dicas aprovadas pela Qualidade</div>
-        <h1>Feed de Conhecimento</h1>
-        <p>Soluções do hangar já aprovadas pela Qualidade. Filtra por avião ou sistema, ou pesquisa por aviso, peça ou palavra.</p>
+        <div class="eyebrow">Tips approved by Quality</div>
+        <h1>Knowledge Feed</h1>
+        <p>Hangar fixes already approved by Quality. Filter by aircraft or system, or search by warning, part or keyword.</p>
       </div>
     </div>
     <div class="toolbar">
-      <div class="field search"><label for="q">Pesquisa</label><input class="input" id="q" type="search" placeholder="ex: APU, trem de aterragem, ar condicionado…"></div>
-      <div class="field"><label for="fa">Aeronave</label><select class="input" id="fa"></select></div>
-      <div class="field"><label for="fata">Sistema do avião</label><select class="input" id="fata"></select></div>
+      <div class="field search"><label for="q">Search</label><input class="input" id="q" type="search" placeholder="e.g. APU, landing gear, air conditioning…"></div>
+      <div class="field"><label for="fa">Aircraft</label><select class="input" id="fa"></select></div>
+      <div class="field"><label for="fata">Aircraft system</label><select class="input" id="fata"></select></div>
     </div>
     <div class="result-meta" id="feed-meta"></div>
     <div class="cards" id="cards"></div>
@@ -442,9 +442,9 @@ dialog::backdrop{background:rgba(5,12,24,.65)}
   <section id="view-chat" data-view="chat" hidden>
     <div class="view-head">
       <div class="grow">
-        <div class="eyebrow">Pergunta a quem já resolveu</div>
+        <div class="eyebrow">Ask the people who already fixed it</div>
         <h1>Chat MEC-AI</h1>
-        <p>Explica o problema como explicarias a um colega. O MEC-AI faz perguntas até perceber a causa e só responde com soluções aprovadas, dizendo sempre quem as escreveu.</p>
+        <p>Describe the problem the way you would to a colleague. MEC-AI asks questions until it finds the cause and only answers with approved fixes, always showing who wrote them.</p>
       </div>
     </div>
     <div class="chat">
@@ -452,33 +452,33 @@ dialog::backdrop{background:rgba(5,12,24,.65)}
         <div class="chat-head">
           <div class="bot-badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f2b705" stroke-width="2" aria-hidden="true"><rect x="4" y="7" width="16" height="12" rx="3"/><path d="M12 3v4M9 12h.01M15 12h.01M9 16h6"/></svg></div>
           <div><b>MEC-AI</b><small><span class="live"></span><span id="chat-scope"></span></small></div>
-          <button class="btn btn-sm" id="chat-reset" type="button" style="margin-left:auto">Nova conversa</button>
+          <button class="btn btn-sm" id="chat-reset" type="button" style="margin-left:auto">New chat</button>
         </div>
         <div class="msgs" id="msgs" aria-live="polite"></div>
         <form class="composer" id="composer">
           <div class="pending-att" id="pending-att" hidden></div>
           <div class="composer-row">
             <input type="file" id="chat-file" accept="image/*" hidden>
-            <button class="attach" type="button" id="btn-photo" aria-label="Anexar foto do problema" title="Anexar foto">
+            <button class="attach" type="button" id="btn-photo" aria-label="Attach a photo of the problem" title="Attach photo">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4Z"/><circle cx="12" cy="13" r="3.5"/></svg></button>
-            <button class="attach" type="button" id="btn-audio" aria-label="Simular nota de voz" title="Simular nota de voz">
+            <button class="attach" type="button" id="btn-audio" aria-label="Simulate a voice note" title="Simulate a voice note">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>
-            <textarea class="input" id="chat-in" rows="1" placeholder="Descreve o que está a acontecer, por palavras tuas…"></textarea>
-            <button class="btn btn-primary send" type="submit" aria-label="Enviar">
+            <textarea class="input" id="chat-in" rows="1" placeholder="Describe what is happening, in your own words…"></textarea>
+            <button class="btn btn-primary send" type="submit" aria-label="Send">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg></button>
           </div>
         </form>
       </div>
       <aside class="panel side-note">
-        <h2>Como funciona</h2>
+        <h2>How it works</h2>
         <ol>
-          <li>Descreve o sintoma como o vês. Não precisas do código de alarme exato.</li>
-          <li>Se houver várias hipóteses, o MEC-AI faz até 3 perguntas. Toca numa das respostas rápidas ou escreve a tua.</li>
-          <li>O MEC-AI pesquisa apenas dicas com estado <b>Aprovado</b>. Submissões pendentes ficam de fora.</li>
-          <li>Cada resposta mostra quem resolveu o problema, a foto ou vídeo, quando foi aprovada e o sistema do avião.</li>
-          <li>Confirma sempre o procedimento no manual oficial do avião antes de mexer.</li>
+          <li>Describe the symptom as you see it. You don't need the exact warning code.</li>
+          <li>If several causes are possible, MEC-AI asks up to 3 questions. Tap a quick reply or type your own.</li>
+          <li>MEC-AI only searches tips with status <b>Approved</b>. Pending submissions are left out.</li>
+          <li>Every answer shows who fixed the problem, the photo, video or voice note, when it was approved and the aircraft system.</li>
+          <li>Always confirm the procedure in the official aircraft manual before working on it.</li>
         </ol>
-        <div class="label">Experimenta perguntar</div>
+        <div class="label">Try asking</div>
         <div class="suggest" id="side-suggest"></div>
       </aside>
     </div>
@@ -488,72 +488,73 @@ dialog::backdrop{background:rgba(5,12,24,.65)}
   <section id="view-submit" data-view="submit" hidden>
     <div class="view-head">
       <div class="grow">
-        <div class="eyebrow">Resolveste um problema? Partilha</div>
-        <h1>Submeter Conhecimento</h1>
-        <p>Regista a solução enquanto te lembras bem dela. Todos os campos são obrigatórios. A dica fica <b>Pendente de Aprovação</b> até a Qualidade a validar.</p>
+        <div class="eyebrow">Fixed a problem? Share it</div>
+        <h1>Submit Knowledge</h1>
+        <p>Record the fix while it is fresh. All fields are required. The tip stays <b>Pending Approval</b> until Quality validates it.</p>
       </div>
-      <button class="btn" id="fill-example" type="button">Preencher exemplo</button>
+      <button class="btn" id="fill-example" type="button">Fill in example</button>
     </div>
     <div class="submit-grid">
       <form class="panel form" id="sub-form" novalidate>
-        <div class="form-section">Quem és</div>
+        <div class="form-section">About you</div>
         <div class="form-row">
-          <div class="field"><label for="f-name">O teu nome <span class="req">*</span></label><input class="input" id="f-name" autocomplete="name"><span class="err">Indica o teu nome.</span></div>
-          <div class="field"><label for="f-role">A tua função <span class="req">*</span></label><select class="input" id="f-role"></select><span class="err">Indica a tua função.</span></div>
+          <div class="field"><label for="f-name">Your name <span class="req">*</span></label><input class="input" id="f-name" autocomplete="name"><span class="err">Enter your name.</span></div>
+          <div class="field"><label for="f-role">Your role <span class="req">*</span></label><select class="input" id="f-role"></select><span class="err">Choose your role.</span></div>
         </div>
-        <div class="form-section">Avião e sistema</div>
+        <div class="form-section">Aircraft and system</div>
         <div class="form-row">
-          <div class="field"><label for="f-aircraft">Avião <span class="req">*</span></label><select class="input" id="f-aircraft"></select><span class="err">Escolhe o modelo.</span></div>
-          <div class="field"><label for="f-ata">Sistema do avião (código ATA) <span class="req">*</span></label><select class="input" id="f-ata"></select><span class="err">Escolhe o sistema.</span></div>
+          <div class="field"><label for="f-aircraft">Aircraft <span class="req">*</span></label><select class="input" id="f-aircraft"></select><span class="err">Choose the model.</span></div>
+          <div class="field"><label for="f-ata">Aircraft system (ATA code) <span class="req">*</span></label><select class="input" id="f-ata"></select><span class="err">Choose the system.</span></div>
         </div>
         <div class="form-row">
-          <div class="field"><label for="f-part">Peça <span class="req">*</span></label><input class="input" id="f-part" placeholder="ex: Válvula do ar quente do motor"><span class="err">Indica a peça.</span></div>
-          <div class="field"><label for="f-alarm">Aviso ou código de erro <span class="req">*</span></label><input class="input mono" id="f-alarm" placeholder="ex: Erro E-402, aviso de perda de pressão"><span class="err">Indica o aviso ou o código.</span></div>
+          <div class="field"><label for="f-part">Part <span class="req">*</span></label><input class="input" id="f-part" placeholder="e.g. Engine bleed air valve"><span class="err">Enter the part.</span></div>
+          <div class="field"><label for="f-alarm">Warning or error code <span class="req">*</span></label><input class="input mono" id="f-alarm" placeholder="e.g. Error E-402, pressure loss warning"><span class="err">Enter the warning or code.</span></div>
         </div>
-        <div class="field"><label for="f-downtime">Horas de avião parado poupadas <span class="req">*</span></label><input class="input mono" id="f-downtime" type="number" inputmode="decimal" min="0.5" step="0.5" placeholder="ex: 4.5" style="max-width:220px"><span class="err">Indica as horas de paragem poupadas (mínimo 0,5 h).</span><span class="hint">Quanto tempo a menos o avião fica parado graças a esta dica.</span></div>
-        <div class="form-section">Anexo</div>
+        <div class="field"><label for="f-downtime">Aircraft downtime hours saved <span class="req">*</span></label><input class="input mono" id="f-downtime" type="number" inputmode="decimal" min="0.5" step="0.5" placeholder="e.g. 4.5" style="max-width:220px"><span class="err">Enter the downtime hours saved (minimum 0.5 h).</span><span class="hint">How much less time the aircraft stays grounded thanks to this tip.</span></div>
+        <div class="form-section">Attachment</div>
         <div class="field" id="media-field">
-          <span class="label" id="media-label">O que vais anexar? <span class="req">*</span></span>
+          <span class="label" id="media-label">What are you attaching? <span class="req">*</span></span>
           <div class="media-pick" role="radiogroup" aria-labelledby="media-label">
-            <input type="radio" name="media" id="m-photo" value="Foto + Texto"><label for="m-photo"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4Z"/><circle cx="12" cy="13" r="3.5"/></svg>Foto + Texto</label>
-            <input type="radio" name="media" id="m-audio" value="Áudio com Transcrição"><label for="m-audio"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>Áudio com Transcrição</label>
-            <input type="radio" name="media" id="m-video" value="Vídeo Demonstrativo"><label for="m-video"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="m16 10 5-3v10l-5-3Z"/></svg>Vídeo Demonstrativo</label>
+            <input type="radio" name="media" id="m-photo" value="Photo + Text"><label for="m-photo"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4Z"/><circle cx="12" cy="13" r="3.5"/></svg>Photo + Text</label>
+            <input type="radio" name="media" id="m-audio" value="Audio with Transcript"><label for="m-audio"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>Audio with Transcript</label>
+            <input type="radio" name="media" id="m-video" value="Demo Video"><label for="m-video"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="m16 10 5-3v10l-5-3Z"/></svg>Demo Video</label>
           </div>
-          <span class="err">Escolhe o tipo de anexo.</span>
+          <span class="err">Choose the attachment type.</span>
         </div>
         <div class="media-in" id="media-in">
-          <p class="hint" id="media-hint" style="margin:0">Escolhe o tipo de anexo acima para juntar a foto, o áudio ou o vídeo.</p>
+          <p class="hint" id="media-hint" style="margin:0">Choose the attachment type above to add the photo, audio or video.</p>
           <div class="media-in-row" data-for="photo" hidden>
             <input type="file" id="f-photo" accept="image/*" capture="environment" hidden>
-            <button class="btn" type="button" data-pick="f-photo">Tirar ou escolher foto</button>
+            <button class="btn" type="button" data-pick="f-photo">Take or choose photo</button>
           </div>
           <div class="media-in-row" data-for="audio" hidden>
-            <button class="btn btn-rec" type="button" id="rec-btn">Gravar nota de voz</button>
+            <button class="btn btn-rec" type="button" id="rec-btn">Record voice note</button>
             <span class="rec-time mono" id="rec-time" hidden></span>
             <input type="file" id="f-audio" accept="audio/*" hidden>
-            <button class="btn" type="button" data-pick="f-audio">Anexar ficheiro de áudio</button>
+            <button class="btn" type="button" data-pick="f-audio">Attach audio file</button>
           </div>
           <div class="media-in-row" data-for="video" hidden>
             <input type="file" id="f-video" accept="video/*" capture="environment" hidden>
-            <button class="btn" type="button" data-pick="f-video">Gravar ou escolher vídeo</button>
+            <button class="btn" type="button" data-pick="f-video">Record or choose video</button>
           </div>
           <div class="media-preview" id="media-preview" hidden></div>
           <div class="field" id="transcript-field" data-for="audio" hidden>
-            <label for="f-transcript">Transcrição do áudio <span class="req">*</span></label>
-            <textarea class="input" id="f-transcript" style="min-height:110px" placeholder="Ao gravar, a transcrição aparece aqui sozinha (Chrome e Edge). Também podes escrevê-la ou corrigi-la."></textarea>
-            <span class="err">Escreve ou corrige a transcrição do áudio (pelo menos 10 letras).</span>
+            <label for="f-transcript">Audio transcript <span class="req">*</span></label>
+            <select class="input" id="f-lang" aria-label="Voice note language" style="max-width:220px;min-height:40px;padding:6px 10px"><option value="en-GB">Transcribe in English</option><option value="pt-PT">Transcrever em português</option></select>
+            <textarea class="input" id="f-transcript" style="min-height:110px" placeholder="While you record, the transcript appears here automatically (Chrome and Edge). You can also type or correct it."></textarea>
+            <span class="err">Type or correct the audio transcript (at least 10 characters).</span>
           </div>
         </div>
-        <div class="form-section">A tua dica</div>
-        <div class="field"><label for="f-title">Título da dica <span class="req">*</span></label><input class="input" id="f-title" placeholder="ex: Aviso de ar quente no motor por ficha solta no sensor"><span class="err">Dá um título à solução.</span></div>
-        <div class="field"><label for="f-desc">Como resolveste? <span class="req">*</span></label><textarea class="input" id="f-desc" placeholder="O que acontecia, o que verificaste, qual era a causa e o que fizeste para resolver."></textarea><span class="err">Explica um pouco mais (pelo menos 30 letras).</span></div>
+        <div class="form-section">Your tip</div>
+        <div class="field"><label for="f-title">Tip title <span class="req">*</span></label><input class="input" id="f-title" placeholder="e.g. Engine bleed warning caused by a loose sensor connector"><span class="err">Give the fix a title.</span></div>
+        <div class="field"><label for="f-desc">How did you fix it? <span class="req">*</span></label><textarea class="input" id="f-desc" placeholder="What was happening, what you checked, what the cause was and what you did to fix it."></textarea><span class="err">Explain a little more (at least 30 characters).</span></div>
         <div class="form-actions">
           <button class="btn btn-primary" type="submit">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>Submeter para Validação</button>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>Submit for Validation</button>
         </div>
       </form>
       <aside class="panel">
-        <h2>Dicas enviadas</h2>
+        <h2>Submitted tips</h2>
         <div class="sublist" id="sublist"></div>
       </aside>
     </div>
@@ -563,38 +564,38 @@ dialog::backdrop{background:rgba(5,12,24,.65)}
   <section id="view-validate" data-view="validate" hidden>
     <div id="validate-locked" class="locked" hidden>
       <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
-      <h1>Acesso reservado à Qualidade</h1>
-      <p class="hint">O Painel de Validação está disponível apenas para Supervisores e Engenheiros de Qualidade. Muda o perfil no topo para continuar a demo.</p>
-      <button class="btn btn-primary" id="go-sup" type="button">Mudar para Supervisor</button>
+      <h1>Quality team only</h1>
+      <p class="hint">The Validation Panel is only available to Supervisors and Quality Engineers. Switch the profile at the top to continue the demo.</p>
+      <button class="btn btn-primary" id="go-sup" type="button">Switch to Supervisor</button>
     </div>
     <div id="validate-body">
       <div class="view-head">
         <div class="grow">
-          <div class="eyebrow">Só para a Qualidade</div>
-          <h1>Painel de Validação</h1>
-          <p>Revê cada submissão antes de ser publicada. Só o que aprovares chega ao Feed e ao MEC-AI.</p>
+          <div class="eyebrow">Quality team only</div>
+          <h1>Validation Panel</h1>
+          <p>Review every submission before it is published. Only what you approve reaches the Feed and MEC-AI.</p>
         </div>
       </div>
       <div class="kpis" id="kpis"></div>
-      <section class="hangar" id="hangar" aria-label="Estado da frota"></section>
-      <section class="dash" id="dash" aria-label="Indicadores"></section>
+      <section class="hangar" id="hangar" aria-label="Fleet status"></section>
+      <section class="dash" id="dash" aria-label="Indicators"></section>
       <div class="val-grid">
         <div class="panel">
-          <h2>À espera de aprovação</h2>
-          <div class="queue" id="queue" role="listbox" aria-label="Submissões pendentes"></div>
+          <h2>Awaiting approval</h2>
+          <div class="queue" id="queue" role="listbox" aria-label="Pending submissions"></div>
         </div>
         <div class="panel detail" id="detail"></div>
       </div>
       <div class="panel" style="margin-top:22px">
-        <h2>Já decididas</h2>
+        <h2>Decided</h2>
         <div class="table-wrap"><table id="history"></table></div>
       </div>
     </div>
   </section>
 
   <div class="disclaimer">
-    <span>Dados de demonstração. As dicas não substituem os manuais oficiais do avião nem a aprovação para voltar a voar.</span>
-    <span id="mode-note">Submissões e decisões são partilhadas em tempo real com todos os que abrem esta página.</span>
+    <span>Demo data. Tips do not replace the official aircraft manuals or the release to service.</span>
+    <span id="mode-note">Submissions and decisions are shared in real time with everyone who opens this page.</span>
   </div>
 </main>
 
@@ -604,12 +605,12 @@ dialog::backdrop{background:rgba(5,12,24,.65)}
 <script>
 (() => {
 const AIRCRAFT = ['Airbus A320','Airbus A321neo','Boeing 737-800','Boeing 737 MAX 8','Embraer E190','ATR 72-600'];
-const ATA = [['21','Ar condicionado'],['24','Eletricidade'],['27','Comandos de voo'],['28','Combustível'],['29','Hidráulica'],['32','Trem de aterragem'],['34','Navegação'],['36','Ar quente do motor'],['49','APU (motor auxiliar)'],['72','Motor'],['79','Óleo']];
+const ATA = [['21','Air Conditioning'],['24','Electrical Power'],['27','Flight Controls'],['28','Fuel'],['29','Hydraulic Power'],['32','Landing Gear'],['34','Navigation'],['36','Pneumatic (Bleed Air)'],['49','APU'],['72','Engine'],['79','Oil']];
 const ataName = c => (ATA.find(a => a[0] === c) || [c,''])[1];
-const ROLES = ['Mecânico(a) júnior','Mecânico(a)','Mecânico(a) sénior','Mecânico(a) de linha','Mecânico(a) de motores','Mecânico(a) de hidráulica','Técnico(a) de eletrónica','Inspetor(a)','Engenheiro(a)','Chefe de equipa'];
+const ROLES = ['Junior Mechanic','Mechanic','Senior Mechanic','Line Mechanic','Engine Mechanic','Hydraulics Mechanic','Avionics Technician','Inspector','Engineer','Team Leader'];
 const PROFILES = {
-  mec: { name: 'Rui Carvalho', role: 'Mecânico sénior' },
-  sup: { name: 'Eng.ª Helena Costa', role: 'Engenheira de Qualidade' }
+  mec: { name: 'Rui Carvalho', role: 'Senior Mechanic' },
+  sup: { name: 'Helena Costa', role: 'Quality Engineer' }
 };
 
 
@@ -623,10 +624,10 @@ function save(){ try { localStorage.setItem('akh-role', store.role); } catch(e){
 function setSync(state){
   dbState = state;
   const el = $('#sync');
-  const map = { loading:['A ligar…','sync-wait'], live:['Sincronizado','sync-ok'], offline:['Sem ligação à base','sync-off'], readonly:['Só leitura','sync-off'], local:['Modo demo','sync-local'] };
+  const map = { loading:['Connecting…','sync-wait'], live:['Synced','sync-ok'], offline:['No database connection','sync-off'], readonly:['Read only','sync-off'], local:['Demo mode','sync-local'] };
   const [t, c] = map[state];
   el.className = 'sync ' + c; el.querySelector('span').textContent = t;
-  el.title = state === 'live' ? 'Dados partilhados em tempo real entre todos os dispositivos' : state === 'offline' ? 'Abre a página no claude.ai com sessão iniciada para ver os dados partilhados' : state === 'local' ? 'Dados de exemplo guardados só neste browser' : '';
+  el.title = state === 'live' ? 'Data shared in real time across all devices' : state === 'offline' ? 'Open the page signed in to see the shared data' : state === 'local' ? 'Example data saved in this browser only' : '';
 }
 // Netlify / GitHub Pages: shared data in Supabase (tables "items" and "fleet", see supabase/setup.sql).
 // The publishable key is meant to sit in the browser; access is limited by the table policies.
@@ -671,7 +672,7 @@ async function supabaseMode(){
     setSync('live'); render();
     return true;
   } catch(e){
-    console.warn('Supabase indisponível, a usar o modo demo.', e);
+    console.warn('Supabase unavailable, using demo mode.', e);
     return false;
   }
 }
@@ -686,8 +687,8 @@ function applyRow(table, row){
   const it = { ...row.doc, id: row.id }, i = store.items.findIndex(x => x.id === it.id), prev = i >= 0 ? store.items[i] : null;
   if (i >= 0) store.items[i] = it; else store.items.push(it);
   if (!ownWrites.has(it.id)){
-    if (!prev && it.status === 'pending' && store.role === 'sup') toast(`Nova submissão de ${it.author}: ${it.title}`);
-    if (prev && prev.status === 'pending' && it.status === 'approved' && store.role === 'mec') toast(`${it.id} foi aprovado e publicado.`);
+    if (!prev && it.status === 'pending' && store.role === 'sup') toast(`New submission from ${it.author}: ${it.title}`);
+    if (prev && prev.status === 'pending' && it.status === 'approved' && store.role === 'mec') toast(`${it.id} was approved and published.`);
   }
   render();
 }
@@ -739,7 +740,7 @@ async function localMode(){
     }
     local = true; setSync('local');
     const note = $('#mode-note');
-    if (note) note.innerHTML = 'Modo demo: as alterações ficam guardadas só neste browser. <button class="linkbtn" id="reset-local" type="button">Repor dados de exemplo</button>';
+    if (note) note.innerHTML = 'Demo mode: changes are saved in this browser only. <button class="linkbtn" id="reset-local" type="button">Reset example data</button>';
   } catch(e){ setSync('offline'); }
   render();
 }
@@ -751,7 +752,7 @@ async function dbWrite(id, data, merge, coll = 'items'){
     const cur = list.find(x => x[key] === id), doc = merge && cur ? { ...cur, ...data } : { ...data, [key]: id };
     ownWrites.add(id); setTimeout(() => ownWrites.delete(id), 5000);
     const { error } = await sb.from(table).upsert({ [key]: id, doc, updated_at: new Date().toISOString() });
-    if (error){ toast('Não foi possível guardar. Verifica a ligação e tenta de novo.'); return false; }
+    if (error){ toast('Could not save. Check your connection and try again.'); return false; }
     const i = list.findIndex(x => x[key] === id); if (i >= 0) list[i] = doc; else list.push(doc);
     setTimeout(render);
     return true;
@@ -763,15 +764,15 @@ async function dbWrite(id, data, merge, coll = 'items'){
     saveLocal(); setTimeout(render);
     return true;
   }
-  if (!db){ toast('Sem ligação à base partilhada. Abre a página no claude.ai com sessão iniciada.'); return false; }
+  if (!db){ toast('No connection to the shared database. Open the page signed in.'); return false; }
   try {
     const ref = db.collection(coll).doc(id);
     await (merge ? ref.update(data) : ref.set(data));
     return true;
   } catch(e){
-    if (e && e.code === 'invalid_argument'){ setSync('readonly'); toast('Não tens permissão para alterar dados nesta página. Pede acesso de Contributor ao dono.'); }
-    else if (e && e.code === 'quota_exceeded') toast('A base de dados está cheia. Remove registos antigos.');
-    else toast('Não foi possível guardar. Verifica a ligação e tenta de novo.');
+    if (e && e.code === 'invalid_argument'){ setSync('readonly'); toast('You are not allowed to change data on this page. Ask the owner for Contributor access.'); }
+    else if (e && e.code === 'quota_exceeded') toast('The database is full. Remove old records.');
+    else toast('Could not save. Check your connection and try again.');
     return false;
   }
 }
@@ -795,8 +796,8 @@ async function connect(){
     if (!firstSnap && !snap.metadata.hasPendingWrites){
       snap.docChanges().forEach(ch => {
         const it = { ...ch.doc.data(), id: ch.doc.id };
-        if (ch.type === 'added' && !before.has(it.id) && it.status === 'pending' && store.role === 'sup') toast(`Nova submissão de ${it.author}: ${it.title}`);
-        if (ch.type === 'modified' && it.status === 'approved' && store.role === 'mec' && ui.lastStatus?.[it.id] === 'pending') toast(`${it.id} foi aprovado e publicado.`);
+        if (ch.type === 'added' && !before.has(it.id) && it.status === 'pending' && store.role === 'sup') toast(`New submission from ${it.author}: ${it.title}`);
+        if (ch.type === 'modified' && it.status === 'approved' && store.role === 'mec' && ui.lastStatus?.[it.id] === 'pending') toast(`${it.id} was approved and published.`);
       });
     }
     ui.lastStatus = Object.fromEntries(store.items.map(i => [i.id, i.status]));
@@ -808,10 +809,10 @@ async function connect(){
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const fmtH = n => (Math.round(n*10)/10).toLocaleString('pt-PT', {maximumFractionDigits:1});
-const fmtD = d => d ? new Date(d).toLocaleDateString('pt-PT', {day:'2-digit', month:'short', year:'numeric'}) : '—';
-const fmtDT = d => d ? new Date(d).toLocaleString('pt-PT', {day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'}) : '—';
-const initials = n => n.replace(/^Eng\.ª\s*/,'').split(/\s+/).map(w => w[0]).slice(0,2).join('').toUpperCase();
+const fmtH = n => (Math.round(n*10)/10).toLocaleString('en-GB', {maximumFractionDigits:1});
+const fmtD = d => d ? new Date(d).toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'}) : '—';
+const fmtDT = d => d ? new Date(d).toLocaleString('en-GB', {day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'}) : '—';
+const initials = n => n.replace(/^Eng\.ª?\s*/,'').split(/\s+/).map(w => w[0]).slice(0,2).join('').toUpperCase();
 const approved = () => store.items.filter(i => i.status === 'approved');
 const pending = () => store.items.filter(i => i.status === 'pending');
 const norm = s => String(s).normalize('NFD').replace(/\p{M}/gu,'').toLowerCase();
@@ -820,13 +821,13 @@ function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add
 
 /* ---------- Media art (procedural, no external assets) ---------- */
 function rng(seedStr){ let h = 2166136261; for (const c of seedStr) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return () => { h += 0x6D2B79F5; let t = h; t = Math.imul(t ^ t>>>15, t|1); t ^= t + Math.imul(t ^ t>>>7, t|61); return ((t ^ t>>>14)>>>0)/4294967296; }; }
-function kindOf(m){ return m.startsWith('Foto') ? 'photo' : m.startsWith('Áudio') ? 'audio' : 'video'; }
+function kindOf(m){ return /^(Foto|Photo)/.test(m) ? 'photo' : /^(Áudio|Audio)/.test(m) ? 'audio' : 'video'; }
 function mediaArt(it){
   const k = kindOf(it.media), r = rng(it.id);
-  const tag = k === 'photo' ? 'FOTO' : k === 'audio' ? (it.mediaUrl ? 'NOTA DE VOZ + TRANSCRIÇÃO' : 'ÁUDIO + TRANSCRIÇÃO') : 'VÍDEO';
+  const tag = k === 'photo' ? 'PHOTO' : k === 'audio' ? (it.mediaUrl ? 'VOICE NOTE + TRANSCRIPT' : 'AUDIO + TRANSCRIPT') : 'VIDEO';
   const photo = it.mediaData || (it.mediaKind === 'photo' && it.mediaUrl);
   const aiNote = it.mediaNote ? `<span class="media-ai">${esc(it.mediaNote)}</span>` : '';
-  if (photo && k === 'photo') return `<div class="media"><span class="media-tag">${tag}</span>${aiNote}<img src="${esc(photo)}" alt="Foto anexada: ${esc(it.part)}" loading="lazy"></div>`;
+  if (photo && k === 'photo') return `<div class="media"><span class="media-tag">${tag}</span>${aiNote}<img src="${esc(photo)}" alt="Attached photo: ${esc(it.part)}" loading="lazy"></div>`;
   if (it.mediaUrl && k === 'video') return `<div class="media"><span class="media-tag">${tag}</span>${aiNote}<video src="${esc(it.mediaUrl)}#t=0.5" muted preload="metadata" playsinline></video><span class="media-play"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7Z" fill="#0d2140"/></svg></span></div>`;
   let g = '';
   for (let x = 0; x <= 320; x += 20) g += `<path class="m-grid" d="M${x} 0V180"/>`;
@@ -837,7 +838,7 @@ function mediaArt(it){
     const dur = `0${1 + Math.floor(r()*3)}:${String(10 + Math.floor(r()*49))}`;
     return `<div class="media"><span class="media-tag">${tag}</span>${aiNote}<svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="320" height="180" class="m-bg"/>${g}
       <circle cx="28" cy="88" r="16" class="m-hi-fill"/><path d="M23 80v16l13-8Z" fill="#1b1300"/>${bars}
-      <text x="50" y="150" class="m-txt">NOTA DE VOZ · ${it.mediaUrl ? 'carrega para ouvir' : dur}</text><text x="50" y="166" class="m-txt" opacity=".7">ATA ${it.ata} · transcrição disponível</text></svg></div>`;
+      <text x="50" y="150" class="m-txt">VOICE NOTE · ${it.mediaUrl ? 'press play to listen' : dur}</text><text x="50" y="166" class="m-txt" opacity=".7">ATA ${it.ata} · transcript available</text></svg></div>`;
   }
   const cx = 110 + r()*100, cy = 70 + r()*40, R = 30 + r()*16;
   let shape = `<rect class="m-fill" x="${cx-R-40}" y="${cy-R*0.6}" width="${(R+40)*2}" height="${R*1.2}" rx="6" opacity=".7"/>
@@ -845,7 +846,7 @@ function mediaArt(it){
     <path class="m-line" d="M${cx-R-40} ${cy}H${cx-R}M${cx+R} ${cy}H${cx+R+40}"/>`;
   for (let i = 0; i < 6; i++){ const a = i*Math.PI/3 + r(); shape += `<circle class="m-line" cx="${cx+Math.cos(a)*R*0.78}" cy="${cy+Math.sin(a)*R*0.78}" r="3"/>`; }
   const hx = cx + (r()-.5)*R*1.2, hy = cy + (r()-.5)*R*0.9;
-  const hi = `<circle class="m-hi" cx="${hx}" cy="${hy}" r="13"/><path class="m-hi" d="M${hx+10} ${hy-10}L${hx+34} ${hy-34}H${hx+60}"/><text x="${hx+38}" y="${hy-40}" class="m-txt" style="fill:var(--amber)">ponto</text>`;
+  const hi = `<circle class="m-hi" cx="${hx}" cy="${hy}" r="13"/><path class="m-hi" d="M${hx+10} ${hy-10}L${hx+34} ${hy-34}H${hx+60}"/><text x="${hx+38}" y="${hy-40}" class="m-txt" style="fill:var(--amber)">check</text>`;
   const label = `<text x="12" y="168" class="m-txt">${k==='photo'?'IMG_'+it.id.replace(/\D/g,'')+'.JPG':'VID_'+it.id.replace(/\D/g,'')+'.MP4'} · ATA ${it.ata}</text>`;
   let over = '';
   if (k === 'video'){
@@ -859,18 +860,18 @@ function mediaArt(it){
 
 /* ---------- Shared pieces ---------- */
 const ataChip = c => `<span class="chip chip-ata"><b>ATA ${c}</b> ${esc(ataName(c))}</span>`;
-const pill = s => s === 'approved' ? '<span class="pill pill-approved">Aprovado</span>' : s === 'rejected' ? '<span class="pill pill-rejected">Rejeitado</span>' : '<span class="pill pill-pending">Pendente de Aprovação</span>';
+const pill = s => s === 'approved' ? '<span class="pill pill-approved">Approved</span>' : s === 'rejected' ? '<span class="pill pill-rejected">Rejected</span>' : '<span class="pill pill-pending">Pending Approval</span>';
 const alarmIco = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M12 3 2 21h20Z"/><path d="M12 10v5M12 18h.01"/></svg>';
 const byline = it => `<div class="avatar" aria-hidden="true">${esc(initials(it.author))}</div><div class="byline"><b>${esc(it.author)}</b><span>${esc(it.role)}</span></div>`;
 
 function metaList(it){
-  const rows = [['Quem resolveu', it.author],['Função', it.role],['Avião', it.aircraft],['Sistema', `ATA ${it.ata} · ${ataName(it.ata)}`],['Peça', it.part],['Aviso / erro', it.alarm],['Horas de paragem poupadas', fmtH(it.downtime)+' h'],['Anexo', it.media],['Enviada em', fmtDT(it.submittedAt)],['ID', it.id]];
-  if (it.approvedAt) rows.push(['Aprovado em', fmtD(it.approvedAt)]);
+  const rows = [['Fixed by', it.author],['Role', it.role],['Aircraft', it.aircraft],['System', `ATA ${it.ata} · ${ataName(it.ata)}`],['Part', it.part],['Warning / error', it.alarm],['Downtime hours saved', fmtH(it.downtime)+' h'],['Attachment', it.media],['Submitted', fmtDT(it.submittedAt)],['ID', it.id]];
+  if (it.approvedAt) rows.push(['Approved on', fmtD(it.approvedAt)]);
   return `<dl class="meta">${rows.map(([k,v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>`;
 }
 
 /* ---------- Navigation & role ---------- */
-const VIEWS = [['feed','Feed'],['chat','Chat MEC-AI'],['submit','Submeter'],['validate','Validação']];
+const VIEWS = [['feed','Feed'],['chat','MEC-AI Chat'],['submit','Submit'],['validate','Validation']];
 function renderNav(){
   const sup = store.role === 'sup';
   $('#tabs').innerHTML = VIEWS.filter(v => v[0] !== 'validate' || sup).map(([k,l]) =>
@@ -890,7 +891,7 @@ function go(v){
 }
 function setRole(r){
   store.role = r; save();
-  toast(r === 'sup' ? 'Perfil: Supervisor / Engenheiro de Qualidade' : 'Perfil: Mecânico / Técnico');
+  toast(r === 'sup' ? 'Profile: Supervisor / Quality Engineer' : 'Profile: Mechanic / Technician');
   if (r === 'mec' && ui.view === 'validate') go('feed'); else render();
 }
 
@@ -921,9 +922,9 @@ function renderFeed(){
     return terms.every(t => hay.includes(t));
   }).sort((a,b) => b.approvedAt.localeCompare(a.approvedAt));
   const hrs = list.reduce((s,i) => s + Number(i.downtime), 0);
-  $('#feed-meta').innerHTML = `<b>${list.length}</b> ${list.length===1?'dica aprovada':'dicas aprovadas'} · <span class="mono">${fmtH(hrs)} h</span> de paragem poupada${pending().length ? ` · <span class="pill pill-pending">${pending().length} em validação, não visíveis</span>` : ''}`;
+  $('#feed-meta').innerHTML = `<b>${list.length}</b> ${list.length===1?'approved tip':'approved tips'} · <span class="mono">${fmtH(hrs)} h</span> of downtime saved${pending().length ? ` · <span class="pill pill-pending">${pending().length} in validation, not visible</span>` : ''}`;
   if (!store.items.length){
-    $('#cards').innerHTML = `<div class="empty" style="grid-column:1/-1">${dbState === 'loading' ? 'A carregar a base de conhecimento…' : dbState === 'offline' ? '<b>Sem ligação à base partilhada.</b><br>Abre esta página no claude.ai com sessão iniciada para ver e partilhar as dicas.' : '<b>Ainda não há dicas.</b><br>A primeira solução submetida e aprovada aparece aqui. <button class="linkbtn" data-go="submit">Submeter conhecimento</button>'}</div>`;
+    $('#cards').innerHTML = `<div class="empty" style="grid-column:1/-1">${dbState === 'loading' ? 'Loading the knowledge base…' : dbState === 'offline' ? '<b>No connection to the shared database.</b><br>Open this page signed in to see and share tips.' : '<b>No tips yet.</b><br>The first fix submitted and approved will appear here. <button class="linkbtn" data-go="submit">Submit knowledge</button>'}</div>`;
     return;
   }
   $('#cards').innerHTML = list.length ? list.map(it => `
@@ -932,31 +933,31 @@ function renderFeed(){
       <div class="card-body">
         <div class="card-chips">${ataChip(it.ata)}<span class="chip">${esc(it.aircraft)}</span></div>
         <h3><button class="card-link" type="button" data-open="${it.id}">${esc(it.title)}</button></h3>
-        ${it.mediaUrl && kindOf(it.media) === 'audio' ? `<audio class="card-audio" controls preload="none" src="${esc(it.mediaUrl)}" aria-label="Nota de voz de ${esc(it.author)}"></audio>` : ''}
+        ${it.mediaUrl && kindOf(it.media) === 'audio' ? `<audio class="card-audio" controls preload="none" src="${esc(it.mediaUrl)}" aria-label="Voice note by ${esc(it.author)}"></audio>` : ''}
         <div class="alarm">${alarmIco}<span>${esc(it.alarm)}</span></div>
         <p>${esc(it.description.replace(/\n+/g,' '))}</p>
-        <div class="card-foot">${byline(it)}<div class="saved"><b>−${fmtH(it.downtime)} h</b>parado</div></div>
+        <div class="card-foot">${byline(it)}<div class="saved"><b>−${fmtH(it.downtime)} h</b>downtime</div></div>
       </div>
-    </article>`).join('') : `<div class="empty" style="grid-column:1/-1"><b>Sem resultados.</b><br>Tenta outro alarme ou limpa os filtros. Se resolveste este problema, <button class="linkbtn" data-go="submit">submete a solução</button>.</div>`;
+    </article>`).join('') : `<div class="empty" style="grid-column:1/-1"><b>No results.</b><br>Try another warning or clear the filters. If you fixed this problem, <button class="linkbtn" data-go="submit">submit the fix</button>.</div>`;
 }
 // Detail views: playable audio/video and the transcription, on top of the card art.
 function mediaFull(it){
   const k = kindOf(it.media), url = it.mediaUrl;
-  let h = url && k === 'video' ? `<div class="media"><span class="media-tag">VÍDEO</span>${it.mediaNote ? `<span class="media-ai">${esc(it.mediaNote)}</span>` : ''}<video src="${esc(url)}" controls preload="metadata" playsinline></video></div>` : mediaArt(it);
+  let h = url && k === 'video' ? `<div class="media"><span class="media-tag">VIDEO</span>${it.mediaNote ? `<span class="media-ai">${esc(it.mediaNote)}</span>` : ''}<video src="${esc(url)}" controls preload="metadata" playsinline></video></div>` : mediaArt(it);
   if (url && k === 'audio') h += `<div class="player"><audio controls preload="none" src="${esc(url)}"></audio></div>`;
-  if (it.transcript && !String(it.description).includes(it.transcript.slice(0, 30))) h += `<div class="transcript"><span class="label">Transcrição</span><p>${esc(it.transcript)}</p></div>`;
+  if (it.transcript && !String(it.description).includes(it.transcript.slice(0, 30))) h += `<div class="transcript"><span class="label">Transcript</span><p>${esc(it.transcript)}</p></div>`;
   return h;
 }
 function openDetail(id){
   const it = store.items.find(i => i.id === id); if (!it) return;
   $('#dlg-body').innerHTML = `
     <div class="dlg-top"><div><div class="card-chips" style="margin-bottom:8px">${ataChip(it.ata)}<span class="chip">${esc(it.aircraft)}</span>${pill(it.status)}</div><h2>${esc(it.title)}</h2></div>
-      <button class="close" type="button" data-close aria-label="Fechar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+      <button class="close" type="button" data-close aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
     ${mediaFull(it)}
     <div class="alarm">${alarmIco}<span>${esc(it.alarm)}</span></div>
     <p class="desc">${esc(it.description)}</p>
     ${metaList(it)}
-    <div class="card-foot">${byline(it)}<div class="saved"><b>−${fmtH(it.downtime)} h</b>de paragem poupadas</div></div>`;
+    <div class="card-foot">${byline(it)}<div class="saved"><b>−${fmtH(it.downtime)} h</b>downtime saved</div></div>`;
   const d = $('#dlg'); if (d.showModal) d.showModal(); else d.setAttribute('open','');
 }
 
@@ -964,13 +965,13 @@ function openDetail(id){
 function renderSubmit(){
   const p = PROFILES.mec;
   if (!$('#f-name').value) $('#f-name').value = store.role === 'mec' ? p.name : '';
-  if (!$('#f-role').value && store.role === 'mec') $('#f-role').value = 'Mecânico(a) sénior';
+  if (!$('#f-role').value && store.role === 'mec') $('#f-role').value = 'Senior Mechanic';
   const mine = [...store.items].sort((a,b) => b.submittedAt.localeCompare(a.submittedAt)).slice(0, 8);
   $('#sublist').innerHTML = mine.map(it => `
     <div class="subitem">
       <div class="subitem-top"><b>${esc(it.title)}</b>${pill(it.status)}</div>
       <small>${esc(it.author)} · ${esc(it.aircraft)} · ATA ${it.ata} · ${fmtDT(it.submittedAt)}</small>
-      ${it.status === 'rejected' ? `<div class="reason"><b>Motivo da rejeição:</b> ${esc(it.rejectReason)}</div>` : ''}
+      ${it.status === 'rejected' ? `<div class="reason"><b>Rejection reason:</b> ${esc(it.rejectReason)}</div>` : ''}
     </div>`).join('');
 }
 const REQ = ['f-name','f-role','f-aircraft','f-ata','f-part','f-alarm','f-downtime','f-title','f-desc'];
@@ -994,7 +995,7 @@ function validateForm(){
 }
 async function submitForm(e){
   e.preventDefault();
-  if (!validateForm()){ toast('Faltam campos obrigatórios. Revê os campos a vermelho.'); return; }
+  if (!validateForm()){ toast('Some required fields are missing. Check the fields in red.'); return; }
   const n = Math.max(1069, ...store.items.map(i => Number(i.id.replace(/\D/g,'')) || 0)) + 1;
   const media = document.querySelector('input[name="media"]:checked').value;
   const item = { id:'K-'+n, author:$('#f-name').value.trim(), role:$('#f-role').value.trim(), aircraft:$('#f-aircraft').value, ata:$('#f-ata').value,
@@ -1005,7 +1006,7 @@ async function submitForm(e){
   const btn = $('#sub-form [type=submit]'); btn.disabled = true;
   if (ui.subMedia && ui.subMedia.kind === kindOf(media)){
     try { Object.assign(item, await storeMedia(item.id, ui.subMedia), { mediaKind: ui.subMedia.kind }); }
-    catch(err){ btn.disabled = false; toast('Não foi possível enviar o anexo. Verifica a ligação e tenta de novo.'); return; }
+    catch(err){ btn.disabled = false; toast('Could not upload the attachment. Check your connection and try again.'); return; }
     if (!item.mediaUrl) delete item.mediaKind;
   }
   const ok = await dbWrite(item.id, item, false);
@@ -1013,19 +1014,19 @@ async function submitForm(e){
   if (!ok) return;
   $('#sub-form').reset(); setSubMedia(null); updMediaIn(); updRecUi();
   document.querySelectorAll('.field.invalid').forEach(f => f.classList.remove('invalid'));
-  toast(`${item.id} submetido. Estado: Pendente de Aprovação.`);
+  toast(`${item.id} submitted. Status: Pending Approval.`);
 }
 function fillExample(){
-  $('#f-name').value = PROFILES.mec.name; $('#f-role').value = 'Mecânico(a) sénior';
+  $('#f-name').value = PROFILES.mec.name; $('#f-role').value = 'Senior Mechanic';
   $('#f-aircraft').value = 'Airbus A320'; $('#f-ata').value = '27';
-  $('#f-part').value = 'Pistão que mexe o travão de ar 3 da asa esquerda';
-  $('#f-alarm').value = 'Aviso de falha no travão de ar 3 (SPLR 3 FAULT)';
+  $('#f-part').value = 'Spoiler 3 actuator, left wing';
+  $('#f-alarm').value = 'Spoiler 3 fault warning (SPLR 3 FAULT)';
   $('#f-downtime').value = '3.5';
   $('#m-video').checked = true; updMediaIn();
-  $('#f-title').value = 'Aviso no travão de ar depois de lavar o avião: tirar o ar do pistão antes de o trocar';
-  $('#f-desc').value = 'O que acontece: depois de lavar o avião e de mexer no sistema hidráulico, aparece um aviso de falha no travão de ar 3 da asa esquerda.\n\nCausa: entrou ar no pistão quando se tirou a pressão ao sistema. O pistão estava bom.\n\nSolução: dar pressão ao sistema hidráulico, abrir e fechar o travão de ar várias vezes pelo teste do computador e tirar o ar como diz o manual. No vídeo mostro a sequência.';
+  $('#f-title').value = 'Spoiler fault after washing the aircraft: bleed the air from the actuator before replacing it';
+  $('#f-desc').value = 'What happens: after washing the aircraft and working on the hydraulic system, a fault warning appears on spoiler 3 of the left wing.\n\nCause: air got into the actuator when the system was depressurised. The actuator itself was fine.\n\nFix: pressurise the hydraulic system, cycle the spoiler several times through the computer test and bleed the air as the manual says. The video shows the sequence.';
   document.querySelectorAll('.field.invalid').forEach(f => f.classList.remove('invalid'));
-  toast('Exemplo preenchido. Carrega em Submeter para Validação.');
+  toast('Example filled in. Press Submit for Validation.');
 }
 
 /* ---------- Validate ---------- */
@@ -1037,10 +1038,10 @@ function renderValidate(){
   const total = ap.reduce((s,i) => s + Number(i.downtime), 0);
   const decided = ap.length + rj.length;
   $('#kpis').innerHTML = `
-    <div class="kpi kpi-hero"><span class="label">Total de horas de avião parado poupadas</span><div class="val">${fmtH(total)}<small>h</small></div><div class="sub">Soma das horas poupadas nas ${ap.length} dicas aprovadas</div></div>
-    <div class="kpi"><span class="label">Pendentes</span><div class="val" style="color:var(--warn)">${pe.length}</div><div class="sub">${fmtH(pe.reduce((s,i)=>s+Number(i.downtime),0))} h em validação</div></div>
-    <div class="kpi"><span class="label">Aprovadas</span><div class="val" style="color:var(--ok)">${ap.length}</div><div class="sub">Visíveis no Feed e MEC-AI</div></div>
-    <div class="kpi"><span class="label">Taxa de aprovação</span><div class="val">${decided ? Math.round(ap.length/decided*100) : 0}<small style="font-size:1.2rem">%</small></div><div class="sub">${rj.length} rejeitada${rj.length===1?'':'s'} e devolvida${rj.length===1?'':'s'}</div></div>`;
+    <div class="kpi kpi-hero"><span class="label">Total aircraft downtime hours saved</span><div class="val">${fmtH(total)}<small>h</small></div><div class="sub">Sum of hours saved across ${ap.length} approved tips</div></div>
+    <div class="kpi"><span class="label">Pending</span><div class="val" style="color:var(--warn)">${pe.length}</div><div class="sub">${fmtH(pe.reduce((s,i)=>s+Number(i.downtime),0))} h in validation</div></div>
+    <div class="kpi"><span class="label">Approved</span><div class="val" style="color:var(--ok)">${ap.length}</div><div class="sub">Visible in the Feed and MEC-AI</div></div>
+    <div class="kpi"><span class="label">Approval rate</span><div class="val">${decided ? Math.round(ap.length/decided*100) : 0}<small style="font-size:1.2rem">%</small></div><div class="sub">${rj.length} rejected and returned</div></div>`;
   renderHangar();
   renderDash();
   if (!pe.some(i => i.id === ui.selected)){ ui.selected = pe[0]?.id || null; ui.rejecting = false; ui.approving = false; }
@@ -1049,37 +1050,37 @@ function renderValidate(){
       <div class="avatar" aria-hidden="true">${esc(initials(it.author))}</div>
       <div style="min-width:0"><span class="t">${esc(it.title)}</span><small>${esc(it.author)} · ${esc(it.aircraft)} · ATA ${it.ata}</small></div>
       <div class="h">${fmtH(it.downtime)} h<br>${fmtD(it.submittedAt)}</div>
-    </button>`).join('') : `<div class="empty">Fila vazia. Todas as submissões foram revistas.</div>`;
+    </button>`).join('') : `<div class="empty">Queue empty. Every submission has been reviewed.</div>`;
   const it = store.items.find(i => i.id === ui.selected);
-  $('#detail').innerHTML = !it ? `<div class="empty">Seleciona uma submissão para rever.</div>` : `
+  $('#detail').innerHTML = !it ? `<div class="empty">Select a submission to review.</div>` : `
     <div><div class="card-chips" style="margin-bottom:8px">${ataChip(it.ata)}<span class="chip">${esc(it.aircraft)}</span>${pill(it.status)}</div><h2>${esc(it.title)}</h2></div>
     ${mediaFull(it)}
     ${metaList(it)}
-    <div><span class="label">Como resolveu</span><p class="desc" style="margin-top:6px">${esc(it.description)}</p></div>
+    <div><span class="label">How it was fixed</span><p class="desc" style="margin-top:6px">${esc(it.description)}</p></div>
     ${ui.approving ? `
       <div class="approve-box">
-        <div class="field"><label for="approve-hours">Horas de avião parado poupadas</label>
+        <div class="field"><label for="approve-hours">Aircraft downtime hours saved</label>
         <input class="input mono" id="approve-hours" type="number" inputmode="decimal" min="0.5" step="0.5" value="${esc(ui.approveHours)}">
-        <span class="hint">${esc(it.author)} indicou <b>${fmtH(it.downtime)} h</b>. Confirma se é realista ou corrige antes de aprovar. Este valor entra no total de horas poupadas.</span></div>
-        <div class="decide"><button class="btn" type="button" data-act="cancel">Cancelar</button><button class="btn btn-ok" type="button" data-act="confirm-approve" id="confirm-approve" ${Number(ui.approveHours) >= 0.5 ? '' : 'disabled'}>Confirmar horas e aprovar</button></div>
+        <span class="hint">${esc(it.author)} entered <b>${fmtH(it.downtime)} h</b>. Confirm it is realistic or correct it before approving. This value counts towards the total hours saved.</span></div>
+        <div class="decide"><button class="btn" type="button" data-act="cancel">Cancel</button><button class="btn btn-ok" type="button" data-act="confirm-approve" id="confirm-approve" ${Number(ui.approveHours) >= 0.5 ? '' : 'disabled'}>Confirm hours and approve</button></div>
       </div>` : ui.rejecting ? `
       <div class="reject-box">
-        <div class="field"><label for="reject-reason">Motivo da rejeição (enviado ao técnico)</label>
-        <textarea class="input" id="reject-reason" style="min-height:110px" placeholder="ex: Falta dizer o que verificaste antes de trocar a peça.">${esc(ui.rejectText || '')}</textarea></div>
-        <div class="decide"><button class="btn" type="button" data-act="cancel">Cancelar</button><button class="btn btn-bad-solid" type="button" data-act="confirm-reject" id="confirm-reject" ${ui.rejectText?.trim() ? '' : 'disabled'}>Confirmar rejeição</button></div>
+        <div class="field"><label for="reject-reason">Rejection reason (sent to the mechanic)</label>
+        <textarea class="input" id="reject-reason" style="min-height:110px" placeholder="e.g. Please add what you checked before replacing the part.">${esc(ui.rejectText || '')}</textarea></div>
+        <div class="decide"><button class="btn" type="button" data-act="cancel">Cancel</button><button class="btn btn-bad-solid" type="button" data-act="confirm-reject" id="confirm-reject" ${ui.rejectText?.trim() ? '' : 'disabled'}>Confirm rejection</button></div>
       </div>` : `
       <div class="decide">
-        <button class="btn btn-ok" type="button" data-act="approve"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Aprovar e publicar</button>
-        <button class="btn btn-bad" type="button" data-act="reject"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>Rejeitar</button>
+        <button class="btn btn-ok" type="button" data-act="approve"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Approve and publish</button>
+        <button class="btn btn-bad" type="button" data-act="reject"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>Reject</button>
       </div>`}`;
   const hist = store.items.filter(i => i.status !== 'pending').sort((a,b) => (b.approvedAt||b.reviewedAt).localeCompare(a.approvedAt||a.reviewedAt));
-  $('#history').innerHTML = `<thead><tr><th>ID</th><th>Título</th><th>Autor</th><th>ATA</th><th>Decisão</th><th>Data</th><th style="text-align:right">Horas</th></tr></thead><tbody>${hist.map(i => `
-    <tr><td class="mono">${i.id}</td><td>${esc(i.title)}${i.rejectReason?`<div class="hint">${esc(i.rejectReason)}</div>`:''}</td><td>${esc(i.author)}</td><td class="mono">${i.ata}</td><td>${pill(i.status)}</td><td style="white-space:nowrap">${fmtD(i.approvedAt||i.reviewedAt)}</td><td class="num">${i.status==='approved'?fmtH(i.downtime):'—'}${i.status==='approved' && i.downtimeAsked != null && i.downtimeAsked !== i.downtime ? `<div class="hint">pedido: ${fmtH(i.downtimeAsked)}</div>` : ''}</td></tr>`).join('')}</tbody>`;
+  $('#history').innerHTML = `<thead><tr><th>ID</th><th>Title</th><th>Author</th><th>ATA</th><th>Decision</th><th>Date</th><th style="text-align:right">Hours</th></tr></thead><tbody>${hist.map(i => `
+    <tr><td class="mono">${i.id}</td><td>${esc(i.title)}${i.rejectReason?`<div class="hint">${esc(i.rejectReason)}</div>`:''}</td><td>${esc(i.author)}</td><td class="mono">${i.ata}</td><td>${pill(i.status)}</td><td style="white-space:nowrap">${fmtD(i.approvedAt||i.reviewedAt)}</td><td class="num">${i.status==='approved'?fmtH(i.downtime):'—'}${i.status==='approved' && i.downtimeAsked != null && i.downtimeAsked !== i.downtime ? `<div class="hint">requested: ${fmtH(i.downtimeAsked)}</div>` : ''}</td></tr>`).join('')}</tbody>`;
 }
 /* ---------- Hangar live map ---------- */
-const ST = { ok:['Operacional','var(--ok)','pill-approved'], maint:['Em manutenção','var(--warn)','pill-pending'], aog:['Parado (AOG)','var(--bad)','pill-rejected'] };
+const ST = { ok:['Operational','var(--ok)','pill-approved'], maint:['In maintenance','var(--warn)','pill-pending'], aog:['Grounded (AOG)','var(--bad)','pill-rejected'] };
 const isToday = d => !!d && new Date(d).toDateString() === new Date().toDateString();
-const hhmm = d => new Date(d).toLocaleTimeString('pt-PT', { hour:'2-digit', minute:'2-digit' });
+const hhmm = d => new Date(d).toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
 // Top-view silhouettes built from each type's proportions (fuselage, swept wing, tailplane, engines).
 const PLANES = {
   a320: { n:4, t:94, w:3.8, wing:{ r:38, c:17, s:46, k:.47, ct:5 }, tip:'sharklet', eng:{ x:17, w:5.6, l:13 }, hs:{ r:82, c:8, s:17, k:.55, ct:3 } },
@@ -1145,24 +1146,24 @@ function renderHangar(){
   const el = $('#hangar'); if (!el) return;
   const focusId = document.activeElement?.id;
   const fleet = [...store.fleet].sort((a, b) => (a.bay || 0) - (b.bay || 0));
-  const head = (extra = '') => `<div class="dash-head"><div><div class="eyebrow">Hangar ao vivo</div><h2>Estado da frota</h2></div>${extra}</div>`;
-  if (!fleet.length){ el.innerHTML = head() + `<div class="empty">${dbState === 'loading' ? 'A carregar a frota…' : 'Ainda não há aviões registados no hangar.'}</div>`; return; }
+  const head = (extra = '') => `<div class="dash-head"><div><div class="eyebrow">Live hangar</div><h2>Fleet status</h2></div>${extra}</div>`;
+  if (!fleet.length){ el.innerHTML = head() + `<div class="empty">${dbState === 'loading' ? 'Loading the fleet…' : 'No aircraft registered in the hangar yet.'}</div>`; return; }
   const cnt = k => fleet.filter(a => a.status === k).length;
   const f = ui.fleetFilter || 'all';
   const stops = fleet.reduce((s, a) => s + todayStops(a).length, 0);
   const hrs = fleet.reduce((s, a) => s + downHoursToday(a), 0);
   if (!fleet.some(a => a.reg === ui.ac)) ui.ac = (fleet.find(a => a.status === 'aog') || fleet[0]).reg;
   const sel = fleet.find(a => a.reg === ui.ac);
-  el.innerHTML = head(`<div class="range" role="group" aria-label="Filtrar aviões">${[['all','Todos',fleet.length],['ok','Operacionais',cnt('ok')],['maint','Em manutenção',cnt('maint')],['aog','Parados',cnt('aog')]].map(([k, l, n]) => `<button type="button" data-fleet="${k}" aria-pressed="${f === k}">${l} · ${n}</button>`).join('')}</div>`) + `
+  el.innerHTML = head(`<div class="range" role="group" aria-label="Filter aircraft">${[['all','All',fleet.length],['ok','Operational',cnt('ok')],['maint','In maintenance',cnt('maint')],['aog','Grounded',cnt('aog')]].map(([k, l, n]) => `<button type="button" data-fleet="${k}" aria-pressed="${f === k}">${l} · ${n}</button>`).join('')}</div>`) + `
     <div class="fleet-sum">
-      <span><i class="dot" style="background:var(--ok)"></i><b>${cnt('ok')}</b> operacionais</span>
-      <span><i class="dot" style="background:var(--warn)"></i><b>${cnt('maint')}</b> em manutenção</span>
-      <span><i class="dot" style="background:var(--bad)"></i><b>${cnt('aog')}</b> parados</span>
-      <span><b>${stops}</b> ${stops === 1 ? 'paragem' : 'paragens'} hoje</span>
-      <span><b>${fmtH(hrs)} h</b> de avião parado hoje</span>
+      <span><i class="dot" style="background:var(--ok)"></i><b>${cnt('ok')}</b> operational</span>
+      <span><i class="dot" style="background:var(--warn)"></i><b>${cnt('maint')}</b> in maintenance</span>
+      <span><i class="dot" style="background:var(--bad)"></i><b>${cnt('aog')}</b> grounded</span>
+      <span><b>${stops}</b> ${stops === 1 ? 'stop' : 'stops'} today</span>
+      <span><b>${fmtH(hrs)} h</b> of aircraft downtime today</span>
     </div>
     <div class="hangar-grid">
-      <div class="floor" role="listbox" aria-label="Aviões no hangar">${fleet.map(a => {
+      <div class="floor" role="listbox" aria-label="Aircraft in the hangar">${fleet.map(a => {
         const [l, c] = ST[a.status] || ST.ok, n = todayStops(a).length;
         return `<button type="button" class="bay ${a.status}${f !== 'all' && a.status !== f ? ' dim' : ''}" role="option" aria-selected="${a.reg === ui.ac}" data-ac="${esc(a.reg)}" style="--sc:${c}"
           data-tip="${esc(a.reg)} · ${esc(a.model)} · ${l}${a.status !== 'ok' && a.issue ? ' · ' + esc(a.issue) : ''}">
@@ -1170,7 +1171,7 @@ function renderHangar(){
           <span class="bay-plane">${planeSvg(a.model)}</span>
           <span class="bay-reg mono">${esc(a.reg)}</span>
           <span class="bay-st">${l}</span>
-          ${n ? `<span class="bay-flag">${n}× hoje</span>` : ''}
+          ${n ? `<span class="bay-flag">${n}× today</span>` : ''}
         </button>`; }).join('')}</div>
       <div class="ac-panel">${acPanel(sel)}</div>
     </div>`;
@@ -1184,37 +1185,37 @@ function acPanel(a){
   return `
     <div class="ac-top" style="--sc:${c}"><div class="ac-sketch">${planeSvg(a.model)}</div>
       <div><span class="mono ac-reg">${esc(a.reg)}</span><span class="hint">${esc(a.model)} · Bay ${a.bay}</span><span class="pill ${pc}">${l}</span></div></div>
-    ${a.status !== 'ok' ? `<div class="ac-issue"><div class="label">Porque está parado</div><p>${esc(a.issue || 'Sem motivo indicado')}</p>
-      <div class="ac-facts"><div><span>Desde</span>${fmtDT(a.since)}</div><div><span>Previsão de volta</span>${a.eta ? fmtDT(a.eta) : '—'}</div>
-      <div><span>Sistema</span>${a.ata ? `ATA ${a.ata} · ${esc(ataName(a.ata))}` : '—'}</div><div><span>Mecânico</span>${esc(a.tech || '—')}</div></div></div>`
-      : `<p class="hint" style="margin:0">Pronto a voar${a.since ? ` desde ${fmtDT(a.since)}` : ''}.</p>`}
-    <div><div class="label">Paragens hoje</div>${stops.length ? `<ol class="stops">${stops.map(x => `<li><span class="mono">${x.carried ? 'desde ' + fmtDT(x.at) : hhmm(x.at)} – ${x.end ? hhmm(x.end) : 'agora'}</span>${esc(x.reason || '')}${x.fix ? `<small>Resolvido: ${esc(x.fix)}</small>` : ''}</li>`).join('')}</ol>` : '<p class="hint" style="margin:6px 0 0">Não parou hoje.</p>'}</div>
-    ${tips.length ? `<div><div class="label">Dicas aprovadas que podem ajudar</div><div class="ac-tips">${tips.map(t => `<button type="button" class="ac-tip" data-open="${t.id}"><b>${esc(t.title)}</b><small>${esc(t.author)} · ${esc(t.aircraft)} · −${fmtH(t.downtime)} h</small></button>`).join('')}</div></div>` : ''}
-    ${pend.length ? `<p class="hint" style="margin:0">Há ${pend.length} ${pend.length === 1 ? 'dica pendente' : 'dicas pendentes'} sobre este sistema à espera da tua aprovação.</p>` : ''}
-    ${a.status !== 'ok' ? `<button class="btn btn-sm" type="button" data-askac="${esc(a.reg)}">Perguntar ao MEC-AI sobre isto</button>` : ''}
+    ${a.status !== 'ok' ? `<div class="ac-issue"><div class="label">Why it is stopped</div><p>${esc(a.issue || 'No reason given')}</p>
+      <div class="ac-facts"><div><span>Since</span>${fmtDT(a.since)}</div><div><span>Expected back</span>${a.eta ? fmtDT(a.eta) : '—'}</div>
+      <div><span>System</span>${a.ata ? `ATA ${a.ata} · ${esc(ataName(a.ata))}` : '—'}</div><div><span>Mechanic</span>${esc(a.tech || '—')}</div></div></div>`
+      : `<p class="hint" style="margin:0">Ready to fly${a.since ? ` since ${fmtDT(a.since)}` : ''}.</p>`}
+    <div><div class="label">Stops today</div>${stops.length ? `<ol class="stops">${stops.map(x => `<li><span class="mono">${x.carried ? 'since ' + fmtDT(x.at) : hhmm(x.at)} – ${x.end ? hhmm(x.end) : 'now'}</span>${esc(x.reason || '')}${x.fix ? `<small>Fixed: ${esc(x.fix)}</small>` : ''}</li>`).join('')}</ol>` : '<p class="hint" style="margin:6px 0 0">No stops today.</p>'}</div>
+    ${tips.length ? `<div><div class="label">Approved tips that may help</div><div class="ac-tips">${tips.map(t => `<button type="button" class="ac-tip" data-open="${t.id}"><b>${esc(t.title)}</b><small>${esc(t.author)} · ${esc(t.aircraft)} · −${fmtH(t.downtime)} h</small></button>`).join('')}</div></div>` : ''}
+    ${pend.length ? `<p class="hint" style="margin:0">There ${pend.length === 1 ? 'is 1 pending tip' : `are ${pend.length} pending tips`} about this system waiting for your approval.</p>` : ''}
+    ${a.status !== 'ok' ? `<button class="btn btn-sm" type="button" data-askac="${esc(a.reg)}">Ask MEC-AI about this</button>` : ''}
     ${acActions(a)}`;
 }
 function acActions(a){
   if (ui.acMode) return `<div class="ac-form">
-      <div class="label">${ui.acMode === 'aog' ? 'Marcar como parado (AOG)' : 'Pôr em manutenção'}</div>
-      <div class="field"><label for="ac-reason">O que se passa?</label><input class="input" id="ac-reason" type="text" value="${esc(ui.acReason || '')}" placeholder="ex: A APU desliga-se sozinha"></div>
+      <div class="label">${ui.acMode === 'aog' ? 'Mark as grounded (AOG)' : 'Put in maintenance'}</div>
+      <div class="field"><label for="ac-reason">What is wrong?</label><input class="input" id="ac-reason" type="text" value="${esc(ui.acReason || '')}" placeholder="e.g. The APU shuts down by itself"></div>
       <div class="form-row">
-        <div class="field"><label for="ac-ata">Sistema</label><select class="input" id="ac-ata"><option value="">Não sei</option>${ATA.map(([k, n]) => `<option value="${k}"${ui.acAta === k ? ' selected' : ''}>ATA ${k} · ${esc(n)}</option>`).join('')}</select></div>
-        <div class="field"><label for="ac-eta">Volta daqui a (horas)</label><input class="input mono" id="ac-eta" type="number" inputmode="decimal" min="0.5" step="0.5" value="${esc(ui.acEta || '')}"></div>
+        <div class="field"><label for="ac-ata">System</label><select class="input" id="ac-ata"><option value="">Not sure</option>${ATA.map(([k, n]) => `<option value="${k}"${ui.acAta === k ? ' selected' : ''}>ATA ${k} · ${esc(n)}</option>`).join('')}</select></div>
+        <div class="field"><label for="ac-eta">Back in (hours)</label><input class="input mono" id="ac-eta" type="number" inputmode="decimal" min="0.5" step="0.5" value="${esc(ui.acEta || '')}"></div>
       </div>
-      <div class="decide"><button class="btn" type="button" data-acset="cancel">Cancelar</button><button class="btn ${ui.acMode === 'aog' ? 'btn-bad-solid' : 'btn-primary'}" type="button" data-acset="save" id="ac-save"${ui.acReason?.trim() ? '' : ' disabled'}>Guardar</button></div>
+      <div class="decide"><button class="btn" type="button" data-acset="cancel">Cancel</button><button class="btn ${ui.acMode === 'aog' ? 'btn-bad-solid' : 'btn-primary'}" type="button" data-acset="save" id="ac-save"${ui.acReason?.trim() ? '' : ' disabled'}>Save</button></div>
     </div>`;
   return `<div class="ac-actions">
-    ${a.status !== 'ok' ? '<button class="btn btn-ok btn-sm" type="button" data-acset="ok">Voltou a operar</button>' : ''}
-    ${a.status !== 'maint' ? '<button class="btn btn-sm" type="button" data-acset="maint">Em manutenção</button>' : ''}
-    ${a.status !== 'aog' ? '<button class="btn btn-bad btn-sm" type="button" data-acset="aog">Parado (AOG)</button>' : ''}
+    ${a.status !== 'ok' ? '<button class="btn btn-ok btn-sm" type="button" data-acset="ok">Back in service</button>' : ''}
+    ${a.status !== 'maint' ? '<button class="btn btn-sm" type="button" data-acset="maint">In maintenance</button>' : ''}
+    ${a.status !== 'aog' ? '<button class="btn btn-bad btn-sm" type="button" data-acset="aog">Grounded (AOG)</button>' : ''}
   </div>`;
 }
 document.addEventListener('click', async e => {
   const f = e.target.closest('[data-fleet]'); if (f){ ui.fleetFilter = f.dataset.fleet; renderHangar(); return; }
   const b = e.target.closest('[data-ac]'); if (b){ ui.ac = b.dataset.ac; ui.acMode = null; renderHangar(); return; }
   const q = e.target.closest('[data-askac]');
-  if (q){ const a = store.fleet.find(x => x.reg === q.dataset.askac); if (a){ go('chat'); ask(`No ${a.model}: ${a.issue}`); } return; }
+  if (q){ const a = store.fleet.find(x => x.reg === q.dataset.askac); if (a){ go('chat'); ask(`On the ${a.model}: ${a.issue}`); } return; }
   const s = e.target.closest('[data-acset]'); if (!s) return;
   const a = store.fleet.find(x => x.reg === ui.ac); if (!a) return;
   const k = s.dataset.acset;
@@ -1223,14 +1224,14 @@ document.addEventListener('click', async e => {
   const now = new Date().toISOString();
   let patch, msg;
   if (k === 'ok'){
-    patch = { status:'ok', since:now, issue:'', ata:'', eta:'', events:[...(a.events || []), { at:now, type:'ok', reason:'Voltou a operar', by:PROFILES.sup.name }] };
-    msg = `${a.reg} voltou a operar.`;
+    patch = { status:'ok', since:now, issue:'', ata:'', eta:'', events:[...(a.events || []), { at:now, type:'ok', reason:'Back in service', by:PROFILES.sup.name }] };
+    msg = `${a.reg} is back in service.`;
   } else {
     const reason = (ui.acReason || '').trim(); if (!reason) return;
     const h = Number(ui.acEta), mode = ui.acMode;
     patch = { status:mode, since:now, issue:reason, ata:ui.acAta || '', eta: h > 0 ? new Date(Date.now() + h * HOUR).toISOString() : '',
       events:[...(a.events || []), { at:now, type:mode, reason, ata:ui.acAta || '', by:PROFILES.sup.name }] };
-    msg = `${a.reg} marcado como ${ST[mode][0].toLowerCase()}.`;
+    msg = `${a.reg} marked as ${ST[mode][0].toLowerCase()}.`;
   }
   s.disabled = true;
   if (await dbWrite(a.reg, patch, true, 'fleet')){ toast(msg); ui.acMode = null; }
@@ -1255,37 +1256,37 @@ function updMediaIn(){
 }
 function setSubMedia(m){
   if (ui.subMedia?.url) URL.revokeObjectURL(ui.subMedia.url);
-  if (m && m.blob.size > MAX_MEDIA){ toast('O ficheiro tem mais de 10 MB. Usa um mais curto ou mais pequeno.'); m = null; }
+  if (m && m.blob.size > MAX_MEDIA){ toast('The file is larger than 10 MB. Use a shorter or smaller one.'); m = null; }
   ui.subMedia = m ? { ...m, url: URL.createObjectURL(m.blob) } : null;
   const pv = $('#media-preview'), sm = ui.subMedia;
   pv.hidden = !sm;
-  pv.innerHTML = !sm ? '' : `${sm.kind === 'photo' ? `<img src="${sm.url}" alt="Foto escolhida">` : sm.kind === 'audio' ? `<audio controls src="${sm.url}"></audio>` : `<video controls src="${sm.url}" playsinline></video>`}
-    <span class="hint">${esc(sm.name || 'nota de voz')} · ${sm.blob.size < 1048576 ? Math.max(1, Math.round(sm.blob.size / 1024)) + ' KB' : fmtH(sm.blob.size / 1048576) + ' MB'}</span><button class="linkbtn" type="button" id="media-remove">Remover</button>`;
+  pv.innerHTML = !sm ? '' : `${sm.kind === 'photo' ? `<img src="${sm.url}" alt="Chosen photo">` : sm.kind === 'audio' ? `<audio controls src="${sm.url}"></audio>` : `<video controls src="${sm.url}" playsinline></video>`}
+    <span class="hint">${esc(sm.name || 'voice note')} · ${sm.blob.size < 1048576 ? Math.max(1, Math.round(sm.blob.size / 1024)) + ' KB' : fmtH(sm.blob.size / 1048576) + ' MB'}</span><button class="linkbtn" type="button" id="media-remove">Remove</button>`;
 }
 function updRecUi(){
   const b = $('#rec-btn'), t = $('#rec-time');
   b.classList.toggle('on', !!rec);
-  b.textContent = rec ? 'Parar gravação' : (ui.subMedia?.kind === 'audio' ? 'Gravar outra vez' : 'Gravar nota de voz');
+  b.textContent = rec ? 'Stop recording' : (ui.subMedia?.kind === 'audio' ? 'Record again' : 'Record voice note');
   t.hidden = !rec;
   if (rec){ const sec = Math.floor((Date.now() - rec.t0) / 1000); t.textContent = `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`; if (sec >= 120) stopRec(); }
 }
 async function startRec(){
-  if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder){ toast('Este browser não deixa gravar áudio. Anexa um ficheiro de áudio.'); return; }
+  if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder){ toast('This browser cannot record audio. Attach an audio file instead.'); return; }
   let stream;
   try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
-  catch(e){ toast('Sem acesso ao microfone. Autoriza o microfone no browser ou anexa um ficheiro.'); return; }
+  catch(e){ toast('No microphone access. Allow the microphone in the browser or attach a file.'); return; }
   const mr = new MediaRecorder(stream), chunks = [];
   mr.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
   mr.onstop = () => {
     stream.getTracks().forEach(t => t.stop());
-    setSubMedia({ kind:'audio', blob: new Blob(chunks, { type: mr.mimeType || 'audio/webm' }), name:'Nota de voz gravada' });
+    setSubMedia({ kind:'audio', blob: new Blob(chunks, { type: mr.mimeType || 'audio/webm' }), name:'Recorded voice note' });
     updRecUi();
   };
   // Live transcription where the browser offers it (Chrome, Edge); elsewhere the mechanic types it.
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   let sr = null;
   if (SR){
-    sr = new SR(); sr.lang = 'pt-PT'; sr.continuous = true; sr.interimResults = true;
+    sr = new SR(); sr.lang = $('#f-lang').value || 'en-GB'; sr.continuous = true; sr.interimResults = true;
     const base = $('#f-transcript').value.trim();
     sr.onresult = ev => {
       let text = '';
@@ -1300,7 +1301,7 @@ async function startRec(){
   mr.start();
   rec = { mr, sr, t0: Date.now(), timer: setInterval(updRecUi, 500) };
   updRecUi();
-  if (!sr) toast('A gravar. Este browser não transcreve sozinho: escreve a transcrição no fim.');
+  if (!sr) toast('Recording. This browser cannot transcribe automatically: type the transcript at the end.');
 }
 function stopRec(){
   if (!rec) return;
@@ -1323,11 +1324,11 @@ async function storeMedia(id, m){
   if (m.kind === 'photo'){
     const url = await shrinkImg(m.blob, sb ? 1280 : 720);
     if (!sb) return { mediaUrl: url };
-    return upload(id, { ...m, blob: dataURLtoBlob(url), name: 'foto.jpg' });
+    return upload(id, { ...m, blob: dataURLtoBlob(url), name: 'photo.jpg' });
   }
   if (sb) return upload(id, m);
   if (m.blob.size < 180 * 1024) return { mediaUrl: await blobToDataURL(m.blob) };
-  toast('Nesta versão só cabem anexos pequenos. A dica foi guardada sem o ficheiro.');
+  toast('This version only stores small attachments. The tip was saved without the file.');
   return {};
 }
 async function upload(id, m){
@@ -1347,16 +1348,16 @@ document.addEventListener('click', e => {
 
 /* ---------- Supervisor dashboard ---------- */
 const HOUR = 36e5, DAY = 864e5;
-function fmtDur(h){ return h < 48 ? `${Math.round(h)} h` : `${fmtH(h / 24)} dias`; }
+function fmtDur(h){ return h < 48 ? `${Math.round(h)} h` : `${fmtH(h / 24)} days`; }
 function groupSum(list, key){
   const m = new Map();
   list.forEach(i => { const k = key(i); const g = m.get(k) || { k, hours:0, n:0 }; g.hours += Number(i.downtime); g.n++; m.set(k, g); });
   return [...m.values()].sort((a, b) => b.hours - a.hours || b.n - a.n);
 }
 function hbars(rows, label){
-  if (!rows.length) return '<div class="empty">Sem dicas aprovadas neste período.</div>';
+  if (!rows.length) return '<div class="empty">No approved tips in this period.</div>';
   const max = Math.max(...rows.map(r => r.hours), 1);
-  return `<div class="hbars">${rows.map(r => `<div class="hrow" data-tip="${esc(label(r.k))}: ${fmtH(r.hours)} h poupadas em ${r.n} ${r.n === 1 ? 'dica' : 'dicas'}">
+  return `<div class="hbars">${rows.map(r => `<div class="hrow" data-tip="${esc(label(r.k))}: ${fmtH(r.hours)} h saved across ${r.n} ${r.n === 1 ? 'tip' : 'tips'}">
     <span class="name">${esc(label(r.k))}</span><span class="bar"><i style="width:${r.hours / max * 100}%"></i></span><span class="v"><b>${fmtH(r.hours)} h</b> · ${r.n}</span></div>`).join('')}</div>`;
 }
 function renderDash(){
@@ -1384,9 +1385,9 @@ function renderDash(){
     if (mo){ mo.hours += Number(i.downtime); mo.n++; }
   });
   const mMax = Math.max(...months.map(m => m.hours), 1);
-  const mName = m => new Date(m.y, m.m, 1).toLocaleDateString('pt-PT', { month:'short' }).replace('.', '');
+  const mName = m => new Date(m.y, m.m, 1).toLocaleDateString('en-GB', { month:'short' }).replace('.', '');
 
-  const st = [['approved','Aprovadas','var(--ok)'], ['pending','Pendentes','var(--warn)'], ['rejected','Rejeitadas','var(--bad)']].map(([k, l, c]) => ({ k, l, c, n: sub.filter(i => i.status === k).length }));
+  const st = [['approved','Approved','var(--ok)'], ['pending','Pending','var(--warn)'], ['rejected','Rejected','var(--bad)']].map(([k, l, c]) => ({ k, l, c, n: sub.filter(i => i.status === k).length }));
   const stTotal = st.reduce((s, x) => s + x.n, 0);
 
   const people = new Map();
@@ -1398,47 +1399,47 @@ function renderDash(){
     people.set(i.author, p);
   });
   const rank = [...people.values()].filter(p => p.ap || p.pe || p.rj).sort((a, b) => b.hours - a.hours || b.ap - a.ap).slice(0, 6);
-  const rangeLabel = { '30':'nos últimos 30 dias', '90':'nos últimos 90 dias', all:'desde o início' }[ui.range || 'all'];
+  const rangeLabel = { '30':'in the last 30 days', '90':'in the last 90 days', all:'since the start' }[ui.range || 'all'];
 
   el.innerHTML = `
     <div class="dash-head">
-      <div><div class="eyebrow">Indicadores</div><h2>Impacto do conhecimento</h2></div>
-      <div class="range" role="group" aria-label="Período">${[['30','30 dias'],['90','90 dias'],['all','Tudo']].map(([k, l]) => `<button type="button" data-range="${k}" aria-pressed="${(ui.range || 'all') === k}">${l}</button>`).join('')}</div>
+      <div><div class="eyebrow">Indicators</div><h2>Knowledge impact</h2></div>
+      <div class="range" role="group" aria-label="Period">${[['30','30 days'],['90','90 days'],['all','All']].map(([k, l]) => `<button type="button" data-range="${k}" aria-pressed="${(ui.range || 'all') === k}">${l}</button>`).join('')}</div>
     </div>
     <div class="kpis-2">
-      <div class="kpi"><span class="label">Horas poupadas</span><div class="val">${fmtH(hours)}<small style="font-size:1rem"> h</small></div><div class="sub">${ap.length} ${ap.length === 1 ? 'dica aprovada' : 'dicas aprovadas'} ${rangeLabel}</div></div>
-      <div class="kpi"><span class="label">Média por dica</span><div class="val">${ap.length ? fmtH(hours / ap.length) : '—'}<small style="font-size:1rem"> h</small></div><div class="sub">Horas de paragem evitadas por dica aprovada</div></div>
-      <div class="kpi"><span class="label">Tempo médio de decisão</span><div class="val">${avgRev == null ? '—' : fmtDur(avgRev)}</div><div class="sub">Do envio pelo mecânico até aprovar ou rejeitar</div></div>
-      <div class="kpi"><span class="label">À espera há mais tempo</span><div class="val" style="color:${oldAge > 72 ? 'var(--bad)' : 'var(--ink)'}">${oldest ? fmtDur(oldAge) : '—'}</div><div class="sub">${oldest ? `${esc(oldest.author)} · ${esc(oldest.id)}${oldAge > 72 ? ' · acima de 3 dias' : ''}` : 'Nenhuma dica à espera'}</div></div>
+      <div class="kpi"><span class="label">Hours saved</span><div class="val">${fmtH(hours)}<small style="font-size:1rem"> h</small></div><div class="sub">${ap.length} ${ap.length === 1 ? 'approved tip' : 'approved tips'} ${rangeLabel}</div></div>
+      <div class="kpi"><span class="label">Average per tip</span><div class="val">${ap.length ? fmtH(hours / ap.length) : '—'}<small style="font-size:1rem"> h</small></div><div class="sub">Downtime hours avoided per approved tip</div></div>
+      <div class="kpi"><span class="label">Average decision time</span><div class="val">${avgRev == null ? '—' : fmtDur(avgRev)}</div><div class="sub">From mechanic submission to approval or rejection</div></div>
+      <div class="kpi"><span class="label">Longest waiting</span><div class="val" style="color:${oldAge > 72 ? 'var(--bad)' : 'var(--ink)'}">${oldest ? fmtDur(oldAge) : '—'}</div><div class="sub">${oldest ? `${esc(oldest.author)} · ${esc(oldest.id)}${oldAge > 72 ? ' · over 3 days' : ''}` : 'No tips waiting'}</div></div>
     </div>
     <div class="charts">
       <div class="chart chart-wide">
-        <div><h3>Horas poupadas por mês</h3><div class="sub">Últimos 6 meses, pela data de aprovação. ${fixed.length ? `A Qualidade corrigiu ${fixed.length} ${fixed.length === 1 ? 'dica' : 'dicas'} (−${fmtH(cut)} h face ao pedido).` : 'Nenhuma correção de horas na aprovação.'}</div></div>
-        <div><div class="cols">${months.map((m, k) => `<div class="col${k === 5 ? ' now' : ''}" data-tip="${mName(m)} ${m.y}: ${fmtH(m.hours)} h em ${m.n} ${m.n === 1 ? 'dica' : 'dicas'}">${k === 5 || m.hours === mMax ? `<b style="bottom:${m.hours / mMax * 100}%">${fmtH(m.hours)} h</b>` : ''}<i style="height:${m.hours / mMax * 100}%"></i></div>`).join('')}</div>
+        <div><h3>Hours saved per month</h3><div class="sub">Last 6 months, by approval date. ${fixed.length ? `Quality corrected ${fixed.length} ${fixed.length === 1 ? 'tip' : 'tips'} (−${fmtH(cut)} h compared with the request).` : 'No hours corrected at approval.'}</div></div>
+        <div><div class="cols">${months.map((m, k) => `<div class="col${k === 5 ? ' now' : ''}" data-tip="${mName(m)} ${m.y}: ${fmtH(m.hours)} h across ${m.n} ${m.n === 1 ? 'tip' : 'tips'}">${k === 5 || m.hours === mMax ? `<b style="bottom:${m.hours / mMax * 100}%">${fmtH(m.hours)} h</b>` : ''}<i style="height:${m.hours / mMax * 100}%"></i></div>`).join('')}</div>
         <div class="col-labels">${months.map(m => `<span>${mName(m)}</span>`).join('')}</div></div>
       </div>
       <div class="chart">
-        <div><h3>Por sistema do avião</h3><div class="sub">Horas poupadas e número de dicas ${rangeLabel}</div></div>
+        <div><h3>By aircraft system</h3><div class="sub">Hours saved and number of tips ${rangeLabel}</div></div>
         ${hbars(groupSum(ap, i => i.ata), k => ataName(k))}
       </div>
       <div class="chart">
-        <div><h3>Por avião</h3><div class="sub">Horas poupadas e número de dicas ${rangeLabel}</div></div>
+        <div><h3>By aircraft</h3><div class="sub">Hours saved and number of tips ${rangeLabel}</div></div>
         ${hbars(groupSum(ap, i => i.aircraft), k => k)}
       </div>
       <div class="chart">
-        <div><h3>Estado das submissões</h3><div class="sub">${stTotal} ${stTotal === 1 ? 'dica enviada' : 'dicas enviadas'} ${rangeLabel}</div></div>
+        <div><h3>Submission status</h3><div class="sub">${stTotal} ${stTotal === 1 ? 'tip submitted' : 'tips submitted'} ${rangeLabel}</div></div>
         ${stTotal ? `<div class="stack">${st.filter(x => x.n).map(x => `<i style="flex:${x.n};background:${x.c}" data-tip="${x.l}: ${x.n} (${Math.round(x.n / stTotal * 100)}%)"></i>`).join('')}</div>
-        <div class="legend">${st.map(x => `<span><i class="sw" style="background:${x.c}"></i>${x.l} <b>${x.n}</b></span>`).join('')}</div>` : '<div class="empty">Sem dicas enviadas neste período.</div>'}
+        <div class="legend">${st.map(x => `<span><i class="sw" style="background:${x.c}"></i>${x.l} <b>${x.n}</b></span>`).join('')}</div>` : '<div class="empty">No tips submitted in this period.</div>'}
       </div>
       <div class="chart">
-        <div><h3>Tipo de anexo</h3><div class="sub">Dicas aprovadas ${rangeLabel}, por formato</div></div>
+        <div><h3>Attachment type</h3><div class="sub">Approved tips ${rangeLabel}, by format</div></div>
         ${hbars(groupSum(ap, i => i.media), k => k)}
       </div>
       <div class="chart chart-wide">
-        <div><h3>Quem mais contribui</h3><div class="sub">Ordenado por horas poupadas ${rangeLabel}</div></div>
-        ${rank.length ? `<div class="table-wrap"><table class="rank"><thead><tr><th>Mecânico</th><th style="text-align:right">Aprovadas</th><th style="text-align:right">Horas poupadas</th><th style="text-align:right">Pendentes</th><th style="text-align:right">Rejeitadas</th></tr></thead><tbody>
+        <div><h3>Top contributors</h3><div class="sub">Sorted by hours saved ${rangeLabel}</div></div>
+        ${rank.length ? `<div class="table-wrap"><table class="rank"><thead><tr><th>Mechanic</th><th style="text-align:right">Approved</th><th style="text-align:right">Hours saved</th><th style="text-align:right">Pending</th><th style="text-align:right">Rejected</th></tr></thead><tbody>
           ${rank.map(p => `<tr><td><div class="who-cell"><div class="avatar" aria-hidden="true">${esc(initials(p.name))}</div><div class="byline"><b>${esc(p.name)}</b><span>${esc(p.role)}</span></div></div></td><td class="num">${p.ap}</td><td class="num">${fmtH(p.hours)} h</td><td class="num">${p.pe}</td><td class="num">${p.rj}</td></tr>`).join('')}
-        </tbody></table></div>` : '<div class="empty">Sem contribuições neste período.</div>'}
+        </tbody></table></div>` : '<div class="empty">No contributions in this period.</div>'}
       </div>
     </div>`;
 }
@@ -1465,24 +1466,25 @@ async function decide(act){
     const hours = Math.round(Number(ui.approveHours) * 10) / 10;
     if (!(hours >= 0.5)) return;
     if (await dbWrite(it.id, { status:'approved', approvedAt:now, reviewer:PROFILES.sup.name, downtime:hours, downtimeAsked:it.downtime }, true))
-      toast(`${it.id} aprovado com ${fmtH(hours)} h poupadas${hours !== it.downtime ? ` (pedido: ${fmtH(it.downtime)} h)` : ''}. Publicado no Feed e no MEC-AI.`);
+      toast(`${it.id} approved with ${fmtH(hours)} h saved${hours !== it.downtime ? ` (requested: ${fmtH(it.downtime)} h)` : ''}. Published to the Feed and MEC-AI.`);
   }
   if (act === 'confirm-reject'){
     const r = $('#reject-reason').value.trim(); if (!r) return;
     if (await dbWrite(it.id, { status:'rejected', reviewedAt:now, reviewer:PROFILES.sup.name, rejectReason:r }, true))
-      toast(`${it.id} rejeitado e devolvido a ${it.author}.`);
+      toast(`${it.id} rejected and returned to ${it.author}.`);
   }
   ui.rejecting = false; ui.approving = false; ui.selected = null; render();
 }
 
 /* ---------- Chat ---------- */
-const STOP = new Set('a o os as de da do das dos e em no na nos nas um uma uns umas para por com que se ao aos e é tenho tem temos estou esta está qual quais como problema aviao avião ajuda dica dicas quando onde depois antes muito fica faz fazer o que porque sobre alguma algum me meu minha isto isso ja já nao não sim ou the and verifico primeiro'.split(' ').map(norm));
+const STOP = new Set(('a o os as de da do das dos e em no na nos nas um uma uns umas para por com que se ao aos e é tenho tem temos estou esta está qual quais como problema aviao avião ajuda dica dicas quando onde depois antes muito fica faz fazer o que porque sobre alguma algum me meu minha isto isso ja já nao não sim ou verifico primeiro '
+  + 'the and an of on in at to for with is it its my we our this that what why how when after before keeps keep gets get does do i have has there problem aircraft plane help tip tips first check should').split(' ').map(norm));
 const PRESETS_AUDIO = [
-  'No A320, logo depois de arrancar o motor de manhã, aparece um aviso no ar quente do motor 1. O que vejo primeiro?',
-  'No Boeing 737 há uma luz da válvula de combustível que fica meio acesa e não apaga.',
-  'A APU do A320 desliga-se sozinha, mas o óleo está no nível certo.'
+  'On the A320, right after starting the engine in the morning, I get a bleed warning on engine 1. What should I check first?',
+  'On the Boeing 737 a fuel valve light stays dim and does not go out.',
+  'The A320 APU keeps shutting down by itself, but the oil level is fine.'
 ];
-const SUGGEST = ['O motor dá um aviso de bleed logo depois de arrancar','A APU desliga-se sozinha','Há uma luz da válvula de combustível que fica meio acesa','O ar condicionado aquece demais em solo no verão'];
+const SUGGEST = ['The engine gives a bleed warning right after start','The APU shuts down by itself','A fuel valve light stays half on','The air conditioning overheats on the ground in summer'];
 function score(q){
   const terms = norm(q).split(/[^a-z0-9]+/).filter(t => t && !STOP.has(t) && (t.length > 2 || /\d/.test(t)));
   if (!terms.length) return [];
@@ -1503,99 +1505,101 @@ function score(q){
 }
 function sourceCard(it){
   return `<div class="source">
-    <div class="source-head"><span>Quem resolveu isto · ${it.id}</span><span>Aprovado por ${esc(it.reviewer || 'Qualidade')}</span></div>
+    <div class="source-head"><span>Who fixed this · ${it.id}</span><span>Approved by ${esc(it.reviewer || 'Quality')}</span></div>
     <div class="source-body">
       ${mediaArt(it)}
       <div class="source-info">
         <h4>${esc(it.title)}</h4>
         <div style="display:flex;gap:10px;align-items:center">${byline(it)}</div>
         <div class="source-facts">
-          <div><span>Data de aprovação</span>${fmtD(it.approvedAt)}</div>
-          <div><span>Sistema</span>ATA ${it.ata} · ${esc(ataName(it.ata))}</div>
-          <div><span>Aeronave</span>${esc(it.aircraft)}</div>
-          <div><span>Paragem poupada</span>${fmtH(it.downtime)} h</div>
+          <div><span>Approval date</span>${fmtD(it.approvedAt)}</div>
+          <div><span>System</span>ATA ${it.ata} · ${esc(ataName(it.ata))}</div>
+          <div><span>Aircraft</span>${esc(it.aircraft)}</div>
+          <div><span>Downtime saved</span>${fmtH(it.downtime)} h</div>
         </div>
         ${it.mediaUrl && kindOf(it.media) === 'audio' ? `<audio controls preload="none" src="${esc(it.mediaUrl)}"></audio>` : ''}
-        <button class="btn btn-sm" type="button" data-open="${it.id}" style="align-self:flex-start">Ver dica completa</button>
+        <button class="btn btn-sm" type="button" data-open="${it.id}" style="align-self:flex-start">See full tip</button>
       </div>
     </div></div>`;
 }
 function summary(it){
   const parts = it.description.split(/\n+/).map(s => s.replace(/^(Transcrição( da nota de voz)?:\s*)/,'').replace(/^"|"$/g,''));
-  const sol = parts.find(p => /^Solução|^A dica|^Dica|^Antes de|primeira coisa/i.test(p)) || parts[1] || parts[0];
+  const sol = parts.find(p => /^Solução|^Fix|^A dica|^Dica|^Antes de|primeira coisa/i.test(p)) || parts[1] || parts[0];
   return sol;
 }
 function botAnswer(q, origin){
   const res = score(q).slice(0, 2);
   const n = approved().length;
-  const meta = `<div class="searchmeta">Procurei em ${n} dicas aprovadas</div>`;
-  if (!res.length) return `${meta}<p>Não encontrei nenhuma solução validada para isto. Tenta dizer o avião, o sistema ou o aviso que aparece.</p><p>Se resolveres o problema, regista a solução em <button class="linkbtn" data-go="submit">Submeter</button> para ficar disponível depois de validada.</p>`;
+  const meta = `<div class="searchmeta">Searched ${n} approved tips</div>`;
+  if (!res.length) return `${meta}<p>I couldn't find a validated fix for this. Try mentioning the aircraft, the system or the warning you see.</p><p>If you fix the problem, record it in <button class="linkbtn" data-go="submit">Submit</button> so it becomes available once validated.</p>`;
   const top = res[0].it;
   return `${meta}${origin ? `<p>${origin}</p>` : ''}
-    <p>Encontrei ${res.length === 1 ? 'uma solução validada' : 'duas soluções validadas'} na base. A mais relevante é de <b>${esc(top.author)}</b> (${esc(top.role)}), para <b>${esc(top.alarm)}</b> em ${esc(top.aircraft)}:</p>
+    <p>I found ${res.length === 1 ? 'one validated fix' : 'two validated fixes'}. The most relevant is by <b>${esc(top.author)}</b> (${esc(top.role)}), for <b>${esc(top.alarm)}</b> on the ${esc(top.aircraft)}:</p>
     <p>${esc(summary(top))}</p>
     ${sourceCard(top)}
-    ${res[1] ? `<p>Também pode ajudar:</p>${sourceCard(res[1].it)}` : ''}
-    <p class="hint">Confirma o procedimento no manual oficial do avião antes de mexer.</p>`;
+    ${res[1] ? `<p>This may also help:</p>${sourceCard(res[1].it)}` : ''}
+    <p class="hint">Always confirm the procedure in the official aircraft manual before working on it.</p>`;
 }
 function greet(){
-  ui.chat = [{ from:'bot', html:`<p>Olá, sou o <b>MEC-AI</b>. Descreve o problema por palavras tuas: o que vês, ouves ou o que aparece no ecrã. Não precisas de saber o código exato. Se precisar de mais detalhes, faço-te algumas perguntas até chegarmos à causa.</p><p>Também podes enviar uma foto ou uma nota de voz.</p><p>Só respondo com dicas aprovadas pela Qualidade e mostro sempre quem as escreveu.</p><div class="suggest">${SUGGEST.map(s => `<button type="button" data-ask="${esc(s)}">${esc(s)}</button>`).join('')}</div>` }];
+  ui.chat = [{ from:'bot', html:`<p>Hi, I'm <b>MEC-AI</b>. Describe the problem in your own words: what you see, hear or what shows on the screen. You don't need the exact code. If I need more detail, I'll ask a few questions until we find the cause.</p><p>You can also send a photo or a voice note.</p><p>I only answer with tips approved by Quality and always show who wrote them.</p><div class="suggest">${SUGGEST.map(s => `<button type="button" data-ask="${esc(s)}">${esc(s)}</button>`).join('')}</div>` }];
 }
 function waveHtml(seed){ const r = rng(seed); let s = ''; for (let i = 0; i < 34; i++) s += `<i style="height:${6 + r()*22}px"></i>`; return `<div class="wave">${s}</div>`; }
 function renderChat(){
-  $('#chat-scope').textContent = `${sample ? 'IA Claude' : 'Pesquisa local'} · ${approved().length} dicas aprovadas`;
+  $('#chat-scope').textContent = `${sample ? 'Claude AI' : 'Local search'} · ${approved().length} approved tips`;
   $('#side-suggest').innerHTML = SUGGEST.map(s => `<button type="button" data-ask="${esc(s)}">${esc(s)}</button>`).join('');
   $('#msgs').innerHTML = ui.chat.map(m => m.from === 'bot'
-    ? `<div class="msg bot"><div class="bot-badge" style="width:34px;height:34px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f2b705" stroke-width="2.2" aria-hidden="true"><rect x="4" y="7" width="16" height="12" rx="3"/><path d="M12 3v4M9 12h.01M15 12h.01"/></svg></div><div class="bubble">${m.typing ? '<div class="typing" aria-label="A pesquisar"><span></span><span></span><span></span></div>' : m.ai ? aiHtml(m) : m.html}</div></div>`
-    : `<div class="msg user"><div class="bubble">${m.img ? `<img class="att" src="${m.img}" alt="Foto enviada">` : ''}${m.audio ? waveHtml(m.text) + '<small style="opacity:.75">Nota de voz · transcrição automática</small>' : ''}${m.text ? `<p>${esc(m.text)}</p>` : ''}</div></div>`).join('');
+    ? `<div class="msg bot"><div class="bot-badge" style="width:34px;height:34px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f2b705" stroke-width="2.2" aria-hidden="true"><rect x="4" y="7" width="16" height="12" rx="3"/><path d="M12 3v4M9 12h.01M15 12h.01"/></svg></div><div class="bubble">${m.typing ? '<div class="typing" aria-label="Searching"><span></span><span></span><span></span></div>' : m.ai ? aiHtml(m) : m.html}</div></div>`
+    : `<div class="msg user"><div class="bubble">${m.img ? `<img class="att" src="${m.img}" alt="Photo sent">` : ''}${m.audio ? waveHtml(m.text) + '<small style="opacity:.75">Voice note · automatic transcript</small>' : ''}${m.text ? `<p>${esc(m.text)}</p>` : ''}</div></div>`).join('');
   const pa = $('#pending-att');
   pa.hidden = !ui.pendingImg;
-  pa.innerHTML = ui.pendingImg ? `<img src="${ui.pendingImg}" alt=""><span>Foto pronta a enviar</span><button class="linkbtn" type="button" data-act="drop-img">Remover</button>` : '';
+  pa.innerHTML = ui.pendingImg ? `<img src="${ui.pendingImg}" alt=""><span>Photo ready to send</span><button class="linkbtn" type="button" data-act="drop-img">Remove</button>` : '';
   const box = $('#msgs'); box.scrollTop = box.scrollHeight;
 }
-const AI_RULES = `És o MEC-AI, o assistente de diagnóstico do AeroKnowledge Hub, usado por técnicos de manutenção aeronáutica (MRO) no hangar, muitos deles novos na função. Respondes sempre em português europeu simples, como um colega experiente a explicar a alguém novo no hangar: tratas por tu, frases curtas, palavras do dia a dia, sem siglas e sem linguagem de manual. Se tiveres mesmo de usar um termo técnico ou uma sigla, explica-a entre parênteses (por exemplo "APU (motor pequeno da cauda)").
+const AI_RULES = `You are MEC-AI, the diagnostic assistant of AeroKnowledge Hub, used by aircraft maintenance mechanics (MRO) in the hangar, many of them new to the job. Reply in English by default; if the mechanic writes in Portuguese, reply in European Portuguese. Talk like an experienced colleague explaining things to someone new in the hangar: short sentences, everyday words, no acronyms and no manual-speak. If you really need a technical term or acronym, explain it in brackets (e.g. "APU (the small engine in the tail)").
 
-O técnico muitas vezes NÃO sabe o código de alarme exato. Descreve com palavras suas o que vê, ouve ou cheira ("o motor dá um aviso de ar quente depois de arrancar", "a APU vai abaixo sozinha", "há uma luz que fica meio acesa"). O teu trabalho é perceber qual é o problema e ligá-lo à dica aprovada certa.
+The approved tips below were written by Portuguese mechanics, so their descriptions and voice-note transcripts are in Portuguese. Read them and explain them in the language of your reply.
 
-Quem te escreve são mecânicos no hangar. Falam como falam entre colegas, não como no manual: frases curtas, calão do hangar, abreviaturas, erros de escrita, mistura de português e inglês. Exemplos do que podem dizer e o que querem dizer:
-- "o motorzinho de trás vai abaixo", "a APU morre" = a APU desliga-se sozinha
-- "a luz fica a meio gás", "fica meio acesa", "não apaga de vez" = luz da válvula fica meio acesa
-- "dá erro no trem", "o trem está a dar barraca" = aviso no trem de aterragem
-- "o ar sai a ferver", "o ar condicionado aquece" = sobreaquecimento do ar condicionado
-- "o motor dá aviso de ar quente", "dá bleed" = aviso no ar quente do motor
-- "o gerador não pega", "não dá corrente" = gerador não entra em funcionamento
-- "o hidráulico vai perdendo", "a pressão foge" = perda de pressão no sistema hidráulico
-- "os travões fazem asneira", "o anti-bloqueio salta" = travões anti-bloqueio desligam-se
-Percebe a ideia mesmo que as palavras sejam outras. Nunca corrijas a forma como o mecânico fala.
+Mechanics often do NOT know the exact warning code. They describe what they see, hear or smell in their own words ("the engine gives a hot air warning after start", "the APU keeps dying", "a light stays half on"). Your job is to understand the problem and match it to the right approved tip.
 
-Como decidir:
-- Compara a descrição com os sintomas, alarmes, peças, sistemas e condições das dicas abaixo, mesmo que o técnico use outras palavras, termos em inglês ou linguagem informal.
-- Se UMA dica encaixa claramente, responde logo.
-- Se a descrição é vaga ou encaixa em mais do que uma dica, faz UMA pergunta de diagnóstico de cada vez para desempatar: que aeronave é, que aviso aparece no ecrã do cockpit, em que fase acontece (arranque, taxi, cruzeiro, em solo), se é intermitente, em que condições (frio, calor, depois de lavagem), o que já foi verificado. Escolhe a pergunta que mais reduz as hipóteses e diz numa frase curta o que estás a considerar.
-- Faz no máximo 3 perguntas na conversa. Depois disso, dá a melhor correspondência e diz o grau de confiança.
-- Se nenhuma dica se aplicar, diz claramente que não há solução validada na base e sugere submeter a solução depois de resolver.
-- Usa APENAS as dicas aprovadas da base de conhecimento abaixo. Não inventes procedimentos, valores, binários, part numbers nem referências.
+They talk the way colleagues talk, not like the manual: short sentences, hangar slang, abbreviations, typos, a mix of English and Portuguese. Examples of what they may say and what they mean:
+- "the little engine at the back keeps dying", "o motorzinho de trás vai abaixo" = the APU shuts down by itself
+- "the light stays half on", "fica a meio gás" = a fuel valve light stays dim
+- "the gear is acting up", "dá erro no trem" = landing gear warning
+- "the air comes out boiling", "o ar sai a ferver" = air conditioning overheat
+- "bleed warning on the engine", "dá bleed" = engine bleed air warning
+- "the generator won't come online", "o gerador não pega" = generator not powering the bus
+- "hydraulics keep bleeding off", "a pressão foge" = hydraulic pressure loss
+- "the anti-skid keeps dropping out", "o anti-bloqueio salta" = anti-skid brakes switching off
+Understand the idea even if the words differ. Never correct the way the mechanic talks.
 
-Formato quando PERGUNTAS:
-- Uma ou duas frases curtas e a pergunta.
-- Na penúltima linha: "OPÇÕES: " seguido de 2 a 4 respostas curtas, escritas como um mecânico as diria (por exemplo "Só de manhã, a frio" | "Já troquei a peça" | "Não sei"), separadas por " | ". Inclui sempre uma opção "Não sei".
-- Na última linha: "FONTES: nenhuma".
+How to decide:
+- Compare the description with the symptoms, warnings, parts, systems and conditions in the tips below, even if the mechanic uses other words.
+- If ONE tip clearly fits, answer straight away.
+- If the description is vague or fits more than one tip, ask ONE diagnostic question at a time to narrow it down: which aircraft, which warning shows in the cockpit, in which phase it happens (start-up, taxi, cruise, on the ground), whether it is intermittent, under which conditions (cold, heat, after washing), what has already been checked. Pick the question that best narrows the options and say in one short sentence what you are considering.
+- Ask at most 3 questions in the conversation. After that, give the best match and say how confident you are.
+- If no tip applies, say clearly that there is no validated fix in the knowledge base and suggest submitting the fix once it is solved.
+- Use ONLY the approved tips in the knowledge base below. Do not invent procedures, values, torques, part numbers or references.
 
-Formato quando RESPONDES:
-- Uma frase a dizer qual é o problema provável, a dica e quem a escreveu; depois os passos principais numa lista numerada (máximo 5 passos curtos). Sem títulos. Podes usar **negrito** em termos-chave.
-- Uma frase curta a lembrar que o procedimento deve ser confirmado no manual oficial do avião.
-- Na ÚLTIMA linha: "FONTES: " seguido dos IDs das dicas usadas, separados por vírgula (máximo 2).`;
+Format when you ASK:
+- One or two short sentences and the question.
+- On the second-to-last line: "OPTIONS: " followed by 2 to 4 short possible answers, written the way a mechanic would say them (e.g. "Only in the morning, when cold" | "Already replaced the part" | "Not sure"), separated by " | ". Always include a "Not sure" option.
+- On the last line: "SOURCES: none".
+
+Format when you ANSWER:
+- One sentence saying what the likely problem is, which tip it is and who wrote it; then the main steps as a numbered list (at most 5 short steps). No headings. You may use **bold** for key terms.
+- One short sentence reminding them to confirm the procedure in the official aircraft manual.
+- On the LAST line: "SOURCES: " followed by the IDs of the tips used, separated by commas (at most 2).`;
 function kbText(){
-  return approved().map(i => `[${i.id}] ${i.title}\nAeronave: ${i.aircraft} | ATA ${i.ata} ${ataName(i.ata)} | Peça: ${i.part} | Alarme: ${i.alarm}\nAutor: ${i.author} (${i.role}) | Aprovado: ${fmtD(i.approvedAt)} | Horas de paragem poupadas: ${i.downtime} h\n${i.description}${i.transcript && !i.description.includes(i.transcript.slice(0, 30)) ? '\nTranscrição da nota de voz: ' + i.transcript : ''}`).join('\n\n---\n\n');
+  return approved().map(i => `[${i.id}] ${i.title}\nAircraft: ${i.aircraft} | ATA ${i.ata} ${ataName(i.ata)} | Part: ${i.part} | Warning: ${i.alarm}\nAuthor: ${i.author} (${i.role}) | Approved: ${fmtD(i.approvedAt)} | Downtime hours saved: ${i.downtime} h\nDescription (Portuguese): ${i.description}${i.transcript && !i.description.includes(i.transcript.slice(0, 30)) ? '\nVoice-note transcript (Portuguese): ' + i.transcript : ''}`).join('\n\n---\n\n');
 }
-// Claude ends each reply with control lines: optional "OPÇÕES: a | b" (quick replies) and "FONTES: K-…".
+// Claude ends each reply with control lines: optional "OPTIONS: a | b" (quick replies) and "SOURCES: K-…" (Portuguese markers accepted too).
 function splitSources(text){
-  const cut = text.search(/\n\s*(OP[ÇC][ÕO]ES:|FONTES:)/);
+  const cut = text.search(/\n\s*(OPTIONS:|SOURCES:|OP[ÇC][ÕO]ES:|FONTES:)/);
   const tail = cut < 0 ? '' : text.slice(cut);
-  const body = (cut < 0 ? text : text.slice(0, cut)).replace(/\n\s*(O(P(Ç(Õ(E(S)?)?)?)?)?|F(O(N(T(E(S)?)?)?)?)?)$/, '').trim();
-  const om = tail.match(/OP[ÇC][ÕO]ES:\s*(.+)/);
+  const body = (cut < 0 ? text : text.slice(0, cut)).replace(/\n\s*(O(P(T(I(O(N(S)?)?)?)?|Ç(Õ(E(S)?)?)?)?)?|S(O(U(R(C(E(S)?)?)?)?)?)?|F(O(N(T(E(S)?)?)?)?)?)$/, '').trim();
+  const om = tail.match(/(?:OPTIONS|OP[ÇC][ÕO]ES):\s*(.+)/);
   const opts = om ? om[1].split('|').map(s => s.trim()).filter(Boolean).slice(0, 4) : [];
-  const fm = tail.match(/FONTES:(.*)/);
+  const fm = tail.match(/(?:SOURCES|FONTES):(.*)/);
   const ids = fm ? (fm[1].match(/K-\d+/g) || []).filter((v, i, a) => a.indexOf(v) === i).slice(0, 2) : [];
   return { body, ids, opts };
 }
@@ -1603,12 +1607,12 @@ function fmtAi(t){
   return esc(t).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').split(/\n{2,}/).map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`).join('');
 }
 function aiHtml(m){
-  if (!m.text) return '<div class="typing" aria-label="A pesquisar"><span></span><span></span><span></span></div>';
+  if (!m.text) return '<div class="typing" aria-label="Searching"><span></span><span></span><span></span></div>';
   const { body, ids, opts } = splitSources(m.text);
   const src = m.done ? ids.map(id => approved().find(i => i.id === id)).filter(Boolean) : [];
   const asking = m.done && opts.length && !src.length;
   const isLast = ui.chat[ui.chat.length - 1] === m;
-  return `<div class="searchmeta">Claude · ${asking ? 'a perceber o problema' : `procurei em ${m.kb} dicas aprovadas`}</div>${fmtAi(body)}${src.map(sourceCard).join('')}${m.done && opts.length && isLast ? `<div class="suggest">${opts.map(o => `<button type="button" data-ask="${esc(o)}">${esc(o)}</button>`).join('')}</div>` : ''}${m.note ? `<p class="hint">${esc(m.note)}</p>` : ''}`;
+  return `<div class="searchmeta">Claude · ${asking ? 'narrowing down the problem' : `searched ${m.kb} approved tips`}</div>${fmtAi(body)}${src.map(sourceCard).join('')}${m.done && opts.length && isLast ? `<div class="suggest">${opts.map(o => `<button type="button" data-ask="${esc(o)}">${esc(o)}</button>`).join('')}</div>` : ''}${m.note ? `<p class="hint">${esc(m.note)}</p>` : ''}`;
 }
 function paintLastBot(){
   const m = ui.chat[ui.chat.length - 1];
@@ -1618,14 +1622,14 @@ function paintLastBot(){
   const box = $('#msgs'); box.scrollTop = box.scrollHeight;
 }
 async function askClaude(text, opts){
-  let content = text || 'Analisa esta foto do problema.';
-  if (opts.audio) content = `(Nota de voz transcrita) ${content}`;
+  let content = text || 'Analyse this photo of the problem.';
+  if (opts.audio) content = `(Transcribed voice note) ${content}`;
   const imgs = opts.blob && sampleImages ? [opts.blob] : undefined;
-  if (opts.blob) content += imgs ? '\n\n[O técnico anexou uma foto do problema. Descreve numa frase o que vês de relevante e usa-o para encontrar a dica certa.]' : '\n\n[O técnico anexou uma foto, mas não a consegues ver. Responde com base no texto.]';
+  if (opts.blob) content += imgs ? '\n\n[The mechanic attached a photo of the problem. Describe in one sentence what you see that matters and use it to find the right tip.]' : '\n\n[The mechanic attached a photo, but you cannot see it. Answer from the text.]';
   ui.turns.push({ role:'user', content });
   const m = { from:'bot', ai:true, text:'', kb: approved().length };
   ui.chat.push(m); renderChat();
-  const input = [{ role:'user', content: `${AI_RULES}\n\nBASE DE CONHECIMENTO (dicas aprovadas):\n\n${kbText()}` }, ...ui.turns.slice(-8)];
+  const input = [{ role:'user', content: `${AI_RULES}\n\nKNOWLEDGE BASE (approved tips):\n\n${kbText()}` }, ...ui.turns.slice(-8)];
   ui.busy = true;
   try {
     const { text: out } = await sample(input, { modelTier:'quick', cache:false, images: imgs, onText: ({ text }) => { m.text = text; paintLastBot(); } });
@@ -1634,8 +1638,8 @@ async function askClaude(text, opts){
   } catch(e){
     ui.turns.pop();
     if (['not_granted','sampling_disabled','not_declared','capability_disabled','capability_removed'].includes(e.code)) sample = null;
-    const why = e.code === 'rate_limited' ? 'Limite de pedidos ao Claude atingido. Tenta daqui a pouco.' : e.code === 'not_granted' ? 'Sem autorização para usar o Claude nesta página. A usar pesquisa local.' : 'O Claude não respondeu. Mostro o resultado da pesquisa local.';
-    ui.chat[ui.chat.indexOf(m)] = { from:'bot', html: `<p class="hint">${esc(why)}</p>` + botAnswer(text || 'sensor proximidade trem conector LGCIU', '') };
+    const why = e.code === 'rate_limited' ? 'Too many requests to Claude. Try again shortly.' : e.code === 'not_granted' ? 'Claude is not allowed on this page. Using local search.' : 'Claude did not answer. Showing the local search result.';
+    ui.chat[ui.chat.indexOf(m)] = { from:'bot', html: `<p class="hint">${esc(why)}</p>` + botAnswer(text || 'landing gear sensor connector LGCIU', '') };
   }
   ui.busy = false;
   renderChat();
@@ -1648,9 +1652,9 @@ function ask(text, opts = {}){
   ui.chat.push({ from:'bot', typing:true });
   renderChat();
   let q = text, origin = '';
-  if (opts.img && !text){ q = 'sensor proximidade trem conector LGCIU humidade'; origin = 'Analisei a foto: parece um conector elétrico com humidade e início de corrosão junto a um sensor de proximidade do trem de aterragem.'; }
-  else if (opts.img){ origin = 'Usei a foto e a tua descrição para a pesquisa.'; q = text; }
-  if (opts.audio) origin = 'Transcrevi a tua nota de voz e pesquisei pelo alarme e aeronave mencionados.';
+  if (opts.img && !text){ q = 'landing gear sensor connector LGCIU'; origin = 'I looked at the photo: it seems to be an electrical connector with moisture and early corrosion next to a landing gear proximity sensor.'; }
+  else if (opts.img){ origin = 'I used the photo and your description for the search.'; q = text; }
+  if (opts.audio) origin = 'I transcribed your voice note and searched for the warning and aircraft mentioned.';
   setTimeout(() => {
     ui.chat[ui.chat.length - 1] = { from:'bot', html: botAnswer(q, origin) };
     if (ui.view === 'chat') renderChat();
@@ -1712,11 +1716,11 @@ $('#chat-reset').onclick = () => { if (ui.busy) return; ui.turns = []; greet(); 
 
 /* ---------- Boot ---------- */
 try { const th = localStorage.getItem('akh-theme'); if (th) document.documentElement.dataset.theme = th; } catch(e){}
-fillSelect($('#fa'), AIRCRAFT.map(a => [a,a]), 'Todas as aeronaves');
-fillSelect($('#fata'), ATA.map(([c,n]) => [c, `ATA ${c} · ${n}`]), 'Todos os sistemas');
-fillSelect($('#f-aircraft'), AIRCRAFT.map(a => [a,a]), 'Selecionar modelo…');
-fillSelect($('#f-role'), ROLES.map(r => [r,r]), 'Escolher função…');
-fillSelect($('#f-ata'), ATA.map(([c,n]) => [c, `ATA ${c} · ${n}`]), 'Selecionar ATA…');
+fillSelect($('#fa'), AIRCRAFT.map(a => [a,a]), 'All aircraft');
+fillSelect($('#fata'), ATA.map(([c,n]) => [c, `ATA ${c} · ${n}`]), 'All systems');
+fillSelect($('#f-aircraft'), AIRCRAFT.map(a => [a,a]), 'Choose model…');
+fillSelect($('#f-role'), ROLES.map(r => [r,r]), 'Choose role…');
+fillSelect($('#f-ata'), ATA.map(([c,n]) => [c, `ATA ${c} · ${n}`]), 'Choose ATA…');
 greet();
 connect();
 const h = (location.hash || '').slice(1);

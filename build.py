@@ -6,7 +6,7 @@ src = (root / 'aeroknowledge-hub.html').read_text(encoding='utf-8')
 src = src.replace('<meta charset="utf-8">\n', '', 1)
 
 head = '''<!doctype html>
-<html lang="pt">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
