@@ -432,6 +432,9 @@ dialog::backdrop{background:rgba(5,12,24,.65)}
 .aog-set{display:flex;flex-direction:column;gap:4px;font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
 .aog-set .input{min-height:42px;width:140px;padding:6px 10px}
 .withdraw{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.ai-fill{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px}
+.ai-fill .hint{flex:1 1 220px}
+.ai-filled .input,.ai-filled .stepper{border-color:var(--amber);box-shadow:0 0 0 3px color-mix(in srgb,var(--amber) 30%,transparent)}
 .use-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 14px;border-radius:var(--r);background:var(--ok-bg);border:1px solid color-mix(in srgb,var(--ok) 30%,transparent)}
 .use-row b{display:block;font-family:var(--f-display);font-size:1.3rem;color:var(--ok);text-transform:uppercase}
 .use-row span{font-size:.85rem;color:var(--ink-2)}
@@ -631,6 +634,7 @@ dialog::backdrop{background:rgba(5,12,24,.65)}
             <select class="input" id="f-lang" aria-label="Voice note language" style="max-width:220px;min-height:40px;padding:6px 10px"><option value="en-GB">Transcribe in English</option><option value="pt-PT">Transcrever em português</option></select>
             <textarea class="input" id="f-transcript" style="min-height:110px" placeholder="While you record, the transcript appears here automatically (Chrome and Edge). You can also type or correct it."></textarea>
             <span class="err">Type or correct the audio transcript (at least 10 characters).</span>
+            <div class="ai-fill" id="ai-fill-row"><button class="btn btn-navy" type="button" id="ai-fill"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l1.8 5.2L19 9l-5.2 1.8L12 16l-1.8-5.2L5 9l5.2-1.8Z"/><path d="M19 14l.9 2.6 2.6.9-2.6.9L19 21l-.9-2.6-2.6-.9 2.6-.9Z"/></svg>Fill the form with AI</button><span class="hint" id="ai-fill-hint">MEC-AI reads the transcript and fills in aircraft, system, part, warning, title and fix. Check them before submitting.</span></div>
           </div>
         </div>
         <div class="form-section">Your tip</div>
@@ -859,6 +863,7 @@ async function connectNetlifyAI(){
   };
   ask.limits = async () => ({ images: { maxCount: 1 } });
   sample = ask; sampleImages = true;
+  updAiFill();
   if (ui.view === 'chat') renderChat();
 }
 
@@ -929,6 +934,7 @@ async function connect(){
   c.use('sample').then(async s => {
     sample = s;
     if (s){ try { const l = await s.limits(); sampleImages = !!l.images; } catch(e){} }
+    updAiFill();
     if (ui.view === 'chat') renderChat();
   });
   db = await c.use('db');
@@ -1138,6 +1144,7 @@ function openDetail(id){
 
 /* ---------- Submit ---------- */
 function renderSubmit(){
+  updAiFill();
   const p = PROFILES.mec;
   if (!$('#f-name').value) $('#f-name').value = store.role === 'mec' ? p.name : '';
   if (!$('#f-role').value && store.role === 'mec') $('#f-role').value = 'Senior Mechanic';
@@ -1188,7 +1195,8 @@ async function submitForm(e){
   const ok = await dbWrite(item.id, item, false);
   btn.disabled = false;
   if (!ok) return;
-  $('#sub-form').reset(); setSubMedia(null); updMediaIn(); updRecUi();
+  $('#sub-form').reset(); setSubMedia(null); updMediaIn(); updRecUi(); updAiFill();
+  document.querySelectorAll('.ai-filled').forEach(f => f.classList.remove('ai-filled'));
   document.querySelectorAll('.field.invalid').forEach(f => f.classList.remove('invalid'));
   toast(`${item.id} submitted. Status: Pending Approval.`);
 }
@@ -1493,6 +1501,7 @@ async function startRec(){
       let text = '';
       for (let i = 0; i < ev.results.length; i++) text += ev.results[i][0].transcript + ' ';
       $('#f-transcript').value = [base, text.trim()].filter(Boolean).join(' ');
+      updAiFill();
       $('#transcript-field').classList.remove('invalid');
     };
     sr.onerror = () => {};
@@ -2089,6 +2098,66 @@ document.addEventListener('click', e => {
   inp.value = Math.max(0.5, Math.round(((Number(inp.value) || 0) + Number(b.dataset.d)) * 2) / 2);
   inp.dispatchEvent(new Event('input', { bubbles: true }));
 });
+
+/* ---------- Fill the form with AI from the voice-note transcript ---------- */
+function aiFillPrompt(transcript){
+  return `You fill in a maintenance knowledge form from an aircraft mechanic's voice note.
+Return ONLY one JSON object, no other text, with these keys:
+- "aircraft": exactly one of ${JSON.stringify(AIRCRAFT)}, or "" if the aircraft is not clear
+- "ata": exactly one of these ATA codes ${JSON.stringify(ATA.map(([c, n]) => c + ' = ' + n))} (only the number, e.g. "49"), best match for the system, or ""
+- "part": short name of the part or component, in English
+- "alarm": the warning, error code or symptom as the mechanic sees it, in English (keep codes such as "E-402" or "ENG 1 BLEED FAULT")
+- "title": a short tip title like "<symptom>: <what to check or do>", at most 90 characters, in English
+- "description": the fix in clear English as short paragraphs starting with "What happens:", "Cause:" and "Fix:" (leave out "Cause:" if it is not said). Use only what the mechanic said: do not invent steps, values, torques, part numbers or references.
+- "downtime": hours of aircraft downtime saved if the mechanic says it, as a number, otherwise null
+
+Voice note transcript (English or Portuguese), between the lines:
+---
+${transcript}
+---`;
+}
+function parseJsonReply(text){
+  const m = String(text || '').match(/\{[\s\S]*\}/);
+  if (!m) throw new Error('no json');
+  return JSON.parse(m[0]);
+}
+function updAiFill(){
+  const b = $('#ai-fill'); if (!b) return;
+  $('#ai-fill-row').hidden = !sample;
+  b.disabled = ui.aiFilling || $('#f-transcript').value.trim().length < 20;
+}
+async function aiFill(){
+  const t = $('#f-transcript').value.trim();
+  if (!sample){ toast('AI is not available here. Fill in the fields by hand.'); return; }
+  if (t.length < 20){ toast('Record or type a longer voice note first.'); return; }
+  if (rec) stopRec();
+  ui.aiFilling = true; updAiFill();
+  const b = $('#ai-fill'), label = b.innerHTML;
+  b.innerHTML = 'Filling in…';
+  try {
+    const { text } = await sample([{ role:'user', content: aiFillPrompt(t) }], { modelTier:'quick', cache:false });
+    const r = parseJsonReply(text);
+    const set = (id, v) => { if (v == null || v === '') return 0; const el = $('#' + id); el.value = v; el.closest('.field').classList.remove('invalid'); el.closest('.field').classList.add('ai-filled'); return 1; };
+    let n = 0;
+    if (AIRCRAFT.includes(r.aircraft)) n += set('f-aircraft', r.aircraft);
+    const code = String(r.ata || '').match(/\d+/)?.[0];
+    if (code && ATA.some(([c]) => c === code)) n += set('f-ata', code);
+    n += set('f-part', r.part) + set('f-alarm', r.alarm) + set('f-title', r.title) + set('f-desc', r.description);
+    const h = Number(r.downtime);
+    if (h > 0) n += set('f-downtime', Math.max(0.5, Math.round(h * 2) / 2));
+    toast(n ? `MEC-AI filled ${n} fields from your voice note. Check them before submitting.` : 'MEC-AI could not find enough details in the voice note.');
+    if (n) $('#f-title').scrollIntoView({ behavior:'smooth', block:'center' });
+  } catch(e){
+    toast(e && e.code === 'rate_limited' ? 'Too many AI requests. Try again shortly.' : 'MEC-AI could not fill in the form. Try again or fill it in by hand.');
+  }
+  b.innerHTML = label; ui.aiFilling = false; updAiFill();
+}
+$('#ai-fill').onclick = aiFill;
+document.addEventListener('input', e => {
+  if (e.target.id === 'f-transcript') updAiFill();
+  const f = e.target.closest && e.target.closest('.ai-filled'); if (f) f.classList.remove('ai-filled');
+});
+document.addEventListener('change', e => { const f = e.target.closest && e.target.closest('.ai-filled'); if (f && e.target.tagName === 'SELECT') f.classList.remove('ai-filled'); });
 
 /* ---------- Demo reset (supervisor) ---------- */
 // Wipes tips and aircraft and loads the example data dated today. On Supabase the code is checked by reset_demo() on the server.
