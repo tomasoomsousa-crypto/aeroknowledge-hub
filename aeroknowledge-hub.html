@@ -1238,8 +1238,17 @@ async function submitForm(e){
   const ok = await dbWrite(item.id, item, false);
   btn.disabled = false;
   if (!ok) return;
+  notifySupervisor(item);
   clearSubmitForm();
   toast(`${item.id} submitted. Status: Pending Approval.`);
+}
+// Email alert to the supervisor through Make (netlify/functions/notify.mjs). Fire and forget: the submit never waits for it.
+function notifySupervisor(it){
+  if (!/^https?:$/.test(location.protocol) || /^(localhost|127\.0\.0\.1)$/.test(location.hostname)) return;
+  fetch('/.netlify/functions/notify', { method:'POST', headers:{ 'content-type':'application/json' }, body: JSON.stringify({
+    id: it.id, title: it.title, author: it.author, role: it.role, aircraft: it.aircraft, ata: it.ata, ata_name: ataName(it.ata),
+    part: it.part, alarm: it.alarm, downtime: it.downtime, attachment: it.media, description: it.description, submitted_at: it.submittedAt
+  }) }).catch(() => {});
 }
 function fillExample(){
   $('#f-name').value = PROFILES.mec.name; $('#f-role').value = 'Senior Mechanic';
