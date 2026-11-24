@@ -442,6 +442,18 @@ dialog::backdrop{background:rgba(5,12,24,.65)}
 .precheck .label{display:block;margin-bottom:2px}
 .precheck-safety{color:var(--bad)}
 .precheck-actions{display:flex;gap:8px;flex-wrap:wrap}
+.similar{display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-radius:var(--r);background:var(--warn-bg);border:1px solid color-mix(in srgb,var(--warn) 35%,transparent)}
+.similar > b{color:var(--warn);font-size:.92rem}
+.sim-item{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px;text-align:left;cursor:pointer;color:var(--ink)}
+.sim-item small{display:block;color:var(--ink-2)}
+.dup-dlg{width:min(540px,calc(100vw - 32px))}
+.dup-card{border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;display:flex;flex-direction:column;gap:6px;background:var(--surface-2)}
+.dup-actions{display:flex;flex-direction:column;gap:8px}
+.additions{display:flex;flex-direction:column;gap:8px}
+.addition{border-left:3px solid var(--navy);background:var(--surface-2);border-radius:0 8px 8px 0;padding:10px 12px;font-size:.92rem}
+.addition p{margin:4px 0 0;white-space:pre-wrap}
+.addition img,.addition video{max-width:260px;border-radius:6px;margin-top:6px;display:block}
+.addition audio{width:100%;margin-top:6px}
 .use-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 14px;border-radius:var(--r);background:var(--ok-bg);border:1px solid color-mix(in srgb,var(--ok) 30%,transparent)}
 .use-row b{display:block;font-family:var(--f-display);font-size:1.3rem;color:var(--ok);text-transform:uppercase}
 .use-row span{font-size:.85rem;color:var(--ink-2)}
@@ -646,6 +658,7 @@ dialog::backdrop{background:rgba(5,12,24,.65)}
         </div>
         <div class="form-section">Your tip</div>
         <div class="field"><label for="f-title">Tip title <span class="req">*</span></label><input class="input" id="f-title" placeholder="e.g. Engine bleed warning caused by a loose sensor connector"><span class="err">Give the fix a title.</span></div>
+        <div class="similar" id="similar" hidden></div>
         <div class="field"><label for="f-desc">How did you fix it? <span class="req">*</span></label><textarea class="input" id="f-desc" placeholder="What was happening, what you checked, what the cause was and what you did to fix it."></textarea><span class="err">Explain a little more (at least 30 characters).</span></div>
         <div class="form-actions">
           <button class="btn btn-primary" type="submit">
@@ -682,6 +695,10 @@ dialog::backdrop{background:rgba(5,12,24,.65)}
           <div class="queue" id="queue" role="listbox" aria-label="Pending submissions"></div>
         </div>
         <div class="panel detail" id="detail"></div>
+      </div>
+      <div class="panel" id="notes-panel" style="margin-top:22px" hidden>
+        <h2>New notes on existing tips</h2>
+        <div id="notes"></div>
       </div>
       <div class="panel" id="flagged-panel" style="margin-top:22px" hidden>
         <h2>Reported as not working</h2>
@@ -737,6 +754,17 @@ dialog::backdrop{background:rgba(5,12,24,.65)}
   </form>
 </dialog>
 <nav class="bottom-nav" id="bottom-nav" aria-label="Sections"></nav>
+<dialog id="dup-dlg" class="pin-dlg dup-dlg" aria-labelledby="dup-title">
+  <div class="dlg">
+    <h2 id="dup-title">This looks like an existing tip</h2>
+    <div id="dup-body"></div>
+    <div class="dup-actions">
+      <button class="btn btn-primary" type="button" id="dup-add">Add my note to this tip</button>
+      <button class="btn" type="button" id="dup-new">It's different: submit as a new tip</button>
+      <button class="btn" type="button" id="dup-cancel">Cancel</button>
+    </div>
+  </div>
+</dialog>
 <dialog id="reset-dlg" class="pin-dlg" aria-labelledby="reset-title">
   <form class="dlg" id="reset-form" novalidate>
     <h2 id="reset-title">Reset demo data?</h2>
@@ -1141,6 +1169,7 @@ function openDetail(id){
     ${mediaFull(it)}
     <div class="alarm">${alarmIco}<span>${esc(it.alarm)}</span></div>
     <p class="desc">${esc(it.description)}</p>
+    ${additionsBox(it)}
     ${metaList(it)}
     ${useRow(it)}
     ${it.status === 'withdrawn' ? `<div class="reason"><b>Withdrawn by Quality${it.withdrawnAt ? ' on ' + fmtD(it.withdrawnAt) : ''}:</b> ${esc(it.withdrawReason || '')}</div>` : ''}
@@ -1194,6 +1223,13 @@ async function submitForm(e){
   if (rec) stopRec();
   if (kindOf(media) === 'audio') item.transcript = $('#f-transcript').value.trim();
   const btn = $('#sub-form [type=submit]'); btn.disabled = true;
+  if (!ui.skipDupCheck){
+    const label = btn.innerHTML; btn.innerHTML = 'Checking for similar tips…';
+    const dup = await findDuplicate(item);
+    btn.innerHTML = label;
+    if (dup){ btn.disabled = false; showDuplicate(dup, item); return; }
+  }
+  ui.skipDupCheck = false;
   if (ui.subMedia && ui.subMedia.kind === kindOf(media)){
     try { Object.assign(item, await storeMedia(item.id, ui.subMedia), { mediaKind: ui.subMedia.kind }); }
     catch(err){ btn.disabled = false; toast('Could not upload the attachment. Check your connection and try again.'); return; }
@@ -1202,9 +1238,7 @@ async function submitForm(e){
   const ok = await dbWrite(item.id, item, false);
   btn.disabled = false;
   if (!ok) return;
-  $('#sub-form').reset(); setSubMedia(null); updMediaIn(); updRecUi(); updAiFill();
-  document.querySelectorAll('.ai-filled').forEach(f => f.classList.remove('ai-filled'));
-  document.querySelectorAll('.field.invalid').forEach(f => f.classList.remove('invalid'));
+  clearSubmitForm();
   toast(`${item.id} submitted. Status: Pending Approval.`);
 }
 function fillExample(){
@@ -1246,6 +1280,7 @@ function renderValidate(){
     ${mediaFull(it)}
     ${metaList(it)}
     <div><span class="label">How it was fixed</span><p class="desc" style="margin-top:6px">${esc(it.description)}</p></div>
+    ${additionsBox(it)}
     ${precheckBox(it)}
     ${ui.approving ? `
       <div class="approve-box">
@@ -1263,6 +1298,9 @@ function renderValidate(){
         <button class="btn btn-ok" type="button" data-act="approve"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Approve and publish</button>
         <button class="btn btn-bad" type="button" data-act="reject"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>Reject</button>
       </div>`}`;
+  const noted = store.items.filter(i => (i.additions || []).some(a => !a.seen));
+  $('#notes-panel').hidden = !noted.length;
+  $('#notes').innerHTML = noted.map(i => { const nw = i.additions.filter(a => !a.seen), last = nw[nw.length - 1]; return `<div class="flag-row"><div><b>${esc(i.id)} · ${esc(i.title)}</b><small>${nw.length} new ${nw.length === 1 ? 'note' : 'notes'} · latest by ${esc(last.by)}: “${esc(last.text.slice(0, 120))}${last.text.length > 120 ? '…' : ''}”</small></div><button class="btn btn-sm" type="button" data-open="${i.id}">Open tip</button><button class="btn btn-sm btn-navy" type="button" data-notes-seen="${i.id}">Mark as read</button></div>`; }).join('');
   const flagged = approved().filter(i => (i.flags || []).some(f => !f.resolved));
   $('#flagged-panel').hidden = !flagged.length;
   $('#flagged').innerHTML = flagged.map(i => { const fl = i.flags.filter(f => !f.resolved), last = fl[fl.length - 1]; return `<div class="flag-row"><div><b>${esc(i.id)} · ${esc(i.title)}</b><small>${fl.length} ${fl.length === 1 ? 'report' : 'reports'} · latest: “${esc(last.reason)}” (${esc(last.by)}${last.reg ? ', ' + esc(last.reg) : ''})</small></div><button class="btn btn-sm" type="button" data-open="${i.id}">Open to review or withdraw</button><button class="btn btn-sm btn-navy" type="button" data-resolve="${i.id}">Mark as reviewed</button></div>`; }).join('');
@@ -1937,7 +1975,7 @@ Format when you ANSWER:
 - One short sentence reminding them to confirm the procedure in the official aircraft manual.
 - On the LAST line: "SOURCES: " followed by the IDs of the tips used, separated by commas (at most 2).`;
 function kbText(){
-  return approved().map(i => `[${i.id}] ${i.title}\nAircraft: ${i.aircraft} | ATA ${i.ata} ${ataName(i.ata)} | Part: ${i.part} | Warning: ${i.alarm}\nAuthor: ${i.author} (${i.role}) | Approved: ${fmtD(i.approvedAt)} | Downtime saved per use: ${i.downtime} h | Used ${usesOf(i).length} times${openFlags(i).length ? ` | OPEN "DIDN'T WORK" REPORTS: ${openFlags(i).length} (${openFlags(i).map(f => `"${f.reason}"`).join('; ')})` : ''}${(i.flags || []).length ? ` | Success rate: ${successOf(i).rate}%` : ''}\nDescription: ${i.description}${i.transcript && !i.description.includes(i.transcript.slice(0, 30)) ? '\nVoice-note transcript: ' + i.transcript : ''}`).join('\n\n---\n\n');
+  return approved().map(i => `[${i.id}] ${i.title}\nAircraft: ${i.aircraft} | ATA ${i.ata} ${ataName(i.ata)} | Part: ${i.part} | Warning: ${i.alarm}\nAuthor: ${i.author} (${i.role}) | Approved: ${fmtD(i.approvedAt)} | Downtime saved per use: ${i.downtime} h | Used ${usesOf(i).length} times${openFlags(i).length ? ` | OPEN "DIDN'T WORK" REPORTS: ${openFlags(i).length} (${openFlags(i).map(f => `"${f.reason}"`).join('; ')})` : ''}${(i.flags || []).length ? ` | Success rate: ${successOf(i).rate}%` : ''}\nDescription: ${i.description}${i.transcript && !i.description.includes(i.transcript.slice(0, 30)) ? '\nVoice-note transcript: ' + i.transcript : ''}${(i.additions || []).length ? '\nNotes added by other mechanics: ' + i.additions.map(a => `${a.by}${a.aircraft ? ' (' + a.aircraft + ')' : ''}: ${a.text}`).join(' / ') : ''}`).join('\n\n---\n\n');
 }
 // Claude ends each reply with control lines: optional "OPTIONS: a | b" (quick replies) and "SOURCES: K-…" (Portuguese markers accepted too).
 function splitSources(text){
@@ -2235,6 +2273,101 @@ document.addEventListener('click', e => {
   if (ap){ const it = store.items.find(i => i.id === ap.dataset.pcApprove); if (!it?.aiReview) return; ui.rejecting = false; ui.approving = true; ui.approveHours = String(it.aiReview.hours); renderValidate(); $('#approve-hours')?.focus(); return; }
   const rj = e.target.closest('[data-pc-reject]');
   if (rj){ const it = store.items.find(i => i.id === rj.dataset.pcReject); if (!it?.aiReview) return; ui.approving = false; ui.rejecting = true; ui.rejectText = it.aiReview.feedback; renderValidate(); $('#reject-reason')?.focus(); }
+});
+
+/* ---------- Duplicate tips ---------- */
+function simToks(s){ return new Set(norm(s).split(/[^a-z0-9]+/).filter(t => t.length > 2 && !STOP.has(t))); }
+// Overlap of meaningful words in title, warning and part, plus a bonus for the same system and aircraft.
+function similarity(q, it){
+  const a = simToks(`${q.title} ${q.alarm} ${q.part}`), b = simToks(`${it.title} ${it.alarm} ${it.part}`);
+  if (!a.size || !b.size) return 0;
+  let inter = 0; a.forEach(t => { if (b.has(t)) inter++; });
+  return inter / Math.min(a.size, b.size) + (q.ata && q.ata === it.ata ? 0.2 : 0) + (q.aircraft && q.aircraft === it.aircraft ? 0.05 : 0);
+}
+const dupCandidates = () => store.items.filter(i => i.status === 'approved' || i.status === 'pending');
+function similarTo(q, min = 0.35){ return dupCandidates().map(it => ({ it, s: similarity(q, it) })).filter(x => x.s >= min).sort((a, b) => b.s - a.s).slice(0, 3); }
+function formQuery(){ return { title: $('#f-title').value, alarm: $('#f-alarm').value, part: $('#f-part').value, ata: $('#f-ata').value, aircraft: $('#f-aircraft').value }; }
+function renderSimilar(){
+  const q = formQuery(), box = $('#similar');
+  const hits = (q.title + q.alarm + q.part).trim().length < 6 ? [] : similarTo(q);
+  box.hidden = !hits.length;
+  box.innerHTML = hits.length ? `<b>Similar tips already in the knowledge base. Check them first:</b>${hits.map(({ it }) => `<button class="sim-item" type="button" data-open="${it.id}"><span><b>${esc(it.id)} · ${esc(it.title)}</b><small>${esc(it.aircraft)} · ATA ${it.ata} · ${esc(it.alarm)}</small></span>${pill(it.status)}</button>`).join('')}` : '';
+}
+let simTimer = null;
+document.addEventListener('input', e => { if (['f-title', 'f-alarm', 'f-part'].includes(e.target.id)){ clearTimeout(simTimer); simTimer = setTimeout(renderSimilar, 300); } });
+document.addEventListener('change', e => { if (['f-ata', 'f-aircraft'].includes(e.target.id)) renderSimilar(); });
+
+// On submit: MEC-AI decides whether an existing tip already covers this one; without AI, a strong word match decides.
+async function findDuplicate(item){
+  const local = similarTo(item, 0.3);
+  if (sample){
+    const list = dupCandidates().map(i => `[${i.id}] (${i.status}) ${i.title} | ${i.aircraft} | ATA ${i.ata} | ${i.alarm} | part: ${i.part}`).join('\n');
+    const prompt = `A mechanic is submitting a new tip to an aircraft maintenance knowledge base. Decide whether an existing tip already describes the SAME problem with the SAME fix (same symptom and same root cause; the aircraft model may differ if the system is the same). A different cause or a different fix for a similar symptom is NOT a duplicate.
+Return ONLY one JSON object: {"duplicate_of": "K-xxxx" or null, "reason": "one short sentence for the mechanic explaining the match or the difference"}
+
+NEW TIP
+Aircraft: ${item.aircraft} | ATA ${item.ata} ${ataName(item.ata)} | Part: ${item.part} | Warning: ${item.alarm}
+Title: ${item.title}
+Description: ${item.description}${item.transcript ? '\nVoice note: ' + item.transcript : ''}
+
+EXISTING TIPS
+${list || 'none'}`;
+    try {
+      const r = parseJsonReply((await sample([{ role:'user', content: prompt }], { modelTier:'quick', cache:false })).text);
+      const it = store.items.find(i => i.id === r.duplicate_of && (i.status === 'approved' || i.status === 'pending'));
+      return it ? { it, reason: String(r.reason || ''), ai: true } : null;
+    } catch(e){ /* fall back to the word match */ }
+  }
+  return local[0] && local[0].s >= 0.6 ? { it: local[0].it, reason: 'It uses many of the same words, for the same system.', ai: false } : null;
+}
+function showDuplicate(dup, item){
+  ui.dupFor = { dupId: dup.it.id, item };
+  const it = dup.it;
+  $('#dup-body').innerHTML = `<p class="hint" style="margin:0">${dup.ai ? 'MEC-AI' : 'The app'} found a tip that seems to describe the same problem. Instead of a second tip, you can add your note, photo or voice note to it.</p>
+    <div class="dup-card"><div class="card-chips">${ataChip(it.ata)}<span class="chip">${esc(it.aircraft)}</span>${pill(it.status)}</div>
+      <b>${esc(it.id)} · ${esc(it.title)}</b><div class="alarm">${alarmIco}<span>${esc(it.alarm)}</span></div>
+      <small class="hint">By ${esc(it.author)} · ${esc(it.role)}${it.status === 'approved' ? ` · used ${usesOf(it).length}×` : ''}</small>
+      ${dup.reason ? `<p style="margin:0"><b>Why:</b> ${esc(dup.reason)}</p>` : ''}
+      <button class="linkbtn" type="button" data-open="${it.id}" style="align-self:flex-start">See the full tip</button></div>`;
+  $('#dup-add').textContent = `Add my note to ${it.id}`;
+  $('#dup-dlg').showModal();
+}
+function clearSubmitForm(){
+  $('#sub-form').reset(); setSubMedia(null); updMediaIn(); updRecUi(); updAiFill();
+  document.querySelectorAll('.ai-filled').forEach(f => f.classList.remove('ai-filled'));
+  document.querySelectorAll('.field.invalid').forEach(f => f.classList.remove('invalid'));
+  $('#similar').hidden = true;
+}
+async function addNoteTo(dupId, item){
+  const target = store.items.find(i => i.id === dupId); if (!target) return false;
+  const note = { at: new Date().toISOString(), by: item.author, role: item.role, aircraft: item.aircraft, text: item.description, seen: false };
+  if (item.transcript) note.transcript = item.transcript;
+  if (ui.subMedia && ui.subMedia.kind === kindOf(item.media)){
+    try { const m = await storeMedia(`${dupId}-note-${Date.now()}`, ui.subMedia); if (m.mediaUrl){ note.mediaUrl = m.mediaUrl; note.mediaKind = ui.subMedia.kind; } }
+    catch(err){ toast('Could not upload the attachment. Check your connection and try again.'); return false; }
+  }
+  return dbWrite(dupId, { additions: [...(target.additions || []), note] }, true);
+}
+$('#dup-cancel').onclick = () => $('#dup-dlg').close();
+$('#dup-new').onclick = () => { $('#dup-dlg').close(); ui.skipDupCheck = true; $('#sub-form').requestSubmit(); };
+$('#dup-add').onclick = async () => {
+  const d = ui.dupFor; if (!d) return;
+  const b = $('#dup-add'); b.disabled = true; b.textContent = 'Adding…';
+  const ok = await addNoteTo(d.dupId, d.item);
+  b.disabled = false;
+  if (!ok){ b.textContent = `Add my note to ${d.dupId}`; return; }
+  $('#dup-dlg').close(); clearSubmitForm();
+  toast(`Your note was added to ${d.dupId}. Quality will see it.`);
+};
+function additionsBox(it){
+  const ad = it.additions || []; if (!ad.length) return '';
+  return `<div class="additions"><span class="label">Added by other mechanics (${ad.length})</span>${ad.map(a => `<div class="addition"><b>${esc(a.by)}</b> · ${esc(a.role || '')} · ${fmtD(a.at)}${a.aircraft ? ' · ' + esc(a.aircraft) : ''}<p>${esc(a.text)}</p>${!a.mediaUrl ? '' : a.mediaKind === 'audio' ? `<audio controls preload="none" src="${esc(a.mediaUrl)}"></audio>` : a.mediaKind === 'photo' ? `<img src="${esc(a.mediaUrl)}" alt="Photo added by ${esc(a.by)}" loading="lazy">` : `<video controls preload="metadata" src="${esc(a.mediaUrl)}" playsinline></video>`}</div>`).join('')}</div>`;
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-notes-seen]'); if (!b) return;
+  const it = store.items.find(i => i.id === b.dataset.notesSeen); if (!it) return;
+  b.disabled = true;
+  dbWrite(it.id, { additions: (it.additions || []).map(a => ({ ...a, seen: true })) }, true).then(ok => { if (ok) toast(`${it.id}: notes marked as read.`); });
 });
 
 /* ---------- Demo reset (supervisor) ---------- */
