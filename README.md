@@ -2,7 +2,7 @@
 
 A web app that captures and shares the practical know-how of aircraft maintenance mechanics (MRO). Mechanics record the fixes they find in the hangar (photo, voice note with transcript, or video), a quality engineer validates them, and newer mechanics ask an AI assistant that only answers with approved fixes.
 
-**Live app:** https://vermillion-palmier-9c92b1.netlify.app/
+**Live app:** https://aeroknowledge-hub.netlify.app/
 
 > Demo project for the Emerging Technologies course. All tips, people and aircraft registrations are fictional. Photos, videos and voices are AI-generated and labelled as such. Tips do not replace the official aircraft manuals.
 

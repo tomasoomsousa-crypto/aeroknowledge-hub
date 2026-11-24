@@ -46,7 +46,7 @@ begin
       'attachment', d->>'media',
       'description', left(coalesce(d->>'description', ''), 600),
       'submitted_at', d->>'submittedAt',
-      'link', 'https://vermillion-palmier-9c92b1.netlify.app/#validate'
+      'link', 'https://aeroknowledge-hub.netlify.app/#validate'
     )
   );
   return new;
