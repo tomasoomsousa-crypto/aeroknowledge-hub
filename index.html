@@ -448,6 +448,13 @@ dialog::backdrop{background:rgba(5,12,24,.65)}
 .ai-fill{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px}
 .ai-fill .hint{flex:1 1 220px}
 .ai-filled .input,.ai-filled .stepper{border-color:var(--amber);box-shadow:0 0 0 3px color-mix(in srgb,var(--amber) 30%,transparent)}
+.precheck{display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:var(--r);border:1.5px solid var(--navy);background:color-mix(in srgb,var(--navy) 5%,var(--surface))}
+.precheck-head{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.precheck-head b{font-family:var(--f-display);font-size:1.15rem;text-transform:uppercase;letter-spacing:.03em}
+.precheck ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:3px;font-size:.92rem}
+.precheck .label{display:block;margin-bottom:2px}
+.precheck-safety{color:var(--bad)}
+.precheck-actions{display:flex;gap:8px;flex-wrap:wrap}
 .use-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 14px;border-radius:var(--r);background:var(--ok-bg);border:1px solid color-mix(in srgb,var(--ok) 30%,transparent)}
 .use-row b{display:block;font-family:var(--f-display);font-size:1.3rem;color:var(--ok);text-transform:uppercase}
 .use-row span{font-size:.85rem;color:var(--ink-2)}
@@ -1252,6 +1259,7 @@ function renderValidate(){
     ${mediaFull(it)}
     ${metaList(it)}
     <div><span class="label">How it was fixed</span><p class="desc" style="margin-top:6px">${esc(it.description)}</p></div>
+    ${precheckBox(it)}
     ${ui.approving ? `
       <div class="approve-box">
         <div class="field"><label for="approve-hours">Downtime hours saved each time it is used</label>
@@ -2171,6 +2179,76 @@ document.addEventListener('input', e => {
   const f = e.target.closest && e.target.closest('.ai-filled'); if (f) f.classList.remove('ai-filled');
 });
 document.addEventListener('change', e => { const f = e.target.closest && e.target.closest('.ai-filled'); if (f && e.target.tagName === 'SELECT') f.classList.remove('ai-filled'); });
+
+/* ---------- AI pre-check for the supervisor ---------- */
+function precheckPrompt(it){
+  const kb = approved().map(i => `[${i.id}] ${i.title} | ${i.aircraft} | ATA ${i.ata} | ${i.alarm}`).join('\n');
+  return `You assist a quality engineer who validates tips for an aircraft maintenance (MRO) knowledge base. Review this tip, submitted by a mechanic, before it is published.
+Return ONLY one JSON object, no other text:
+{"verdict": "ready" or "needs_changes" or "reject",
+ "summary": "one or two sentences on the overall quality",
+ "missing": ["short items the tip lacks, e.g. what was checked before replacing the part, the cause, a reference to the official manual task"],
+ "safety": ["safety or airworthiness concerns; empty list if none"],
+ "hours": realistic downtime hours saved per use as a number (multiple of 0.5),
+ "hours_comment": "one short sentence comparing your estimate with the mechanic's",
+ "duplicates": ["IDs of approved tips below that describe the same problem; empty list if none"],
+ "feedback": "a short, polite message to the mechanic saying what to add or fix"}
+Be strict but fair: a good tip states the symptom, the cause and the fix clearly, does not contradict good maintenance practice and does not replace the official manual. Write in English.
+
+SUBMISSION ${it.id}
+Aircraft: ${it.aircraft} | ATA ${it.ata} ${ataName(it.ata)} | Part: ${it.part} | Warning: ${it.alarm}
+Mechanic: ${it.author} (${it.role}) | Hours claimed per use: ${it.downtime} | Attachment: ${it.media}${it.mediaUrl ? ' (file attached)' : ' (no file)'}
+Title: ${it.title}
+Description: ${it.description}${it.transcript ? '\nVoice-note transcript: ' + it.transcript : ''}
+
+APPROVED TIPS (to spot duplicates):
+${kb || 'none'}`;
+}
+function precheckBox(it){
+  if (!sample && !it.aiReview) return '';
+  const r = it.aiReview;
+  if (ui.prechecking === it.id) return `<div class="precheck"><div class="precheck-head"><b>AI pre-check</b><span class="typing" aria-label="Reviewing"><span></span><span></span><span></span></span><span class="hint">MEC-AI is reviewing the submission…</span></div></div>`;
+  if (!r) return `<div class="precheck"><div class="precheck-head"><button class="btn btn-navy" type="button" data-precheck="${it.id}"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l1.8 5.2L19 9l-5.2 1.8L12 16l-1.8-5.2L5 9l5.2-1.8Z"/></svg>AI pre-check</button><span class="hint">MEC-AI looks for missing details, safety points, duplicates and realistic hours before you decide.</span></div></div>`;
+  const v = { ready:['pill-approved','Looks ready'], needs_changes:['pill-pending','Needs more detail'], reject:['pill-rejected','Consider rejecting'] }[r.verdict] || ['pill-pending','Review'];
+  const dups = (r.duplicates || []).map(id => store.items.find(i => i.id === id)).filter(Boolean);
+  const list = (title, items, cls = '') => items && items.length ? `<div class="${cls}"><span class="label">${title}</span><ul>${items.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>` : '';
+  return `<div class="precheck">
+    <div class="precheck-head"><b>AI pre-check</b><span class="pill ${v[0]}">${v[1]}</span><span class="hint">MEC-AI · ${fmtDT(r.at)}</span></div>
+    <p style="margin:0">${esc(r.summary || '')}</p>
+    ${list('Missing', r.missing)}
+    ${list('Safety', r.safety, 'precheck-safety')}
+    ${Number(r.hours) > 0 ? `<div><span class="label">Hours saved per use</span>Mechanic: <b>${fmtH(it.downtime)} h</b> · MEC-AI suggests: <b>${fmtH(r.hours)} h</b>${r.hours_comment ? ' · ' + esc(r.hours_comment) : ''}</div>` : ''}
+    ${dups.length ? `<div><span class="label">Possible duplicates</span>${dups.map(d => `<button class="linkbtn" type="button" data-open="${d.id}">${esc(d.id)} · ${esc(d.title)}</button>`).join('<br>')}</div>` : ''}
+    <div class="precheck-actions">
+      ${Number(r.hours) > 0 ? `<button class="btn btn-sm btn-ok" type="button" data-pc-approve="${it.id}">Approve with ${fmtH(r.hours)} h</button>` : ''}
+      ${r.feedback ? `<button class="btn btn-sm btn-bad" type="button" data-pc-reject="${it.id}">Reject with this feedback</button>` : ''}
+      ${sample ? `<button class="btn btn-sm" type="button" data-precheck="${it.id}">Run again</button>` : ''}
+    </div>
+  </div>`;
+}
+async function runPrecheck(id){
+  const it = store.items.find(i => i.id === id); if (!it || !sample) return;
+  ui.prechecking = id; renderValidate();
+  try {
+    const { text } = await sample([{ role:'user', content: precheckPrompt(it) }], { modelTier:'default', cache:false });
+    const r = parseJsonReply(text);
+    const review = { at: new Date().toISOString(), verdict: String(r.verdict || ''), summary: String(r.summary || ''), missing: [].concat(r.missing || []).map(String).slice(0, 6), safety: [].concat(r.safety || []).map(String).slice(0, 4),
+      hours: Math.max(0, Math.round(Number(r.hours) * 2) / 2) || 0, hours_comment: String(r.hours_comment || ''), duplicates: [].concat(r.duplicates || []).map(String).filter(x => /^K-\d+$/.test(x)).slice(0, 3), feedback: String(r.feedback || '') };
+    ui.prechecking = null;
+    if (!(await dbWrite(id, { aiReview: review }, true))) Object.assign(it, { aiReview: review });
+  } catch(e){
+    ui.prechecking = null;
+    toast(e && e.code === 'rate_limited' ? 'Too many AI requests. Try again shortly.' : 'MEC-AI could not review this submission. Try again.');
+  }
+  renderValidate();
+}
+document.addEventListener('click', e => {
+  const pc = e.target.closest('[data-precheck]'); if (pc){ runPrecheck(pc.dataset.precheck); return; }
+  const ap = e.target.closest('[data-pc-approve]');
+  if (ap){ const it = store.items.find(i => i.id === ap.dataset.pcApprove); if (!it?.aiReview) return; ui.rejecting = false; ui.approving = true; ui.approveHours = String(it.aiReview.hours); renderValidate(); $('#approve-hours')?.focus(); return; }
+  const rj = e.target.closest('[data-pc-reject]');
+  if (rj){ const it = store.items.find(i => i.id === rj.dataset.pcReject); if (!it?.aiReview) return; ui.approving = false; ui.rejecting = true; ui.rejectText = it.aiReview.feedback; renderValidate(); $('#reject-reason')?.focus(); }
+});
 
 /* ---------- Demo reset (supervisor) ---------- */
 // Wipes tips and aircraft and loads the example data dated today. On Supabase the code is checked by reset_demo() on the server.
